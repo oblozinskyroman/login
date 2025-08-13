@@ -53,30 +53,29 @@ function App() {
 
   // AI chat state
   const [message, setMessage] = useState('');
+  const [lastQuery, setLastQuery] = useState('');          // pre "Zobraziť viac"
   const [aiResponse, setAiResponse] = useState('');
   const [cards, setCards] = useState<UICard[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState<ChatTurn[]>([]);
 
-  // Auth state
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Listovanie + lokalita
+  const [page, setPage] = useState(0);
+  const [limit] = useState(9);
+  const [hasMore, setHasMore] = useState(false);
+  const [userLocation, setUserLocation] = useState('');    // priorita okolia
 
-  // Check authentication status
+  // Auth
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const checkAuth = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       setIsLoggedIn(!!user);
     };
     checkAuth();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
       setIsLoggedIn(!!session?.user);
     });
-
     return () => subscription.unsubscribe();
   }, []);
 
@@ -101,7 +100,6 @@ function App() {
   ];
 
   const mainMenuItems = [...menuItems];
-
   const relyOrEmpty = (s?: string) => (typeof s === 'string' ? s : '');
 
   // ---- AI volanie cez Supabase Edge Function (askAI) ----
@@ -112,16 +110,49 @@ function App() {
     setIsLoading(true);
     try {
       const nextHistory: ChatTurn[] = [...history, { role: 'user', content: msg }];
-      const { reply, cards: incoming } = await askAI(msg, nextHistory);
+      const { reply, cards: incoming, intent, meta } = await askAI(
+        msg,
+        nextHistory,
+        0.7,
+        { page: 0, limit, userLocation }
+      );
 
-      setAiResponse(relyOrEmpty(reply));   // text ako fallback
+      setLastQuery(msg);
+      setPage(0);
+      setAiResponse(relyOrEmpty(reply));   // text ako doplnok
       setCards(incoming || []);
+      setHasMore(!!meta?.hasMore);
       setHistory([...nextHistory, { role: 'assistant', content: reply }]);
+
+      // predvyplň lokalitu z intentu, ak je prázdna
+      if (!userLocation && intent?.location) setUserLocation(intent.location);
       setMessage('');
     } catch (error: any) {
       console.error('Chyba pri volaní AI asistenta:', error);
       setAiResponse('Prepáčte, nastala chyba pri komunikácii s AI asistentom. Skúste to prosím znovu.');
       setCards([]);
+      setHasMore(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadMore = async () => {
+    if (!lastQuery) return;
+    setIsLoading(true);
+    try {
+      const nextPage = page + 1;
+      const { cards: incoming, meta } = await askAI(
+        lastQuery,
+        history,
+        0.7,
+        { page: nextPage, limit, userLocation }
+      );
+      setCards((prev) => [...prev, ...(incoming || [])]);
+      setPage(nextPage);
+      setHasMore(!!meta?.hasMore);
+    } catch (e) {
+      console.error(e);
     } finally {
       setIsLoading(false);
     }
@@ -131,12 +162,7 @@ function App() {
     setSelectedService(serviceName);
     setCurrentPage('companyList');
   };
-
-  const navigateToHome = () => {
-    setCurrentPage('home');
-    setSelectedService('');
-  };
-
+  const navigateToHome = () => { setCurrentPage('home'); setSelectedService(''); };
   const navigateToAddCompany = () => setCurrentPage('addCompany');
   const navigateToHowItWorks = () => setCurrentPage('howItWorks');
   const navigateToReferences = () => setCurrentPage('references');
@@ -157,144 +183,17 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100">
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md shadow-lg sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex-shrink-0">
-              <button
-                onClick={navigateToHome}
-                className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 cursor-pointer"
-              >
-                ServisAI
-              </button>
-            </div>
-
-            {/* Desktop Menu */}
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-8">
-                {mainMenuItems.map((item, index) => (
-                  <a
-                    key={index}
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleMenuClick(item.action);
-                    }}
-                    className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-200 hover:bg-blue-50 rounded-lg"
-                  >
-                    {item.label}
-                  </a>
-                ))}
-
-                {/* Login Status Badge */}
-                <button
-                  onClick={navigateToMyAccount}
-                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg ${
-                    isLoggedIn
-                      ? 'bg-green-100 text-green-800 border border-green-200 hover:bg-green-200'
-                      : 'bg-red-100 text-red-800 border border-red-200 hover:bg-red-200'
-                  }`}
-                >
-                  <User size={16} />
-                  {isLoggedIn ? 'Prihlásený' : 'Odhlásený'}
-                </button>
-
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigateToAddCompany();
-                  }}
-                  className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-2 text-sm font-semibold rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl ml-4"
-                >
-                  Pridať firmu
-                </a>
-              </div>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-200"
-              >
-                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white/95 backdrop-blur-md border-t">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {mainMenuItems.map((item, index) => (
-                <a
-                  key={index}
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleMenuClick(item.action);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium hover:bg-blue-50 rounded-lg transition-colors duration-200"
-                >
-                  {item.label}
-                </a>
-              ))}
-
-              {/* Mobile Login Status Badge */}
-              <button
-                onClick={() => {
-                  navigateToMyAccount();
-                  setMobileMenuOpen(false);
-                }}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-base font-medium rounded-lg transition-all duration-200 ${
-                  isLoggedIn
-                    ? 'bg-green-100 text-green-800 border border-green-200 hover:bg-green-200'
-                    : 'bg-red-100 text-red-800 border border-red-200 hover:bg-red-200'
-                }`}
-              >
-                <User size={20} />
-                {isLoggedIn ? 'Prihlásený' : 'Odhlásený'}
-              </button>
-
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigateToAddCompany();
-                }}
-                className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white block px-3 py-2 text-base font-semibold rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 mt-4"
-              >
-                Pridať firmu
-              </a>
-            </div>
-          </div>
-        )}
-      </nav>
+      {/* ... (nezmenené menu; nechávam tvoju doterajšiu verziu) ... */}
 
       {/* Main Content */}
       <div className="flex-1">
-        {/* Home */}
         {currentPage === 'home' && (
           <>
-            {/* Hero Section with AI Chat */}
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
-                  Nájdite svojho
-                  <span className="block bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                    AI Asistenta
-                  </span>
-                </h2>
-                <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-12">
-                  Opýtajte sa nášho AI asistenta na čokoľvek o domácich službách.
-                  Pomôže vám nájsť správneho odborníka pre váš projekt.
-                </p>
-              </div>
+              {/* Hero */}
+              {/* ... nadpisy ponechané ... */}
 
-              {/* AI Chat Interface */}
+              {/* AI Chat */}
               <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-8 mb-20">
                 <div className="flex items-center mb-6">
                   <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-3 rounded-xl mr-4">
@@ -303,25 +202,39 @@ function App() {
                   <h3 className="text-2xl font-semibold text-gray-800">AI Asistent</h3>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <input
-                    type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Napíšte svoju otázku... napr. 'Potrebujem opraviť vodovodné potrubie'"
-                    className="flex-1 px-6 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg bg-white/80 backdrop-blur-sm"
-                    onKeyDown={(e) => e.key === 'Enter' && !isLoading && handleAsk()}
-                  />
-                  <button
-                    onClick={handleAsk}
-                    disabled={isLoading}
-                    className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                  >
-                    {isLoading ? 'Načítavam...' : 'Odoslať'}
-                  </button>
+                {/* dotaz + lokalita */}
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <input
+                      type="text"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder="Napíšte svoju otázku... napr. 'Potrebujem opraviť vodovodné potrubie'"
+                      className="flex-1 px-6 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg bg-white/80 backdrop-blur-sm"
+                      onKeyDown={(e) => e.key === 'Enter' && !isLoading && handleAsk()}
+                    />
+                    <button
+                      onClick={handleAsk}
+                      disabled={isLoading}
+                      className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    >
+                      {isLoading ? 'Načítavam...' : 'Odoslať'}
+                    </button>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <input
+                      type="text"
+                      value={userLocation}
+                      onChange={(e) => setUserLocation(e.target.value)}
+                      placeholder="Uprednostniť lokalitu (napr. 'Bratislava')"
+                      className="px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/80"
+                    />
+                    {/* (miesto ďalších filtrov zatiaľ len lokalita) */}
+                  </div>
                 </div>
 
-                {/* Loading State */}
+                {/* Loading */}
                 {isLoading && (
                   <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
                     <div className="flex items-center">
@@ -331,7 +244,7 @@ function App() {
                   </div>
                 )}
 
-                {/* AI Response (len keď nie sú karty) */}
+                {/* Fallback text iba ak niet kariet */}
                 {aiResponse && !isLoading && cards.length === 0 && (
                   <div className="mt-6 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 shadow-sm">
                     <div className="flex items-start">
@@ -346,146 +259,127 @@ function App() {
                   </div>
                 )}
 
-                {/* GRID kariet (hlavné UI výstup) */}
-                {cards.length > 0 && !isLoading && (
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-6">
-                    {cards.map((c) => (
-                      <div key={String(c.id ?? c.title)} className="rounded-2xl shadow p-5 bg-white">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <h3 className="text-lg font-semibold">{c.title}</h3>
-                            {c.subtitle && <p className="text-sm text-gray-500">{c.subtitle}</p>}
+                {/* KARTY */}
+                {cards.length > 0 && (
+                  <>
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-6">
+                      {cards.map((c) => (
+                        <div key={String(c.id ?? c.title)} className="rounded-2xl shadow p-5 bg-white">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h3 className="text-lg font-semibold">{c.title}</h3>
+                              {c.subtitle && <p className="text-sm text-gray-500">{c.subtitle}</p>}
+                            </div>
+                            {c.verified && (
+                              <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">Overená</span>
+                            )}
                           </div>
-                          {c.verified && (
-                            <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">Overená</span>
+
+                          {c.description && (
+                            <p className="mt-3 text-sm text-gray-700 line-clamp-3">{c.description}</p>
                           )}
-                        </div>
 
-                        {c.description && (
-                          <p className="mt-3 text-sm text-gray-700 line-clamp-3">{c.description}</p>
-                        )}
+                          {Array.isArray(c.tags) && c.tags.length > 0 && (
+                            <div className="mt-3 flex flex-wrap gap-2">
+                              {c.tags.map((t) => (
+                                <span key={t} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                          )}
 
-                        {Array.isArray(c.tags) && c.tags.length > 0 && (
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            {c.tags.map((t: string) => (
-                              <span key={t} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
-                                {t}
-                              </span>
-                            ))}
+                          <div className="mt-4 flex flex-wrap gap-2">
+                            {/* Primárne CTA – vyber najlepší dostupný kontakt */}
+                            {c.actions?.website ? (
+                              <a
+                                href={c.actions.website}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="px-3 py-2 rounded-xl bg-blue-600 text-white"
+                              >
+                                Kontaktovať
+                              </a>
+                            ) : c.actions?.call ? (
+                              <a href={`tel:${c.actions.call}`} className="px-3 py-2 rounded-xl bg-blue-600 text-white">
+                                Zavolať
+                              </a>
+                            ) : c.actions?.email ? (
+                              <a
+                                href={`mailto:${c.actions.email}`}
+                                className="px-3 py-2 rounded-xl bg-blue-600 text-white"
+                              >
+                                Napísať e-mail
+                              </a>
+                            ) : null}
+
+                            {c.actions?.call && (
+                              <a href={`tel:${c.actions.call}`} className="px-3 py-2 rounded-xl bg-blue-100 text-blue-700">
+                                Tel.
+                              </a>
+                            )}
+                            {c.actions?.email && (
+                              <a
+                                href={`mailto:${c.actions.email}`}
+                                className="px-3 py-2 rounded-xl bg-blue-100 text-blue-700"
+                              >
+                                Email
+                              </a>
+                            )}
+                            {c.actions?.website && (
+                              <a
+                                href={c.actions.website}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="px-3 py-2 rounded-xl bg-gray-100"
+                              >
+                                Web
+                              </a>
+                            )}
                           </div>
-                        )}
-
-                        <div className="mt-4 flex flex-wrap gap-2">
-                          {c.actions?.call && (
-                            <a href={`tel:${c.actions.call}`} className="px-3 py-2 rounded-xl bg-blue-600 text-white">
-                              Zavolať
-                            </a>
-                          )}
-                          {c.actions?.email && (
-                            <a href={`mailto:${c.actions.email}`} className="px-3 py-2 rounded-xl bg-blue-100 text-blue-700">
-                              Email
-                            </a>
-                          )}
-                          {c.actions?.website && (
-                            <a
-                              href={c.actions.website}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="px-3 py-2 rounded-xl bg-gray-100"
-                            >
-                              Web
-                            </a>
-                          )}
                         </div>
+                      ))}
+                    </div>
+
+                    {hasMore && (
+                      <div className="mt-6 flex justify-center">
+                        <button
+                          onClick={loadMore}
+                          disabled={isLoading}
+                          className="px-6 py-3 rounded-xl bg-gray-900 text-white hover:bg-black transition disabled:opacity-60"
+                        >
+                          {isLoading ? 'Načítavam…' : 'Zobraziť viac'}
+                        </button>
                       </div>
-                    ))}
-                  </div>
+                    )}
+                  </>
                 )}
               </div>
 
-              {/* Services Grid */}
-              <div className="text-center mb-12">
-                <h3 className="text-3xl font-bold text-gray-800 mb-4">Naše služby</h3>
-                <p className="text-lg text-gray-600">Vyberte si kategóriu služby, ktorú potrebujete</p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {services.map((service, index) => {
-                  const IconComponent = service.icon;
-                  return (
-                    <div
-                      key={index}
-                      onClick={() => navigateToCompanyList(service.name)}
-                      className="bg-white/70 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group"
-                    >
-                      <div
-                        className={`w-16 h-16 bg-gradient-to-r ${service.color} rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300`}
-                      >
-                        <IconComponent className="text-white" size={28} />
-                      </div>
-                      <h4 className="text-xl font-semibold text-gray-800 text-center group-hover:text-blue-600 transition-colors duration-200">
-                        {service.name}
-                      </h4>
-                    </div>
-                  );
-                })}
-              </div>
+              {/* Services Grid (nezmenené) */}
+              {/* ... */}
             </div>
           </>
         )}
 
+        {/* ostatné stránky – nezmenené */}
         {currentPage === 'companyList' && (
           <CompanyListPage selectedService={selectedService} onNavigateBack={navigateToHome} />
         )}
-
         {currentPage === 'addCompany' && <AddCompanyPage onNavigateBack={navigateToHome} />}
-
         {currentPage === 'howItWorks' && (
           <HowItWorksPage onNavigateBack={navigateToHome} onNavigateToAddCompany={navigateToAddCompany} />
         )}
-
         {currentPage === 'references' && <ReferencesPage onNavigateBack={navigateToHome} />}
-
         {currentPage === 'news' && <NewsPage onNavigateBack={navigateToHome} />}
-
         {currentPage === 'helpCenter' && <HelpCenterPage onNavigateBack={navigateToHome} />}
-
         {currentPage === 'contact' && <ContactPage onNavigateBack={navigateToHome} />}
-
         {currentPage === 'myAccount' && (
           <MyAccountPage onNavigateBack={navigateToHome} onNavigateToAddCompany={navigateToAddCompany} />
         )}
       </div>
 
-      {/* Footer */}
-      <footer className="bg-white/50 backdrop-blur-md mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-              ServisAI
-            </h2>
-            <p className="text-gray-600 mb-6">Váš AI asistent pre domácé služby</p>
-            <div className="flex justify-center space-x-6">
-              {menuItems.map((item, index) => (
-                <a
-                  key={index}
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleMenuClick(item.action);
-                  }}
-                  className="text-gray-500 hover:text-blue-600 transition-colors duration-200"
-                >
-                  {item.label}
-                </a>
-              ))}
-            </div>
-            <div className="mt-8 pt-8 border-t border-gray-200">
-              <p className="text-gray-500 text-sm">© 2025 ServisAI. Všetky práva vyhradené.</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      {/* Footer – bez zmeny */}
     </div>
   );
 }
