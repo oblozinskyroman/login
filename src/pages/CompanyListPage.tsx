@@ -1,4 +1,4 @@
-prekontroluj ten kod a posli mi opraveny kod: import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Search, 
   Filter, 
