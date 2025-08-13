@@ -23,9 +23,10 @@ import { supabase, type Company } from '../lib/supabase';
 interface CompanyListPageProps {
   selectedService?: string;
   onNavigateBack: () => void;
+  onNavigateToCompanyDetail: (companyId: string) => void;
 }
 
-function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPageProps) {
+function CompanyListPage({ selectedService, onNavigateBack, onNavigateToCompanyDetail }: CompanyListPageProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
@@ -331,7 +332,8 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
             {companies.map((company) => (
               <div
                 key={company.id}
-                className="bg-white/70 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col"
+                onClick={() => onNavigateToCompanyDetail(company.id)}
+                className="bg-white/70 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col cursor-pointer"
               >
                 {/* Company Header */}
                 <div className="flex items-start justify-between mb-4">

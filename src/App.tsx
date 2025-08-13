@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CompanyListPage from './pages/CompanyListPage';
 import AddCompanyPage from './pages/AddCompanyPage';
+import CompanyDetailPage from './pages/CompanyDetailPage';
 import HowItWorksPage from './pages/HowItWorksPage';
 import ReferencesPage from './pages/ReferencesPage';
 import NewsPage from './pages/NewsPage';
@@ -66,9 +67,10 @@ function StarRating({ value = 0 }: { value?: number | null }) {
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<
-    'home' | 'companyList' | 'addCompany' | 'howItWorks' | 'references' | 'news' | 'helpCenter' | 'contact' | 'myAccount'
+    'home' | 'companyList' | 'addCompany' | 'companyDetail' | 'howItWorks' | 'references' | 'news' | 'helpCenter' | 'contact' | 'myAccount'
   >('home');
   const [selectedService, setSelectedService] = useState<string>('');
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
 
   // AI
   const [message, setMessage] = useState('');
@@ -235,6 +237,10 @@ function App() {
   const navigateToHelpCenter = () => setCurrentPage('helpCenter');
   const navigateToContact = () => setCurrentPage('contact');
   const navigateToMyAccount = () => setCurrentPage('myAccount');
+  const navigateToCompanyDetail = (companyId: string) => {
+    setSelectedCompanyId(companyId);
+    setCurrentPage('companyDetail');
+  };
 
   const handleMenuClick = (action: string | null) => {
     if (action === 'howItWorks') navigateToHowItWorks();
@@ -606,7 +612,17 @@ function App() {
         )}
 
         {currentPage === 'companyList' && (
-          <CompanyListPage selectedService={selectedService} onNavigateBack={navigateToHome} />
+          <CompanyListPage 
+            selectedService={selectedService} 
+            onNavigateBack={navigateToHome}
+            onNavigateToCompanyDetail={navigateToCompanyDetail}
+          />
+        )}
+        {currentPage === 'companyDetail' && selectedCompanyId && (
+          <CompanyDetailPage 
+            companyId={selectedCompanyId}
+            onNavigateBack={() => setCurrentPage('companyList')}
+          />
         )}
         {currentPage === 'addCompany' && <AddCompanyPage onNavigateBack={navigateToHome} />}
         {currentPage === 'howItWorks' && (
