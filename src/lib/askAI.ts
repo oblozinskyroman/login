@@ -2,33 +2,30 @@ import { supabase } from './supabase';
 
 export type ChatTurn = { role: 'user' | 'assistant' | 'system'; content: string };
 
-export type AskOptions = {
+export type AskMeta = {
   page?: number;
   limit?: number;
   userLocation?: string;
+  coords?: { lat: number; lng: number } | null;
 };
 
 export async function askAI(
   message: string,
   history: ChatTurn[] = [],
   temperature = 0.7,
-  options: AskOptions = {}
+  meta: AskMeta = {}
 ) {
-  const { page = 0, limit = 9, userLocation = '' } = options;
-
   const { data, error } = await supabase.functions.invoke('ai-assistant', {
-    body: { message, history, temperature, page, limit, user_location: userLocation },
+    body: { message, history, temperature, meta },
   });
-
   if (error) {
     console.error('invoke error:', error);
     throw new Error('Nepodarilo sa zavolať Edge Function');
   }
-
   return {
     reply: data?.reply ?? '',
     cards: data?.cards ?? [],
     intent: data?.intent ?? null,
-    meta: data?.meta ?? { total: 0, page: 0, limit },
+    meta: data?.meta ?? null,
   };
 }
