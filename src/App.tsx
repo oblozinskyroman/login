@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import CompanyListPage from './pages/CompanyListPage';
 import AddCompanyPage from './pages/AddCompanyPage';
 import HowItWorksPage from './pages/HowItWorksPage';
@@ -7,32 +7,53 @@ import NewsPage from './pages/NewsPage';
 import HelpCenterPage from './pages/HelpCenterPage';
 import ContactPage from './pages/ContactPage';
 import MyAccountPage from './pages/MyAccountPage';
+
 import { supabase } from './lib/supabase';
 import { askAI, type ChatTurn } from './lib/askAI';
-import { 
-  MessageCircle, 
-  Hammer, 
-  Droplets, 
-  Zap, 
-  Puzzle, 
-  Palette, 
-  Trees, 
-  Wrench, 
-  Flame, 
+
+import {
+  MessageCircle,
+  Hammer,
+  Droplets,
+  Zap,
+  Puzzle,
+  Palette,
+  Trees,
+  Wrench,
+  Flame,
   HelpCircle,
   Menu,
   X,
-  User
+  User,
 } from 'lucide-react';
+
+type UICard = {
+  id?: string | number;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  verified?: boolean;
+  rating?: number | null;
+  tags?: string[];
+  actions?: {
+    call?: string | null;
+    email?: string | null;
+    website?: string | null;
+    ctaLabel?: string;
+  };
+};
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState<'home' | 'companyList' | 'addCompany' | 'howItWorks' | 'references' | 'news' | 'helpCenter' | 'contact' | 'myAccount'>('home');
+  const [currentPage, setCurrentPage] = useState<
+    'home' | 'companyList' | 'addCompany' | 'howItWorks' | 'references' | 'news' | 'helpCenter' | 'contact' | 'myAccount'
+  >('home');
   const [selectedService, setSelectedService] = useState<string>('');
 
   // AI chat state
   const [message, setMessage] = useState('');
   const [aiResponse, setAiResponse] = useState('');
+  const [cards, setCards] = useState<UICard[]>([]); // ⬅️ nové karty
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState<ChatTurn[]>([]);
 
@@ -42,12 +63,16 @@ function App() {
   // Check authentication status
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       setIsLoggedIn(!!user);
     };
     checkAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsLoggedIn(!!session?.user);
     });
 
@@ -63,7 +88,7 @@ function App() {
     { name: 'Záhradník', icon: Trees, color: 'from-green-500 to-emerald-600' },
     { name: 'Tesár', icon: Wrench, color: 'from-stone-500 to-gray-600' },
     { name: 'Kúrenár', icon: Flame, color: 'from-red-500 to-orange-600' },
-    { name: 'Iné služby', icon: HelpCircle, color: 'from-slate-500 to-gray-600' }
+    { name: 'Iné služby', icon: HelpCircle, color: 'from-slate-500 to-gray-600' },
   ];
 
   const menuItems = [
@@ -71,17 +96,10 @@ function App() {
     { label: 'Referencie', action: 'references' },
     { label: 'Novinky', action: 'news' },
     { label: 'Centrum pomoci', action: 'helpCenter' },
-    { label: 'Kontakt', action: 'contact' }
+    { label: 'Kontakt', action: 'contact' },
   ];
 
-  // Menu items without "Môj účet" pre hlavnú navigáciu
-  const mainMenuItems = [
-    { label: 'Ako fungujeme?', action: 'howItWorks' },
-    { label: 'Referencie', action: 'references' },
-    { label: 'Novinky', action: 'news' },
-    { label: 'Centrum pomoci', action: 'helpCenter' },
-    { label: 'Kontakt', action: 'contact' }
-  ];
+  const mainMenuItems = [...menuItems];
 
   // ---- AI volanie cez Supabase Edge Function (askAI) ----
   const handleAsk = async () => {
@@ -91,18 +109,22 @@ function App() {
     setIsLoading(true);
     try {
       const nextHistory: ChatTurn[] = [...history, { role: 'user', content: msg }];
-      const reply = await askAI(msg, nextHistory);
+      const { reply, cards } = await askAI(msg, nextHistory);
 
-      setAiResponse(reply);
+      setAiResponse(relyOrEmpty(reply));
+      setCards(cards || []);
       setHistory([...nextHistory, { role: 'assistant', content: reply }]);
       setMessage('');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chyba pri volaní AI asistenta:', error);
       setAiResponse('Prepáčte, nastala chyba pri komunikácii s AI asistentom. Skúste to prosím znovu.');
+      setCards([]);
     } finally {
       setIsLoading(false);
     }
   };
+
+  const relyOrEmpty = (s?: string) => (typeof s === 'string' ? s : '');
 
   const navigateToCompanyList = (serviceName: string) => {
     setSelectedService(serviceName);
@@ -137,7 +159,6 @@ function App() {
       <nav className="bg-white/80 backdrop-blur-md shadow-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo */}
             <div className="flex-shrink-0">
               <button
                 onClick={navigateToHome}
@@ -163,7 +184,7 @@ function App() {
                     {item.label}
                   </a>
                 ))}
-                
+
                 {/* Login Status Badge */}
                 <button
                   onClick={navigateToMyAccount}
@@ -176,7 +197,7 @@ function App() {
                   <User size={16} />
                   {isLoggedIn ? 'Prihlásený' : 'Odhlásený'}
                 </button>
-                
+
                 <a
                   href="#"
                   onClick={(e) => {
@@ -220,7 +241,7 @@ function App() {
                   {item.label}
                 </a>
               ))}
-              
+
               {/* Mobile Login Status Badge */}
               <button
                 onClick={() => {
@@ -236,7 +257,7 @@ function App() {
                 <User size={20} />
                 {isLoggedIn ? 'Prihlásený' : 'Odhlásený'}
               </button>
-              
+
               <a
                 href="#"
                 onClick={(e) => {
@@ -267,7 +288,7 @@ function App() {
                   </span>
                 </h2>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-12">
-                  Opýtajte sa nášho AI asistenta na čokoľvek o domácich službách. 
+                  Opýtajte sa nášho AI asistenta na čokoľvek o domácich službách.
                   Pomôže vám nájsť správneho odborníka pre váš projekt.
                 </p>
               </div>
@@ -280,7 +301,7 @@ function App() {
                   </div>
                   <h3 className="text-2xl font-semibold text-gray-800">AI Asistent</h3>
                 </div>
-                
+
                 <div className="flex flex-col sm:flex-row gap-4">
                   <input
                     type="text"
@@ -298,7 +319,7 @@ function App() {
                     {isLoading ? 'Načítavam...' : 'Odoslať'}
                   </button>
                 </div>
-                
+
                 {/* Loading State */}
                 {isLoading && (
                   <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
@@ -308,8 +329,8 @@ function App() {
                     </div>
                   </div>
                 )}
-                
-                {/* AI Response */}
+
+                {/* AI Response (voliteľné) */}
                 {aiResponse && !isLoading && (
                   <div className="mt-6 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 shadow-sm">
                     <div className="flex items-start">
@@ -321,6 +342,67 @@ function App() {
                         <p className="text-green-700 leading-relaxed whitespace-pre-wrap">{aiResponse}</p>
                       </div>
                     </div>
+                  </div>
+                )}
+
+                {/* GRID kariet (hlavné UI výstup) */}
+                {cards.length > 0 && !isLoading && (
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-6">
+                    {cards.map((c) => (
+                      <div key={String(c.id ?? c.title)} className="rounded-2xl shadow p-5 bg-white">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h3 className="text-lg font-semibold">{c.title}</h3>
+                            {c.subtitle && <p className="text-sm text-gray-500">{c.subtitle}</p>}
+                          </div>
+                          {c.verified && (
+                            <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">
+                              Overená
+                            </span>
+                          )}
+                        </div>
+
+                        {c.description && (
+                          <p className="mt-3 text-sm text-gray-700 line-clamp-3">{c.description}</p>
+                        )}
+
+                        {Array.isArray(c.tags) && c.tags.length > 0 && (
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {c.tags.map((t: string) => (
+                              <span key={t} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {c.actions?.call && (
+                            <a href={`tel:${c.actions.call}`} className="px-3 py-2 rounded-xl bg-blue-600 text-white">
+                              Zavolať
+                            </a>
+                          )}
+                          {c.actions?.email && (
+                            <a
+                              href={`mailto:${c.actions.email}`}
+                              className="px-3 py-2 rounded-xl bg-blue-100 text-blue-700"
+                            >
+                              Email
+                            </a>
+                          )}
+                          {c.actions?.website && (
+                            <a
+                              href={c.actions.website}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="px-3 py-2 rounded-xl bg-gray-100"
+                            >
+                              Web
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -340,7 +422,9 @@ function App() {
                       onClick={() => navigateToCompanyList(service.name)}
                       className="bg-white/70 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group"
                     >
-                      <div className={`w-16 h-16 bg-gradient-to-r ${service.color} rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300`}>
+                      <div
+                        className={`w-16 h-16 bg-gradient-to-r ${service.color} rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300`}
+                      >
                         <IconComponent className="text-white" size={28} />
                       </div>
                       <h4 className="text-xl font-semibold text-gray-800 text-center group-hover:text-blue-600 transition-colors duration-200">
@@ -355,19 +439,13 @@ function App() {
         )}
 
         {currentPage === 'companyList' && (
-          <CompanyListPage 
-            selectedService={selectedService}
-            onNavigateBack={navigateToHome}
-          />
+          <CompanyListPage selectedService={selectedService} onNavigateBack={navigateToHome} />
         )}
 
         {currentPage === 'addCompany' && <AddCompanyPage onNavigateBack={navigateToHome} />}
 
         {currentPage === 'howItWorks' && (
-          <HowItWorksPage 
-            onNavigateBack={navigateToHome}
-            onNavigateToAddCompany={navigateToAddCompany}
-          />
+          <HowItWorksPage onNavigateBack={navigateToHome} onNavigateToAddCompany={navigateToAddCompany} />
         )}
 
         {currentPage === 'references' && <ReferencesPage onNavigateBack={navigateToHome} />}
@@ -379,10 +457,7 @@ function App() {
         {currentPage === 'contact' && <ContactPage onNavigateBack={navigateToHome} />}
 
         {currentPage === 'myAccount' && (
-          <MyAccountPage 
-            onNavigateBack={navigateToHome}
-            onNavigateToAddCompany={navigateToAddCompany}
-          />
+          <MyAccountPage onNavigateBack={navigateToHome} onNavigateToAddCompany={navigateToAddCompany} />
         )}
       </div>
 
@@ -393,9 +468,7 @@ function App() {
             <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
               ServisAI
             </h2>
-            <p className="text-gray-600 mb-6">
-              Váš AI asistent pre domácé služby
-            </p>
+            <p className="text-gray-600 mb-6">Váš AI asistent pre domácé služby</p>
             <div className="flex justify-center space-x-6">
               {menuItems.map((item, index) => (
                 <a
@@ -412,9 +485,7 @@ function App() {
               ))}
             </div>
             <div className="mt-8 pt-8 border-t border-gray-200">
-              <p className="text-gray-500 text-sm">
-                © 2025 ServisAI. Všetky práva vyhradené.
-              </p>
+              <p className="text-gray-500 text-sm">© 2025 ServisAI. Všetky práva vyhradené.</p>
             </div>
           </div>
         </div>
