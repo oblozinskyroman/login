@@ -114,7 +114,7 @@ function App() {
       const nextHistory: ChatTurn[] = [...history, { role: 'user', content: msg }];
       const { reply, cards: incoming } = await askAI(msg, nextHistory);
 
-      setAiResponse(relyOrEmpty(reply));   // ponecháme text len ako fallback
+      setAiResponse(relyOrEmpty(reply));   // text ako fallback
       setCards(incoming || []);
       setHistory([...nextHistory, { role: 'assistant', content: reply }]);
       setMessage('');
