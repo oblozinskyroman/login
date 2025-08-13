@@ -20,7 +20,8 @@ import {
   Eye,
   Share2,
   Bookmark,
-  ExternalLink
+  ExternalLink,
+  FileText
 } from 'lucide-react';
 import { supabase, type Company } from '../lib/supabase';
 
@@ -180,23 +181,23 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
               <div className="flex items-start gap-6 mb-6">
                 {/* Logo */}
                 <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center overflow-hidden flex-shrink-0">
-                  {company.logo_url ? (
+                  {company?.logo_url ? (
                     <img 
-                      src={company.logo_url} 
-                      alt={`${company.name} logo`}
+                      src={company?.logo_url} 
+                      alt={`${company?.name} logo`}
                       className="w-full h-full object-cover"
                     />
                   ) : (
                     <span className="text-white font-bold text-3xl">
-                      {company.name.charAt(0)}
+                      {company?.name?.charAt(0)}
                     </span>
                   )}
                 </div>
 
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">
-                    <h2 className="text-3xl font-bold text-gray-800">{company.name}</h2>
-                    {company.status === 'approved' && (
+                    <h2 className="text-3xl font-bold text-gray-800">{company?.name}</h2>
+                    {company?.status === 'approved' && (
                       <div className="flex items-center gap-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
                         <Shield size={16} />
                         Overená
@@ -206,16 +207,16 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
 
                   {/* Rating */}
                   <div className="flex items-center gap-4 mb-4">
-                    {company.average_rating && company.review_count && company.review_count > 0 ? (
+                    {company?.average_rating && company?.review_count && company?.review_count > 0 ? (
                       <div className="flex items-center gap-2">
                         <div className="flex">
-                          {renderStars(company.average_rating)}
+                          {renderStars(company?.average_rating)}
                         </div>
                         <span className="text-lg font-semibold text-gray-700">
-                          {company.average_rating.toFixed(1)}
+                          {company?.average_rating?.toFixed(1)}
                         </span>
                         <span className="text-gray-500">
-                          ({company.review_count} {company.review_count === 1 ? 'hodnotenie' : 'hodnotení'})
+                          ({company?.review_count} {company?.review_count === 1 ? 'hodnotenie' : 'hodnotení'})
                         </span>
                       </div>
                     ) : (
@@ -228,15 +229,15 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
 
                   {/* Location and Date */}
                   <div className="flex flex-wrap gap-4 text-gray-600">
-                    {company.location && (
+                    {company?.location && (
                       <div className="flex items-center gap-1">
                         <MapPin size={16} />
-                        {company.location}
+                        {company?.location}
                       </div>
                     )}
                     <div className="flex items-center gap-1">
                       <Calendar size={16} />
-                      Registrovaná {formatDate(company.created_at)}
+                      Registrovaná {formatDate(company?.created_at || '')}
                     </div>
                   </div>
                 </div>
@@ -246,7 +247,7 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">Služby</h3>
                 <div className="flex flex-wrap gap-2">
-                  {(company.services ?? []).map((service, index) => (
+                  {(company?.services ?? []).map((service, index) => (
                     <span
                       key={`${service}-${index}`}
                       className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full font-medium"
@@ -264,16 +265,16 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Kontakt</h3>
                 
                 <div className="space-y-3 mb-6">
-                  {company.email && (
+                  {company?.email && (
                     <div className="flex items-center gap-3 text-gray-600">
                       <Mail size={18} />
-                      <span className="break-all">{company.email}</span>
+                      <span className="break-all">{company?.email}</span>
                     </div>
                   )}
-                  {company.phone && (
+                  {company?.phone && (
                     <div className="flex items-center gap-3 text-gray-600">
                       <Phone size={18} />
-                      <span>{company.phone}</span>
+                      <span>{company?.phone}</span>
                     </div>
                   )}
                 </div>
@@ -284,9 +285,9 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
                     Poslať správu
                   </button>
                   
-                  {company.phone && (
+                  {company?.phone && (
                     <a
-                      href={`tel:${company.phone}`}
+                      href={`tel:${company?.phone}`}
                       className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-all duration-200 font-semibold flex items-center justify-center gap-2"
                     >
                       <Phone size={18} />
@@ -294,9 +295,9 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
                     </a>
                   )}
                   
-                  {company.email && (
+                  {company?.email && (
                     <a
-                      href={`mailto:${company.email}`}
+                      href={`mailto:${company?.email}`}
                       className="w-full bg-gray-600 text-white py-3 px-4 rounded-lg hover:bg-gray-700 transition-all duration-200 font-semibold flex items-center justify-center gap-2"
                     >
                       <Mail size={18} />
@@ -355,10 +356,10 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
           <div className="bg-white/70 backdrop-blur-md rounded-2xl p-8 shadow-lg">
             <h3 className="text-2xl font-bold text-gray-800 mb-6">O firme</h3>
             
-            {company.description ? (
+            {company?.description ? (
               <div className="prose prose-lg max-w-none">
                 <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                  {company.description}
+                  {company?.description}
                 </p>
               </div>
             ) : (
@@ -375,7 +376,7 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
                   <Calendar className="text-blue-600" size={24} />
                 </div>
                 <h4 className="font-semibold text-gray-800">Registrovaná</h4>
-                <p className="text-gray-600">{formatDate(company.created_at)}</p>
+                <p className="text-gray-600">{formatDate(company?.created_at || '')}</p>
               </div>
               
               <div className="text-center">
@@ -384,7 +385,7 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
                 </div>
                 <h4 className="font-semibold text-gray-800">Hodnotenie</h4>
                 <p className="text-gray-600">
-                  {company.average_rating ? `${company.average_rating.toFixed(1)}/5` : 'Bez hodnotenia'}
+                  {company?.average_rating ? `${company?.average_rating?.toFixed(1)}/5` : 'Bez hodnotenia'}
                 </p>
               </div>
               
@@ -407,30 +408,30 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
                       <span className="text-white font-semibold">
-                        {review.profiles?.full_name?.charAt(0) || 'U'}
+                        {review?.profiles?.full_name?.charAt(0) || 'U'}
                       </span>
                     </div>
                     
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="font-semibold text-gray-800">
-                          {review.profiles?.full_name || 'Anonymný používateľ'}
+                          {review?.profiles?.full_name || 'Anonymný používateľ'}
                         </h4>
                         <span className="text-sm text-gray-500">
-                          {formatDate(review.created_at)}
+                          {formatDate(review?.created_at || '')}
                         </span>
                       </div>
                       
                       <div className="flex items-center mb-3">
                         <div className="flex mr-2">
-                          {renderStars(review.rating)}
+                          {renderStars(review?.rating)}
                         </div>
-                        <span className="font-semibold text-gray-700">{review.rating}/5</span>
+                        <span className="font-semibold text-gray-700">{review?.rating}/5</span>
                       </div>
                       
-                      {review.comment && (
+                      {review?.comment && (
                         <p className="text-gray-700 leading-relaxed">
-                          {review.comment}
+                          {review?.comment}
                         </p>
                       )}
                     </div>
