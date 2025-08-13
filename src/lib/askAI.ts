@@ -1,26 +1,15 @@
-// src/lib/askAI.ts
 import { supabase } from './supabase';
 
 export type ChatTurn = { role: 'user' | 'assistant' | 'system'; content: string };
 
-export async function askAI(message: string, history: ChatTurn[] = []): Promise<string> {
+export async function askAI(message: string, history: ChatTurn[] = [], temperature = 0.7) {
   const { data, error } = await supabase.functions.invoke('ai-assistant', {
-    body: { message, history }, // presne to očakáva naša Edge Function
+    body: { message, history, temperature },
   });
 
   if (error) {
-    console.error('Edge Function error:', error);
-    throw new Error(error.message || 'Edge Function invoke failed');
-  }
-
-  // supabase-js môže vrátiť string alebo objekt (podľa verzie/runtime)
-  if (typeof data === 'string') {
-    try {
-      const parsed = JSON.parse(data);
-      return parsed?.reply ?? '';
-    } catch {
-      return data;
-    }
+    console.error('invoke error:', error);
+    throw new Error('Nepodarilo sa zavolať Edge Function');
   }
   return data?.reply ?? '';
 }
