@@ -26,6 +26,7 @@ import {
   X,
   User,
   MapPin,
+  CheckCircle,
 } from 'lucide-react';
 
 type UICard = {
@@ -77,6 +78,7 @@ function App() {
   const [hasMore, setHasMore] = useState(false);
   const [userLocation, setUserLocation] = useState('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [ack, setAck] = useState('');
 
   // Auth
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -135,6 +137,15 @@ function App() {
     );
   };
 
+  const makeAck = (intent?: any, fallbackLocation?: string) => {
+    const s = (intent?.service ?? '').toString().trim();
+    const loc = (intent?.location ?? fallbackLocation ?? '').toString().trim();
+    const parts: string[] = [];
+    if (s) parts.push(`službu ${s.toLowerCase()}`);
+    if (loc) parts.push(`lokalita ${loc}`);
+    return parts.length ? `Rozumiem — ${parts.join(', ')}.` : '';
+  };
+
   /* ---------- AI volanie ---------- */
   const handleAsk = async () => {
     const msg = message.trim();
@@ -157,6 +168,7 @@ function App() {
       setHasMore(!!meta?.hasMore);
       setHistory([...nextHistory, { role: 'assistant', content: reply }]);
       if (!userLocation && intent?.location) setUserLocation(intent.location);
+      setAck(makeAck(intent, userLocation));
       setMessage('');
     } catch (error: any) {
       console.error('Chyba pri volaní AI asistenta:', error);
@@ -355,6 +367,13 @@ function App() {
                       {isLoading ? 'Načítavam...' : 'Odoslať'}
                     </button>
                   </div>
+
+                {ack && (
+                  <div className="mt-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-800 text-sm flex items-start gap-2">
+                    <CheckCircle size={18} className="mt-0.5 flex-shrink-0" />
+                    <span>{ack}</span>
+                  </div>
+                )}
 
                   <div className="flex flex-col sm:flex-row gap-4">
                     <input
