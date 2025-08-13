@@ -1,3 +1,4 @@
+// src/App.tsx
 import React, { useEffect, useState } from 'react';
 import CompanyListPage from './pages/CompanyListPage';
 import AddCompanyPage from './pages/AddCompanyPage';
@@ -53,7 +54,7 @@ function App() {
   // AI chat state
   const [message, setMessage] = useState('');
   const [aiResponse, setAiResponse] = useState('');
-  const [cards, setCards] = useState<UICard[]>([]); // ⬅️ nové karty
+  const [cards, setCards] = useState<UICard[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState<ChatTurn[]>([]);
 
@@ -101,6 +102,8 @@ function App() {
 
   const mainMenuItems = [...menuItems];
 
+  const relyOrEmpty = (s?: string) => (typeof s === 'string' ? s : '');
+
   // ---- AI volanie cez Supabase Edge Function (askAI) ----
   const handleAsk = async () => {
     const msg = message.trim();
@@ -109,10 +112,10 @@ function App() {
     setIsLoading(true);
     try {
       const nextHistory: ChatTurn[] = [...history, { role: 'user', content: msg }];
-      const { reply, cards } = await askAI(msg, nextHistory);
+      const { reply, cards: incoming } = await askAI(msg, nextHistory);
 
-      setAiResponse(relyOrEmpty(reply));
-      setCards(cards || []);
+      setAiResponse(relyOrEmpty(reply));   // ponecháme text len ako fallback
+      setCards(incoming || []);
       setHistory([...nextHistory, { role: 'assistant', content: reply }]);
       setMessage('');
     } catch (error: any) {
@@ -123,8 +126,6 @@ function App() {
       setIsLoading(false);
     }
   };
-
-  const relyOrEmpty = (s?: string) => (typeof s === 'string' ? s : '');
 
   const navigateToCompanyList = (serviceName: string) => {
     setSelectedService(serviceName);
@@ -330,8 +331,8 @@ function App() {
                   </div>
                 )}
 
-                {/* AI Response (voliteľné) */}
-                {aiResponse && !isLoading && (
+                {/* AI Response (len keď nie sú karty) */}
+                {aiResponse && !isLoading && cards.length === 0 && (
                   <div className="mt-6 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 shadow-sm">
                     <div className="flex items-start">
                       <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-2 rounded-lg mr-4 flex-shrink-0">
@@ -356,9 +357,7 @@ function App() {
                             {c.subtitle && <p className="text-sm text-gray-500">{c.subtitle}</p>}
                           </div>
                           {c.verified && (
-                            <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">
-                              Overená
-                            </span>
+                            <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">Overená</span>
                           )}
                         </div>
 
@@ -383,10 +382,7 @@ function App() {
                             </a>
                           )}
                           {c.actions?.email && (
-                            <a
-                              href={`mailto:${c.actions.email}`}
-                              className="px-3 py-2 rounded-xl bg-blue-100 text-blue-700"
-                            >
+                            <a href={`mailto:${c.actions.email}`} className="px-3 py-2 rounded-xl bg-blue-100 text-blue-700">
                               Email
                             </a>
                           )}
