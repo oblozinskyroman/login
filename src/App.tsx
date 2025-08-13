@@ -27,6 +27,10 @@ import {
   User,
   MapPin,
   CheckCircle,
+  Star,
+  Calendar,
+  Shield,
+  Euro,
 } from 'lucide-react';
 
 type UICard = {
@@ -79,6 +83,7 @@ function App() {
   const [userLocation, setUserLocation] = useState('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [ack, setAck] = useState('');
+  const [aiActiveFilters, setAiActiveFilters] = useState<string[]>([]);
 
   // Auth
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -104,6 +109,14 @@ function App() {
     { name: 'Tesár', icon: Wrench, color: 'from-stone-500 to-gray-600' },
     { name: 'Kúrenár', icon: Flame, color: 'from-red-500 to-orange-600' },
     { name: 'Iné služby', icon: HelpCircle, color: 'from-slate-500 to-gray-600' },
+  ];
+
+  const aiQuickFilters = [
+    { id: 'verified', label: 'Overené', icon: Shield },
+    { id: 'rating-4plus', label: '★ 4+', icon: Star },
+    { id: 'today', label: 'Dnes', icon: Calendar },
+    { id: 'escrow', label: 'Escrow', icon: Shield },
+    { id: 'budget-50', label: 'Do 50 €', icon: Euro }
   ];
 
   const menuItems = [
@@ -146,6 +159,14 @@ function App() {
     return parts.length ? `Rozumiem — ${parts.join(', ')}.` : '';
   };
 
+  const toggleAiFilter = (filterId: string) => {
+    setAiActiveFilters(prev => 
+      prev.includes(filterId) 
+        ? prev.filter(f => f !== filterId)
+        : [...prev, filterId]
+    );
+  };
+
   /* ---------- AI volanie ---------- */
   const handleAsk = async () => {
     const msg = message.trim();
@@ -158,7 +179,7 @@ function App() {
         msg,
         nextHistory,
         0.7,
-        { page: 0, limit, userLocation, coords }
+        { page: 0, limit, userLocation, coords, filters: aiActiveFilters }
       );
 
       setLastQuery(msg);
@@ -189,7 +210,7 @@ function App() {
         lastQuery,
         history,
         0.7,
-        { page: nextPage, limit, userLocation, coords }
+        { page: nextPage, limit, userLocation, coords, filters: aiActiveFilters }
       );
       setCards((prev) => [...prev, ...(incoming || [])]);
       setPage(nextPage);
@@ -391,6 +412,28 @@ function App() {
                       <MapPin size={18} />
                       Firmy v mojom okolí
                     </button>
+                  </div>
+
+                  {/* Quick Filters for AI */}
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {aiQuickFilters.map((filter) => {
+                      const IconComponent = filter.icon;
+                      const isActive = aiActiveFilters.includes(filter.id);
+                      return (
+                        <button
+                          key={filter.id}
+                          onClick={() => toggleAiFilter(filter.id)}
+                          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                            isActive
+                              ? 'bg-blue-600 text-white shadow-md'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          <IconComponent size={16} />
+                          {filter.label}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
