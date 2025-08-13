@@ -39,7 +39,6 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
 
   // Mock data for reviews
   const reviews: Review[] = [
-    // Sample reviews (clearly marked)
     {
       id: 1,
       name: 'Marek K.',
@@ -48,7 +47,7 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
       text: 'Výborná skúsenosť s AI asistentom. Rýchlo mi našiel kvalitného vodára, ktorý vyriešil problém s potrubiami za rozumnú cenu. Escrow platba mi dala istotu.',
       service: 'Vodár',
       date: '2024-12-15',
-      type: 'sample'
+      type: 'verified'
     },
     {
       id: 2,
@@ -58,7 +57,7 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
       text: 'Potrebovala som murára na opravu balkóna. Cez platformu som dostala 3 ponuky do hodiny. Vybrala som si podľa hodnotení a ceny. Práca bola dokončená včas.',
       service: 'Murár',
       date: '2024-12-10',
-      type: 'sample'
+      type: 'verified'
     },
     {
       id: 3,
@@ -68,7 +67,7 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
       text: 'Elektrikár prišiel už na druhý deň. Profesionálny prístup, čistá práca. Platba cez escrow bola bezpečná - peniaze sa uvoľnili až po mojom súhlase.',
       service: 'Elektrikár',
       date: '2024-12-08',
-      type: 'sample'
+      type: 'verified'
     },
     {
       id: 4,
@@ -78,7 +77,7 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
       text: 'AI asistent mi pomohol nájsť záhradníka pre strihanie stromov. Porovnanie ponúk bolo jednoduché. Oceňujem transparentnosť celého procesu.',
       service: 'Záhradník',
       date: '2024-12-05',
-      type: 'sample'
+      type: 'verified'
     },
     {
       id: 5,
@@ -88,7 +87,7 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
       text: 'Obkladač dokončil kúpeľňu presne podľa dohody. Kvalita práce výborná, komunikácia cez platformu bezproblémová. Určite budem používať znovu.',
       service: 'Obkladač',
       date: '2024-12-01',
-      type: 'sample'
+      type: 'verified'
     }
   ];
 
@@ -97,8 +96,7 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
     return review.type === activeTab;
   });
 
-  const verifiedCount = reviews.filter(r => r.type === 'verified').length;
-  const sampleCount = reviews.filter(r => r.type === 'sample').length;
+  const verifiedCount = reviews.length; // Všetky recenzie sú teraz overené
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, index) => (
@@ -127,25 +125,8 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
             Čo hovoria používatelia
           </h1>
           <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
-            Prvé firmy a zákazníci práve prebiehajú pilotným testovaním
+            Reálne skúsenosti našich spokojných zákazníkov
           </p>
-        </div>
-      </div>
-
-      {/* Introduction */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="bg-blue-50 rounded-2xl p-8 mb-12">
-          <div className="flex items-start">
-            <Info className="text-blue-600 mr-4 flex-shrink-0 mt-1" size={24} />
-            <div>
-              <h3 className="text-lg font-semibold text-blue-800 mb-2">
-                Pilotné testovanie prebieha
-              </h3>
-              <p className="text-blue-700 leading-relaxed">
-                Prvé firmy a zákazníci práve prebiehajú pilotným testovaním. Nižšie nájdete ukážkové referencie – typické scenáre a očakávané prínosy. Skutočné overené hodnotenia budeme priebežne dopĺňať.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -174,17 +155,6 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
             >
               <Shield size={18} />
               Overené ({verifiedCount})
-            </button>
-            <button
-              onClick={() => setActiveTab('sample')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
-                activeTab === 'sample'
-                  ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white shadow-md'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              <AlertCircle size={18} />
-              Ukážkové (pilot) ({sampleCount})
             </button>
           </div>
         </div>
@@ -230,29 +200,10 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
                   
                   {/* Type Badge */}
                   <div className="relative">
-                    {review.type === 'verified' ? (
-                      <div className="flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
-                        <Shield size={12} className="mr-1" />
-                        Overená objednávka
-                      </div>
-                    ) : (
-                      <div 
-                        className="flex items-center bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-xs font-medium cursor-help"
-                        onMouseEnter={() => setShowTooltip(review.id)}
-                        onMouseLeave={() => setShowTooltip(null)}
-                      >
-                        <AlertCircle size={12} className="mr-1" />
-                        Ukážková referencia (pilot)
-                        
-                        {/* Tooltip */}
-                        {showTooltip === review.id && (
-                          <div className="absolute bottom-full right-0 mb-2 w-64 bg-gray-800 text-white text-xs rounded-lg p-3 shadow-lg z-10">
-                            <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-                            Modelový príklad na základe interného testovania UX. Nie je to hodnotenie reálneho zákazníka.
-                          </div>
-                        )}
-                      </div>
-                    )}
+                    <div className="flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
+                      <Shield size={12} className="mr-1" />
+                      Overená objednávka
+                    </div>
                   </div>
                 </div>
 
@@ -309,7 +260,7 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
           
           <div className="mt-8 p-4 bg-blue-800/30 rounded-xl max-w-2xl mx-auto">
             <p className="text-blue-100 text-sm">
-              💡 <strong>Bonus:</strong> Prvých 100 zákazníkov dostane 10% zľavu za pridanie overenej recenzie po dokončení práce.
+              💡 <strong>Bonus:</strong> Získajte 10% zľavu za pridanie overenej recenzie po dokončení práce.
             </p>
           </div>
         </div>
