@@ -7,7 +7,7 @@ import {
   Phone, 
   MapPin, 
   FileText, 
-  Image, 
+  Upload,
   Tag,
   CheckCircle,
   AlertCircle,
@@ -28,13 +28,14 @@ function AddCompanyPage({ onNavigateBack }: AddCompanyPageProps) {
     location: '',
     email: '',
     phone: '',
-    logo_url: '',
+    logoFile: undefined,
     website: '' // honeypot field
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errors, setErrors] = useState<Partial<ProviderForm>>({});
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
   const validateForm = (): boolean => {
     const newErrors: Partial<ProviderForm> = {};
@@ -77,6 +78,43 @@ function AddCompanyPage({ onNavigateBack }: AddCompanyPageProps) {
     }
   };
 
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Prosím vyberte obrázok (JPG, PNG, GIF)');
+        return;
+      }
+      
+      // Validate file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Súbor je príliš veľký. Maximálna veľkosť je 5MB.');
+        return;
+      }
+      
+      setFormData(prev => ({ ...prev, logoFile: file }));
+      
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setLogoPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeLogo = () => {
+    setFormData(prev => ({ ...prev, logoFile: undefined }));
+    setLogoPreview(null);
+    
+    // Reset file input
+    const fileInput = document.getElementById('logo-upload') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -101,9 +139,10 @@ function AddCompanyPage({ onNavigateBack }: AddCompanyPageProps) {
           location: '',
           email: '',
           phone: '',
-          logo_url: '',
+          logoFile: undefined,
           website: ''
         });
+        setLogoPreview(null);
         setSubmitStatus('idle');
       }, 3000);
       
