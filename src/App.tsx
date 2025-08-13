@@ -471,7 +471,11 @@ function App() {
                   <>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-6">
                       {cards.map((c) => (
-                        <div key={String(c.id ?? c.title)} className="flex flex-col h-full rounded-2xl shadow p-5 bg-white">
+                        <div 
+                          key={String(c.id ?? c.title)} 
+                          className="flex flex-col h-full rounded-2xl shadow p-5 bg-white cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                          onClick={() => c.id && navigateToCompanyDetail(String(c.id))}
+                        >
                           {/* Hlavička */}
                           <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0">
@@ -516,7 +520,7 @@ function App() {
                           </div>
 
                           {/* CTA naspodku */}
-                          <div className="mt-auto pt-4 flex flex-wrap gap-2">
+                          <div className="mt-auto pt-4 flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
                             {c.actions?.website ? (
                               <a
                                 href={c.actions.website}
