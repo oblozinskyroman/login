@@ -17,8 +17,6 @@ import {
   Phone,
   Mail,
   AlertCircle,
-  Menu,
-  User
 } from 'lucide-react';
 import { supabase, type Company } from '../lib/supabase';
 
@@ -110,7 +108,6 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
 
   const renderStars = (rating: number | null | undefined) => {
     if (!rating) return null;
-    
     return Array.from({ length: 5 }, (_, index) => (
       <Star
         key={index}
@@ -134,7 +131,7 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
             </button>
           </div>
           <h1 className="text-4xl font-bold mb-4">
-            {selectedService ? ${selectedService} - Zoznam firiem : 'Všetky služby'}
+            {selectedService ? `${selectedService} - Zoznam firiem` : 'Všetky služby'}
           </h1>
           <p className="text-xl text-blue-100">
             Nájdite si overených odborníkov vo vašom okolí
@@ -168,11 +165,11 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
                   <button
                     key={filter.id}
                     onClick={() => toggleFilter(filter.id)}
-                    className={flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                       isActive
                         ? 'bg-blue-600 text-white shadow-md'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }}
+                    }`}
                   >
                     <IconComponent size={16} />
                     {filter.label}
@@ -192,7 +189,7 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
           </div>
 
           {/* Active Filters Pills */}
-          {activeFilters.length > 0 && (
+          {!!activeFilters.length && (
             <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t">
               {activeFilters.map((filterId) => {
                 const filter = quickFilters.find(f => f.id === filterId);
@@ -220,19 +217,17 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
             </div>
           )}
 
-          {/* Results Summary */}
-          <div className="mt-3 pt-3 border-t">
-            <p className="text-gray-600 text-sm">
-              {loadingCompanies ? (
-                'Načítavam firmy...'
-              ) : (
-                <>
-                  Zodpovedá <span className="font-semibold">{companies.length} firmám</span> • 
-                </>
-              )}
-              priem. odpoveď <span className="font-semibold">23 min</span>
-            </p>
-          </div>
+          {/* Results Summary (upravené – bez zbytočného wrapperu) */}
+          <p className="mt-3 pt-3 border-t text-gray-600 text-sm">
+            {loadingCompanies ? (
+              'Načítavam firmy...'
+            ) : (
+              <>
+                Zodpovedá <span className="font-semibold">{companies.length} firmám</span> •{' '}
+              </>
+            )}
+            priem. odpoveď <span className="font-semibold">23 min</span>
+          </p>
         </div>
       </div>
 
@@ -259,22 +254,22 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
           <div className="flex bg-gray-100 rounded-lg p-1">
             <button
               onClick={() => setViewMode('list')}
-              className={flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
                 viewMode === 'list'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
-              }}
+              }`}
             >
               <Grid3X3 size={16} />
               Zoznam
             </button>
             <button
               onClick={() => setViewMode('map')}
-              className={flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
                 viewMode === 'map'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
-              }}
+              }`}
             >
               <Map size={16} />
               Mapa
@@ -323,13 +318,14 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
               </h3>
               <p className="text-gray-500 mb-4">
                 {selectedService 
-                  ? Zatiaľ nie sú registrované žiadne firmy pre službu "${selectedService}"
+                  ? `Zatiaľ nie sú registrované žiadne firmy pre službu "${selectedService}"`
                   : 'Zatiaľ nie sú registrované žiadne firmy'
                 }
               </p>
             </div>
           </div>
         )}
+
         {!loadingCompanies && !errorCompanies && companies.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {companies.map((company) => (
@@ -345,7 +341,7 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
                       {company.logo_url ? (
                         <img 
                           src={company.logo_url} 
-                          alt={${company.name} logo}
+                          alt={`${company.name} logo`}
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -405,9 +401,9 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
 
                 {/* Services */}
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {company.services.map((service, index) => (
+                  {(company.services ?? []).map((service, index) => (
                     <span
-                      key={index}
+                      key={`${service}-${index}`}
                       className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
                     >
                       {service}
@@ -443,16 +439,7 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
                   <button className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-2 px-4 rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 font-medium">
                     Kontaktovať
                   </button>
-                  {company.phone && (
-                    <button className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
-                      <Phone size={18} />
-                    </button>
-                  )}
-                  {company.email && (
-                    <button className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
-                      <Mail size={18} />
-                    </button>
-                  )}
+                  {/* odstránené nefunkčné tlačidlá phone/mail */}
                 </div>
               </div>
             ))}
@@ -508,11 +495,7 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
               </div>
               
               <div className="flex gap-3 mt-8">
-                <button
-                  className="flex-1 py-3 px-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
-                >
-                  Vymazať
-                </button>
+                {/* odstránené nefunkčné tlačidlo Vymazať */}
                 <button
                   onClick={() => setShowAdvancedFilters(false)}
                   className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-3 px-4 rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 font-medium"
