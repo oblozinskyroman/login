@@ -160,8 +160,8 @@ function App() {
   };
 
   const toggleAiFilter = (filterId: string) => {
-    setAiActiveFilters(prev => 
-      prev.includes(filterId) 
+    setAiActiveFilters(prev =>
+      prev.includes(filterId)
         ? prev.filter(f => f !== filterId)
         : [...prev, filterId]
     );
@@ -389,12 +389,12 @@ function App() {
                     </button>
                   </div>
 
-                {ack && (
-                  <div className="mt-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-800 text-sm flex items-start gap-2">
-                    <CheckCircle size={18} className="mt-0.5 flex-shrink-0" />
-                    <span>{ack}</span>
-                  </div>
-                )}
+                  {ack && (
+                    <div className="mt-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-800 text-sm flex items-start gap-2">
+                      <CheckCircle size={18} className="mt-0.5 flex-shrink-0" />
+                      <span>{ack}</span>
+                    </div>
+                  )}
 
                   <div className="flex flex-col sm:flex-row gap-4">
                     <input
