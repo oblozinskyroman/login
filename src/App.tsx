@@ -360,7 +360,7 @@ function App() {
                       type="text"
                       value={userLocation}
                       onChange={(e) => setUserLocation(e.target.value)}
-                      placeholder="Uprednostniť lokalitu (napr. 'Bratislava')"
+                      placeholder="Uprednostniť lokalitu"
                       className="px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/80"
                     />
                     <button
