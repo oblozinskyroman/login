@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import CompanyListPage from './pages/CompanyListPage';
 import AddCompanyPage from './pages/AddCompanyPage';
 import HowItWorksPage from './pages/HowItWorksPage';
@@ -9,6 +8,7 @@ import HelpCenterPage from './pages/HelpCenterPage';
 import ContactPage from './pages/ContactPage';
 import MyAccountPage from './pages/MyAccountPage';
 import { supabase } from './lib/supabase';
+import { askAI, type ChatTurn } from './lib/askAI';
 import { 
   MessageCircle, 
   Hammer, 
@@ -29,23 +29,25 @@ function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<'home' | 'companyList' | 'addCompany' | 'howItWorks' | 'references' | 'news' | 'helpCenter' | 'contact' | 'myAccount'>('home');
   const [selectedService, setSelectedService] = useState<string>('');
+
+  // AI chat state
   const [message, setMessage] = useState('');
   const [aiResponse, setAiResponse] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [history, setHistory] = useState<ChatTurn[]>([]);
+
+  // Auth state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Check authentication status
   useEffect(() => {
-    // Check initial auth state
     const checkAuth = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setIsLoggedIn(!!user);
     };
-    
     checkAuth();
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsLoggedIn(!!session?.user);
     });
 
@@ -72,7 +74,7 @@ function App() {
     { label: 'Kontakt', action: 'contact' }
   ];
 
-  // Menu items without "Môj účet" for main navigation
+  // Menu items without "Môj účet" pre hlavnú navigáciu
   const mainMenuItems = [
     { label: 'Ako fungujeme?', action: 'howItWorks' },
     { label: 'Referencie', action: 'references' },
@@ -81,31 +83,24 @@ function App() {
     { label: 'Kontakt', action: 'contact' }
   ];
 
+  // ---- AI volanie cez Supabase Edge Function (askAI) ----
   const handleAsk = async () => {
-    if (message.trim()) {
-      setIsLoading(true);
-      try {
-const response = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTION_URL}/ai-assistant`, {
-         method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ prompt: message }),
-        });
+    const msg = message.trim();
+    if (!msg) return;
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+    setIsLoading(true);
+    try {
+      const nextHistory: ChatTurn[] = [...history, { role: 'user', content: msg }];
+      const reply = await askAI(msg, nextHistory);
 
-        const data = await response.json();
-        setAiResponse(data.reply);
-        setMessage('');
-      } catch (error) {
-        console.error('Chyba pri volaní AI asistenta:', error);
-        setAiResponse('Prepáčte, nastala chyba pri komunikácii s AI asistentom. Skúste to prosím znovu.');
-      } finally {
-        setIsLoading(false);
-      }
+      setAiResponse(reply);
+      setHistory([...nextHistory, { role: 'assistant', content: reply }]);
+      setMessage('');
+    } catch (error) {
+      console.error('Chyba pri volaní AI asistenta:', error);
+      setAiResponse('Prepáčte, nastala chyba pri komunikácii s AI asistentom. Skúste to prosím znovu.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -119,48 +114,21 @@ const response = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTION_URL}/ai-a
     setSelectedService('');
   };
 
-  const navigateToAddCompany = () => {
-    setCurrentPage('addCompany');
-  };
-
-  const navigateToHowItWorks = () => {
-    setCurrentPage('howItWorks');
-  };
-
-  const navigateToReferences = () => {
-    setCurrentPage('references');
-  };
-
-  const navigateToNews = () => {
-    setCurrentPage('news');
-  };
-
-  const navigateToHelpCenter = () => {
-    setCurrentPage('helpCenter');
-  };
-
-  const navigateToContact = () => {
-    setCurrentPage('contact');
-  };
-
-  const navigateToMyAccount = () => {
-    setCurrentPage('myAccount');
-  };
+  const navigateToAddCompany = () => setCurrentPage('addCompany');
+  const navigateToHowItWorks = () => setCurrentPage('howItWorks');
+  const navigateToReferences = () => setCurrentPage('references');
+  const navigateToNews = () => setCurrentPage('news');
+  const navigateToHelpCenter = () => setCurrentPage('helpCenter');
+  const navigateToContact = () => setCurrentPage('contact');
+  const navigateToMyAccount = () => setCurrentPage('myAccount');
 
   const handleMenuClick = (action: string | null) => {
-    if (action === 'howItWorks') {
-      navigateToHowItWorks();
-    } else if (action === 'references') {
-      navigateToReferences();
-    } else if (action === 'news') {
-      navigateToNews();
-    } else if (action === 'helpCenter') {
-      navigateToHelpCenter();
-    } else if (action === 'contact') {
-      navigateToContact();
-    } else if (action === 'myAccount') {
-      navigateToMyAccount();
-    }
+    if (action === 'howItWorks') navigateToHowItWorks();
+    else if (action === 'references') navigateToReferences();
+    else if (action === 'news') navigateToNews();
+    else if (action === 'helpCenter') navigateToHelpCenter();
+    else if (action === 'contact') navigateToContact();
+    else if (action === 'myAccount') navigateToMyAccount();
   };
 
   return (
@@ -286,7 +254,7 @@ const response = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTION_URL}/ai-a
 
       {/* Main Content */}
       <div className="flex-1">
-        {/* Render different pages based on currentPage */}
+        {/* Home */}
         {currentPage === 'home' && (
           <>
             {/* Hero Section with AI Chat */}
@@ -320,7 +288,7 @@ const response = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTION_URL}/ai-a
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Napíšte svoju otázku... napr. 'Potrebujem opraviť vodovodné potrubie'"
                     className="flex-1 px-6 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg bg-white/80 backdrop-blur-sm"
-                    onKeyPress={(e) => e.key === 'Enter' && !isLoading && handleAsk()}
+                    onKeyDown={(e) => e.key === 'Enter' && !isLoading && handleAsk()}
                   />
                   <button
                     onClick={handleAsk}
@@ -393,11 +361,7 @@ const response = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTION_URL}/ai-a
           />
         )}
 
-        {currentPage === 'addCompany' && (
-          <AddCompanyPage 
-            onNavigateBack={navigateToHome}
-          />
-        )}
+        {currentPage === 'addCompany' && <AddCompanyPage onNavigateBack={navigateToHome} />}
 
         {currentPage === 'howItWorks' && (
           <HowItWorksPage 
@@ -406,29 +370,13 @@ const response = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTION_URL}/ai-a
           />
         )}
 
-        {currentPage === 'references' && (
-          <ReferencesPage 
-            onNavigateBack={navigateToHome}
-          />
-        )}
+        {currentPage === 'references' && <ReferencesPage onNavigateBack={navigateToHome} />}
 
-        {currentPage === 'news' && (
-          <NewsPage 
-            onNavigateBack={navigateToHome}
-          />
-        )}
+        {currentPage === 'news' && <NewsPage onNavigateBack={navigateToHome} />}
 
-        {currentPage === 'helpCenter' && (
-          <HelpCenterPage 
-            onNavigateBack={navigateToHome}
-          />
-        )}
+        {currentPage === 'helpCenter' && <HelpCenterPage onNavigateBack={navigateToHome} />}
 
-        {currentPage === 'contact' && (
-          <ContactPage 
-            onNavigateBack={navigateToHome}
-          />
-        )}
+        {currentPage === 'contact' && <ContactPage onNavigateBack={navigateToHome} />}
 
         {currentPage === 'myAccount' && (
           <MyAccountPage 
