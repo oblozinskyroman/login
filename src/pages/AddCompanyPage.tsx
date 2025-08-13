@@ -158,7 +158,7 @@ function AddCompanyPage({ onNavigateBack }: AddCompanyPageProps) {
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-400 to-indigo-500 text-white py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex justify-start mb-6">
               <button
@@ -182,7 +182,7 @@ function AddCompanyPage({ onNavigateBack }: AddCompanyPageProps) {
       </div>
 
       {/* Form Section */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-8">
           {/* Success Message */}
           {submitStatus === 'success' && (

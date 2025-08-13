@@ -249,7 +249,7 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100">
       {/* Navbar */}
       <nav className="bg-white/80 backdrop-blur-md shadow-lg sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex-shrink-0">
               <button
@@ -348,7 +348,7 @@ function App() {
       <div className="flex-1">
         {currentPage === 'home' && (
           <>
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
               <div className="text-center mb-12">
                 <h2 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
                   Nájdite svojho
@@ -623,7 +623,7 @@ function App() {
 
       {/* Footer */}
       <footer className="bg-white/50 backdrop-blur-md mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
               ServisAI

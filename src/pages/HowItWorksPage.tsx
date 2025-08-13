@@ -100,7 +100,7 @@ function HowItWorksPage({ onNavigateBack, onNavigateToAddCompany }: HowItWorksPa
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-400 to-indigo-500 text-white py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex justify-start mb-6">
             <button
               onClick={onNavigateBack}
@@ -119,7 +119,7 @@ function HowItWorksPage({ onNavigateBack, onNavigateToAddCompany }: HowItWorksPa
       </div>
 
       {/* Steps Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {steps.map((step, index) => {
             const IconComponent = step.icon;
@@ -171,7 +171,7 @@ function HowItWorksPage({ onNavigateBack, onNavigateToAddCompany }: HowItWorksPa
 
       {/* Why It Works Better Section */}
       <div className="bg-white/50 backdrop-blur-md py-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
               Prečo to funguje lepšie
@@ -208,7 +208,7 @@ function HowItWorksPage({ onNavigateBack, onNavigateToAddCompany }: HowItWorksPa
       </div>
 
       {/* Timeline Section */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-800 mb-4">
             Jednoduchý proces
@@ -263,7 +263,7 @@ function HowItWorksPage({ onNavigateBack, onNavigateToAddCompany }: HowItWorksPa
 
       {/* CTA Section */}
       <div className="bg-gradient-to-r from-blue-400 to-indigo-500 text-white py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">
             Ste pripravení začať?
           </h2>

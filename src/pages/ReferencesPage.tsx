@@ -112,7 +112,7 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-400 to-indigo-500 text-white py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex justify-start mb-6">
             <button
               onClick={onNavigateBack}
@@ -131,7 +131,7 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
       </div>
 
       {/* Tabs */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-lg p-2 mb-8">
           <div className="flex flex-wrap gap-2">
             <button
@@ -161,7 +161,7 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
       </div>
 
       {/* Reviews Grid */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         {filteredReviews.length === 0 ? (
           <div className="text-center py-20">
             <div className="bg-white/70 backdrop-blur-md rounded-2xl p-12 shadow-lg">
@@ -175,7 +175,7 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredReviews.map((review) => (
               <div
                 key={review.id}
@@ -240,7 +240,7 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
 
       {/* CTA Section */}
       <div className="bg-gradient-to-r from-blue-400 to-indigo-500 text-white py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">
             Chcete reálnu skúsenosť?
           </h2>
@@ -268,7 +268,7 @@ function ReferencesPage({ onNavigateBack }: ReferencesPageProps) {
 
       {/* Methodology Section */}
       <div className="bg-white/50 backdrop-blur-md py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-800 mb-4">
               Ako overujeme referencie

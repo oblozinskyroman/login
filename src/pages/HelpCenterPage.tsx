@@ -218,7 +218,7 @@ function HelpCenterPage({ onNavigateBack }: HelpCenterPageProps) {
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100">
       {/* Hero Section with Search */}
       <div className="bg-gradient-to-r from-blue-400 to-indigo-500 text-white py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex justify-start mb-6">
             <button
               onClick={onNavigateBack}
@@ -254,7 +254,7 @@ function HelpCenterPage({ onNavigateBack }: HelpCenterPageProps) {
       </div>
 
       {/* Categories Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-800 mb-4">Kategórie pomoci</h2>
           <p className="text-lg text-gray-600">Vyberte si kategóriu, ktorá vás zaujíma</p>
@@ -308,7 +308,7 @@ function HelpCenterPage({ onNavigateBack }: HelpCenterPageProps) {
 
       {/* Top Articles Section */}
       <div className="bg-white/50 backdrop-blur-md py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <div className="flex items-center justify-center gap-2 mb-4">
               <TrendingUp className="text-orange-600" size={28} />
@@ -434,7 +434,7 @@ function HelpCenterPage({ onNavigateBack }: HelpCenterPageProps) {
 
       {/* CTA Section - Still Need Help */}
       <div className="bg-gradient-to-r from-blue-400 to-indigo-500 text-white py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">
             Stále potrebuješ pomoc?
           </h2>

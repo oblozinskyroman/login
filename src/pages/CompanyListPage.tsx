@@ -121,7 +121,7 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-400 to-indigo-500 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center mb-4">
             <button
               onClick={onNavigateBack}
@@ -141,7 +141,7 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
 
       {/* Filter Bar - Sticky */}
       <div className="sticky top-16 bg-white/90 backdrop-blur-md border-b shadow-sm z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           {/* Search and Quick Filters */}
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
             {/* Search Input */}
@@ -232,7 +232,7 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
       </div>
 
       {/* Sort and View Controls */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
           {/* Sort Dropdown */}
           <div className="relative">
@@ -279,7 +279,7 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
       </div>
 
       {/* Company List */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         {/* Loading State */}
         {loadingCompanies && (
           <div className="flex justify-center items-center py-20">
@@ -327,7 +327,7 @@ function CompanyListPage({ selectedService, onNavigateBack }: CompanyListPagePro
         )}
 
         {!loadingCompanies && !errorCompanies && companies.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {companies.map((company) => (
               <div
                 key={company.id}
