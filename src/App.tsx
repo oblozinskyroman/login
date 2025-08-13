@@ -27,7 +27,6 @@ import {
   User,
   MapPin,
   CheckCircle,
-  CheckCircle,
 } from 'lucide-react';
 
 type UICard = {
