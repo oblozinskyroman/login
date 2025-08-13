@@ -75,6 +75,7 @@ function App() {
   const [limit] = useState(9);
   const [hasMore, setHasMore] = useState(false);
   const [userLocation, setUserLocation] = useState('');
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
 
   // Auth
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -113,6 +114,26 @@ function App() {
 
   const relyOrEmpty = (s?: string) => (typeof s === 'string' ? s : '');
 
+  /* ---------- Geolokácia: Firmy v mojom okolí ---------- */
+  const useMyLocation = () => {
+    if (!('geolocation' in navigator)) {
+      alert('Prehliadač nepodporuje geolokáciu.');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        setCoords({ lat: latitude, lng: longitude });
+        if (!userLocation) setUserLocation('Moje okolie');
+      },
+      (err) => {
+        console.error(err);
+        alert('Nepodarilo sa získať polohu.');
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 300000 }
+    );
+  };
+
   /* ---------- AI volanie ---------- */
   const handleAsk = async () => {
     const msg = message.trim();
@@ -125,7 +146,7 @@ function App() {
         msg,
         nextHistory,
         0.7,
-        { page: 0, limit, userLocation }
+        { page: 0, limit, userLocation, coords }
       );
 
       setLastQuery(msg);
@@ -155,7 +176,7 @@ function App() {
         lastQuery,
         history,
         0.7,
-        { page: nextPage, limit, userLocation }
+        { page: nextPage, limit, userLocation, coords }
       );
       setCards((prev) => [...prev, ...(incoming || [])]);
       setPage(nextPage);
@@ -268,8 +289,9 @@ function App() {
               <button
                 onClick={() => { navigateToMyAccount(); setMobileMenuOpen(false); }}
                 className={`w-full flex items-center gap-2 px-3 py-2 text-base font-medium rounded-lg transition-all ${
-                  isLoggedIn ? 'bg-green-100 text-green-800 border border-green-200 hover:bg-green-200'
-                             : 'bg-red-100 text-red-800 border border-red-200 hover:bg-red-200'
+                  isLoggedIn
+                    ? 'bg-green-100 text-green-800 border border-green-200 hover:bg-green-200'
+                    : 'bg-red-100 text-red-800 border border-red-200 hover:bg-red-200'
                 }`}
               >
                 <User size={20} />
@@ -338,9 +360,16 @@ function App() {
                       type="text"
                       value={userLocation}
                       onChange={(e) => setUserLocation(e.target.value)}
-                      placeholder="Uprednostniť lokalitu"
+                      placeholder="Uprednostniť lokalitu (napr. 'Bratislava')"
                       className="px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/80"
                     />
+                    <button
+                      type="button"
+                      onClick={useMyLocation}
+                      className="px-4 py-3 rounded-lg border border-gray-200 hover:bg-gray-50"
+                    >
+                      Firmy v mojom okolí
+                    </button>
                   </div>
                 </div>
 
