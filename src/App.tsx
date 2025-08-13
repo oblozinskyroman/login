@@ -43,6 +43,20 @@ type UICard = {
   };
 };
 
+/* ---------- ⭐ hviezdičky ---------- */
+function StarRating({ value = 0 }: { value?: number | null }) {
+  const v = Math.max(0, Math.min(Number(value ?? 0), 5));
+  const pct = (v / 5) * 100;
+  return (
+    <div className="relative inline-block leading-none" aria-label={`Hodnotenie ${v} z 5`}>
+      <div className="text-gray-300 select-none">★★★★★</div>
+      <div className="absolute inset-0 overflow-hidden" style={{ width: `${pct}%` }}>
+        <div className="text-yellow-400 select-none">★★★★★</div>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<
@@ -50,21 +64,19 @@ function App() {
   >('home');
   const [selectedService, setSelectedService] = useState<string>('');
 
-  // AI chat state
+  // AI
   const [message, setMessage] = useState('');
   const [lastQuery, setLastQuery] = useState('');
   const [aiResponse, setAiResponse] = useState('');
   const [cards, setCards] = useState<UICard[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState<ChatTurn[]>([]);
-
-  // stránkovanie + lokalita
   const [page, setPage] = useState(0);
   const [limit] = useState(9);
   const [hasMore, setHasMore] = useState(false);
   const [userLocation, setUserLocation] = useState('');
 
-  // Auth state
+  // Auth
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const checkAuth = async () => {
@@ -72,11 +84,9 @@ function App() {
       setIsLoggedIn(!!user);
     };
     checkAuth();
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsLoggedIn(!!session?.user);
     });
-
     return () => subscription.unsubscribe();
   }, []);
 
@@ -103,7 +113,7 @@ function App() {
 
   const relyOrEmpty = (s?: string) => (typeof s === 'string' ? s : '');
 
-  // ---- AI volanie cez Supabase Edge Function (askAI) ----
+  /* ---------- AI volanie ---------- */
   const handleAsk = async () => {
     const msg = message.trim();
     if (!msg) return;
@@ -120,7 +130,7 @@ function App() {
 
       setLastQuery(msg);
       setPage(0);
-      setAiResponse(relyOrEmpty(reply));   // text ako doplnok
+      setAiResponse(relyOrEmpty(reply));
       setCards(incoming || []);
       setHasMore(!!meta?.hasMore);
       setHistory([...nextHistory, { role: 'assistant', content: reply }]);
@@ -157,7 +167,7 @@ function App() {
     }
   };
 
-  // Navigácia
+  /* ---------- Navigácia ---------- */
   const navigateToCompanyList = (serviceName: string) => {
     setSelectedService(serviceName);
     setCurrentPage('companyList');
@@ -182,38 +192,35 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100">
-      {/* Navigation */}
+      {/* Navbar */}
       <nav className="bg-white/80 backdrop-blur-md shadow-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo */}
             <div className="flex-shrink-0">
               <button
                 onClick={navigateToHome}
-                className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 cursor-pointer"
+                className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent hover:from-blue-700 hover:to-indigo-700 transition-all"
               >
                 ServisAI
               </button>
             </div>
 
-            {/* Desktop Menu */}
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-8">
-                {mainMenuItems.map((item, index) => (
+                {mainMenuItems.map((item, i) => (
                   <a
-                    key={index}
+                    key={i}
                     href="#"
                     onClick={(e) => { e.preventDefault(); handleMenuClick(item.action); }}
-                    className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-200 hover:bg-blue-50 rounded-lg"
+                    className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors hover:bg-blue-50 rounded-lg"
                   >
                     {item.label}
                   </a>
                 ))}
 
-                {/* Login Status Badge */}
                 <button
                   onClick={navigateToMyAccount}
-                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg ${
+                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all transform hover:scale-105 shadow-md hover:shadow-lg ${
                     isLoggedIn
                       ? 'bg-green-100 text-green-800 border border-green-200 hover:bg-green-200'
                       : 'bg-red-100 text-red-800 border border-red-200 hover:bg-red-200'
@@ -226,18 +233,17 @@ function App() {
                 <a
                   href="#"
                   onClick={(e) => { e.preventDefault(); navigateToAddCompany(); }}
-                  className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-2 text-sm font-semibold rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl ml-4"
+                  className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-2 text-sm font-semibold rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl ml-4"
                 >
                   Pridať firmu
                 </a>
               </div>
             </div>
 
-            {/* Mobile menu button */}
             <div className="md:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-200"
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors"
               >
                 {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -245,28 +251,25 @@ function App() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-white/95 backdrop-blur-md border-t">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              {mainMenuItems.map((item, index) => (
+              {mainMenuItems.map((item, i) => (
                 <a
-                  key={index}
+                  key={i}
                   href="#"
                   onClick={(e) => { e.preventDefault(); handleMenuClick(item.action); setMobileMenuOpen(false); }}
-                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium hover:bg-blue-50 rounded-lg transition-colors"
                 >
                   {item.label}
                 </a>
               ))}
 
-              {/* Mobile Login Status Badge */}
               <button
                 onClick={() => { navigateToMyAccount(); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-base font-medium rounded-lg transition-all duration-200 ${
-                  isLoggedIn
-                    ? 'bg-green-100 text-green-800 border border-green-200 hover:bg-green-200'
-                    : 'bg-red-100 text-red-800 border border-red-200 hover:bg-red-200'
+                className={`w-full flex items-center gap-2 px-3 py-2 text-base font-medium rounded-lg transition-all ${
+                  isLoggedIn ? 'bg-green-100 text-green-800 border border-green-200 hover:bg-green-200'
+                             : 'bg-red-100 text-red-800 border border-red-200 hover:bg-red-200'
                 }`}
               >
                 <User size={20} />
@@ -276,7 +279,7 @@ function App() {
               <a
                 href="#"
                 onClick={(e) => { e.preventDefault(); navigateToAddCompany(); }}
-                className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white block px-3 py-2 text-base font-semibold rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 mt-4"
+                className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white block px-3 py-2 text-base font-semibold rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all mt-4"
               >
                 Pridať firmu
               </a>
@@ -285,12 +288,10 @@ function App() {
         )}
       </nav>
 
-      {/* Main Content */}
+      {/* Content */}
       <div className="flex-1">
-        {/* Home */}
         {currentPage === 'home' && (
           <>
-            {/* Hero Section */}
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
               <div className="text-center mb-12">
                 <h2 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
@@ -304,7 +305,7 @@ function App() {
                 </p>
               </div>
 
-              {/* AI Chat Interface */}
+              {/* AI chat */}
               <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-8 mb-20">
                 <div className="flex items-center mb-6">
                   <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-3 rounded-xl mr-4">
@@ -313,7 +314,6 @@ function App() {
                   <h3 className="text-2xl font-semibold text-gray-800">AI Asistent</h3>
                 </div>
 
-                {/* Dotaz + lokalita */}
                 <div className="flex flex-col gap-3">
                   <div className="flex flex-col sm:flex-row gap-4">
                     <input
@@ -327,7 +327,7 @@ function App() {
                     <button
                       onClick={handleAsk}
                       disabled={isLoading}
-                      className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                      className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50"
                     >
                       {isLoading ? 'Načítavam...' : 'Odoslať'}
                     </button>
@@ -344,7 +344,6 @@ function App() {
                   </div>
                 </div>
 
-                {/* Loading */}
                 {isLoading && (
                   <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
                     <div className="flex items-center">
@@ -354,7 +353,6 @@ function App() {
                   </div>
                 )}
 
-                {/* Fallback text iba ak niet kariet */}
                 {aiResponse && !isLoading && cards.length === 0 && (
                   <div className="mt-6 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 shadow-sm">
                     <div className="flex items-start">
@@ -369,38 +367,57 @@ function App() {
                   </div>
                 )}
 
-                {/* GRID kariet */}
+                {/* ------ KARTY ------ */}
                 {cards.length > 0 && (
                   <>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-6">
                       {cards.map((c) => (
-                        <div key={String(c.id ?? c.title)} className="rounded-2xl shadow p-5 bg-white">
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <h3 className="text-lg font-semibold">{c.title}</h3>
-                              {c.subtitle && <p className="text-sm text-gray-500">{c.subtitle}</p>}
+                        <div key={String(c.id ?? c.title)} className="flex flex-col h-full rounded-2xl shadow p-5 bg-white">
+                          {/* Hlavička */}
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                              <h3 className="text-lg font-semibold break-words">{c.title}</h3>
+                              {c.subtitle && <p className="text-sm text-gray-500 truncate">{c.subtitle}</p>}
                             </div>
                             {c.verified && (
-                              <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">Overená</span>
+                              <span className="shrink-0 text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">
+                                Overená
+                              </span>
                             )}
                           </div>
 
+                          {/* Rating / Nová firma */}
+                          <div className="mt-2 flex items-center gap-2">
+                            {typeof c.rating === 'number' ? (
+                              <>
+                                <StarRating value={c.rating} />
+                                <span className="text-xs text-gray-500">{c.rating.toFixed(1)}</span>
+                              </>
+                            ) : (
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                                Nová firma
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Popis */}
                           {c.description && (
-                            <p className="mt-3 text-sm text-gray-700 line-clamp-3">{c.description}</p>
+                            <p className="mt-3 text-sm text-gray-700 line-clamp-3">
+                              {c.description}
+                            </p>
                           )}
 
-                          {Array.isArray(c.tags) && c.tags.length > 0 && (
-                            <div className="mt-3 flex flex-wrap gap-2">
-                              {c.tags.map((t) => (
-                                <span key={t} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
-                                  {t}
-                                </span>
-                              ))}
-                            </div>
-                          )}
+                          {/* Tagy – konzistentná výška */}
+                          <div className="mt-3 min-h-8 flex flex-wrap gap-2">
+                            {Array.isArray(c.tags) && c.tags.map((t: string) => (
+                              <span key={t} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                                {t}
+                              </span>
+                            ))}
+                          </div>
 
-                          <div className="mt-4 flex flex-wrap gap-2">
-                            {/* Primárne CTA – vyber najlepší dostupný kontakt */}
+                          {/* CTA naspodku */}
+                          <div className="mt-auto pt-4 flex flex-wrap gap-2">
                             {c.actions?.website ? (
                               <a
                                 href={c.actions.website}
@@ -411,7 +428,10 @@ function App() {
                                 Kontaktovať
                               </a>
                             ) : c.actions?.call ? (
-                              <a href={`tel:${c.actions.call}`} className="px-3 py-2 rounded-xl bg-blue-600 text-white">
+                              <a
+                                href={`tel:${c.actions.call}`}
+                                className="px-3 py-2 rounded-xl bg-blue-600 text-white"
+                              >
                                 Zavolať
                               </a>
                             ) : c.actions?.email ? (
@@ -429,10 +449,7 @@ function App() {
                               </a>
                             )}
                             {c.actions?.email && (
-                              <a
-                                href={`mailto:${c.actions.email}`}
-                                className="px-3 py-2 rounded-xl bg-blue-100 text-blue-700"
-                              >
+                              <a href={`mailto:${c.actions.email}`} className="px-3 py-2 rounded-xl bg-blue-100 text-blue-700">
                                 Email
                               </a>
                             )}
@@ -466,7 +483,7 @@ function App() {
                 )}
               </div>
 
-              {/* Services Grid */}
+              {/* Služby */}
               <div className="text-center mb-12">
                 <h3 className="text-3xl font-bold text-gray-800 mb-4">Naše služby</h3>
                 <p className="text-lg text-gray-600">Vyberte si kategóriu služby, ktorú potrebujete</p>
@@ -479,12 +496,12 @@ function App() {
                     <div
                       key={index}
                       onClick={() => navigateToCompanyList(service.name)}
-                      className="bg-white/70 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group"
+                      className="bg-white/70 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2 cursor-pointer group"
                     >
-                      <div className={`w-16 h-16 bg-gradient-to-r ${service.color} rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300`}>
+                      <div className={`w-16 h-16 bg-gradient-to-r ${service.color} rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform`}>
                         <IconComponent className="text-white" size={28} />
                       </div>
-                      <h4 className="text-xl font-semibold text-gray-800 text-center group-hover:text-blue-600 transition-colors duration-200">
+                      <h4 className="text-xl font-semibold text-gray-800 text-center group-hover:text-blue-600 transition-colors">
                         {service.name}
                       </h4>
                     </div>
@@ -498,21 +515,14 @@ function App() {
         {currentPage === 'companyList' && (
           <CompanyListPage selectedService={selectedService} onNavigateBack={navigateToHome} />
         )}
-
         {currentPage === 'addCompany' && <AddCompanyPage onNavigateBack={navigateToHome} />}
-
         {currentPage === 'howItWorks' && (
           <HowItWorksPage onNavigateBack={navigateToHome} onNavigateToAddCompany={navigateToAddCompany} />
         )}
-
         {currentPage === 'references' && <ReferencesPage onNavigateBack={navigateToHome} />}
-
         {currentPage === 'news' && <NewsPage onNavigateBack={navigateToHome} />}
-
-        {currentPage === 'helpCenter' && <HelpCenterPage onNavigateToAddCompany={navigateToAddCompany} onNavigateBack={navigateToHome} />}
-
+        {currentPage === 'helpCenter' && <HelpCenterPage onNavigateBack={navigateToHome} />}
         {currentPage === 'contact' && <ContactPage onNavigateBack={navigateToHome} />}
-
         {currentPage === 'myAccount' && (
           <MyAccountPage onNavigateBack={navigateToHome} onNavigateToAddCompany={navigateToAddCompany} />
         )}
@@ -527,12 +537,12 @@ function App() {
             </h2>
             <p className="text-gray-600 mb-6">Váš AI asistent pre domáce služby</p>
             <div className="flex justify-center space-x-6">
-              {menuItems.map((item, index) => (
+              {menuItems.map((item, i) => (
                 <a
-                  key={index}
+                  key={i}
                   href="#"
                   onClick={(e) => { e.preventDefault(); handleMenuClick(item.action); }}
-                  className="text-gray-500 hover:text-blue-600 transition-colors duration-200"
+                  className="text-gray-500 hover:text-blue-600 transition-colors"
                 >
                   {item.label}
                 </a>
