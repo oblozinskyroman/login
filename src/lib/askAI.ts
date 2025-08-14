@@ -1,4 +1,3 @@
-// src/lib/askAI.ts
 import { supabase } from './supabase';
 
 export type ChatTurn = { role: 'user' | 'assistant' | 'system'; content: string };
@@ -11,26 +10,25 @@ export type AskMeta = {
   filters?: string[];
 };
 
-export type AskCard = {
-  id?: string | number;
-  title: string;
-  subtitle?: string;
-  description?: string;
-  location?: string;
-  verified?: boolean;
-  rating?: number | null;
-  tags?: string[];
-  actions?: {
-    call?: string | null;
-    email?: string | null;
-    website?: string | null;
-    ctaLabel?: string;
-  };
-};
-
 export type AskResult = {
   reply: string;
-  cards: AskCard[];
+  cards: Array<{
+    id?: string | number;
+    title: string;
+    subtitle?: string;
+    description?: string;
+    location?: string;
+    verified?: boolean;
+    rating?: number | null;
+    tags?: string[];
+    geo?: { lat: number; lng: number } | null;
+    actions?: {
+      call?: string | null;
+      email?: string | null;
+      website?: string | null;
+      ctaLabel?: string;
+    };
+  }>;
   intent: any;
   meta: any;
 };
@@ -41,9 +39,7 @@ export async function askAI(
   temperature = 0.7,
   meta: AskMeta = {}
 ): Promise<AskResult> {
-  console.log('askAI: Vstupná meta:', meta);
-
-  // DÔLEŽITÉ: meta posielame NAPLOCHO (edge function ich číta na top-level)
+  // dôležité: meta posielame naplocho – edge function ich číta na top-level
   const { data, error } = await supabase.functions.invoke('ai-assistant', {
     body: { message, history, temperature, ...meta },
   });
@@ -53,41 +49,34 @@ export async function askAI(
     throw new Error('Nepodarilo sa zavolať Edge Function');
   }
 
-  console.log('askAI: Dáta z Edge Function:', data);
-
   const intent = data?.intent ?? null;
   const metaOut = data?.meta ?? null;
   const cardsRaw = Array.isArray(data?.cards) ? data.cards : [];
 
-  const cards: AskCard[] = cardsRaw.map((c: any) => {
-    // Vyberieme lokalitu v tomto poradí: karta -> intent -> metaOut -> meta -> fallback pri coords
-    const loc =
-      (c?.location && String(c.location).trim()) ||
-      (intent?.location && String(intent.location).trim()) ||
-      (metaOut?.userLocation && String(metaOut.userLocation).trim()) ||
-      (meta?.userLocation && String(meta.userLocation).trim()) ||
-      ((metaOut?.coords || meta?.coords) ? 'Moje okolie' : '');
-
-    console.log(`askAI: Spracovaná lokalita pre kartu "${c?.title}":`, loc);
-
-    // Konverzia ratingu do čísla (alebo null)
-    let rating: number | null = null;
-    if (typeof c?.rating === 'number') {
-      rating = c.rating;
-    } else if (c?.rating != null) {
-      const parsed = Number(c.rating);
-      rating = Number.isFinite(parsed) ? parsed : null;
+  const cards = cardsRaw.map((c: any) => {
+    // prevezmi polohu ak ju server poslal
+    let geo: { lat: number; lng: number } | null = null;
+    const lat =
+      c?.lat ?? c?.latitude ?? c?.geo_lat ?? c?.location_lat ?? c?.coords?.lat ?? null;
+    const lng =
+      c?.lng ?? c?.longitude ?? c?.geo_lng ?? c?.location_lng ?? c?.coords?.lng ?? null;
+    if (Number.isFinite(lat) && Number.isFinite(lng)) {
+      geo = { lat: Number(lat), lng: Number(lng) };
     }
 
+    const rating =
+      typeof c?.rating === 'number' ? c.rating : (c?.rating != null ? Number(c.rating) : null);
+
     return {
-      id: typeof c?.id === 'number' || typeof c?.id === 'string' ? c.id : undefined,
+      id: (typeof c?.id === 'number' || typeof c?.id === 'string') ? c.id : undefined,
       title: String(c?.title ?? ''),
       subtitle: c?.subtitle ?? '',
       description: c?.description ?? '',
-      location: loc || undefined,
+      location: (c?.location && String(c.location).trim()) || undefined,
       verified: Boolean(c?.verified),
-      rating,
+      rating: Number.isFinite(rating as number) ? (rating as number) : null,
       tags: Array.isArray(c?.tags) ? c.tags : [],
+      geo,
       actions: c?.actions ?? {},
     };
   });
