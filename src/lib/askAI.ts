@@ -1,3 +1,4 @@
+// src/lib/askAI.ts
 import { supabase } from './supabase';
 
 export type ChatTurn = { role: 'user' | 'assistant' | 'system'; content: string };
@@ -10,12 +11,34 @@ export type AskMeta = {
   filters?: string[];
 };
 
+export type AskResult = {
+  reply: string;
+  cards: Array<{
+    id?: string | number;
+    title: string;
+    subtitle?: string;
+    description?: string;
+    location?: string;
+    verified?: boolean;
+    rating?: number | null;
+    tags?: string[];
+    actions?: {
+      call?: string | null;
+      email?: string | null;
+      website?: string | null;
+      ctaLabel?: string;
+    };
+  }>;
+  intent: any;
+  meta: any;
+};
+
 export async function askAI(
   message: string,
   history: ChatTurn[] = [],
   temperature = 0.7,
   meta: AskMeta = {}
-) {
+): Promise<AskResult> {
   const { data, error } = await supabase.functions.invoke('ai-assistant', {
     body: { message, history, temperature, meta },
   });
@@ -25,26 +48,42 @@ export async function askAI(
     throw new Error('Nepodarilo sa zavolať Edge Function');
   }
 
-  const reply = data?.reply ?? '';
   const intent = data?.intent ?? null;
   const metaOut = data?.meta ?? null;
+  const cardsRaw = Array.isArray(data?.cards) ? data.cards : [];
 
-  const intentLoc = (intent?.location ?? '').toString().trim();
-  const userLoc  = (meta?.userLocation ?? '').toString().trim();
-  const coordsLoc = meta?.coords ? 'Moje okolie' : '';
-
-  const baseFallbackLoc = intentLoc || userLoc || coordsLoc;
-
-  const rawCards = Array.isArray(data?.cards) ? data.cards : [];
-
-  const cards = rawCards.map((c: any) => {
+  const cards = cardsRaw.map((c: any) => {
+    // Fallback poradie pre lokalitu:
     const loc =
-      (typeof c?.location === 'string' && c.location.trim())
-        ? c.location.trim()
-        : baseFallbackLoc || undefined;
+      (c?.location && String(c.location).trim()) ||
+      (intent?.location && String(intent.location).trim()) ||
+      (metaOut?.userLocation && String(metaOut.userLocation).trim()) ||
+      (meta?.userLocation && String(meta.userLocation).trim()) ||
+      (metaOut?.coords || meta?.coords ? 'Moje okolie' : '');
 
-    return { ...c, location: loc };
+    // Normalizácie
+    const rating =
+      typeof c?.rating === 'number' ? c.rating : (c?.rating != null ? Number(c.rating) : null);
+    const id =
+      typeof c?.id === 'number' || typeof c?.id === 'string' ? c.id : undefined;
+
+    return {
+      id,
+      title: String(c?.title ?? ''),
+      subtitle: c?.subtitle ?? '',
+      description: c?.description ?? '',
+      location: loc || undefined,
+      verified: Boolean(c?.verified),
+      rating: Number.isFinite(rating as number) ? (rating as number) : null,
+      tags: Array.isArray(c?.tags) ? c.tags : [],
+      actions: c?.actions ?? {},
+    };
   });
 
-  return { reply, cards, intent, meta: metaOut };
+  return {
+    reply: data?.reply ?? '',
+    cards,
+    intent,
+    meta: metaOut,
+  };
 }
