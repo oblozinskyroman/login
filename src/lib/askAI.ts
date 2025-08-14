@@ -39,8 +39,9 @@ export async function askAI(
   temperature = 0.7,
   meta: AskMeta = {}
 ): Promise<AskResult> {
+  // ⛏️ POSIELAJ META NAPLOCHO (nie pod kľúčom "meta")
   const { data, error } = await supabase.functions.invoke('ai-assistant', {
-    body: { message, history, temperature, meta },
+    body: { message, history, temperature, ...meta },
   });
 
   if (error) {
@@ -52,8 +53,8 @@ export async function askAI(
   const metaOut = data?.meta ?? null;
   const cardsRaw = Array.isArray(data?.cards) ? data.cards : [];
 
+  // Fallback logika pre zobrazenie lokality na kartách
   const cards = cardsRaw.map((c: any) => {
-    // Fallback poradie pre lokalitu:
     const loc =
       (c?.location && String(c.location).trim()) ||
       (intent?.location && String(intent.location).trim()) ||
@@ -61,7 +62,6 @@ export async function askAI(
       (meta?.userLocation && String(meta.userLocation).trim()) ||
       (metaOut?.coords || meta?.coords ? 'Moje okolie' : '');
 
-    // Normalizácie
     const rating =
       typeof c?.rating === 'number' ? c.rating : (c?.rating != null ? Number(c.rating) : null);
     const id =
@@ -72,7 +72,7 @@ export async function askAI(
       title: String(c?.title ?? ''),
       subtitle: c?.subtitle ?? '',
       description: c?.description ?? '',
-      location: loc || undefined,
+      location: loc || undefined, // zobrazí sa iba ak nie je prázdne
       verified: Boolean(c?.verified),
       rating: Number.isFinite(rating as number) ? (rating as number) : null,
       tags: Array.isArray(c?.tags) ? c.tags : [],
