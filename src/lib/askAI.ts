@@ -30,19 +30,18 @@ export type UICard = {
   };
 };
 
-/* ---------- utils ---------- */
+/* ---------------- utils ---------------- */
+
 function toNumberOrNull(v: unknown): number | null {
   if (v == null) return null;
   const n = typeof v === 'string' ? Number(v.replace(',', '.')) : Number(v);
   return Number.isFinite(n) ? n : null;
 }
 
-// bezpečné čítanie z hĺbky: get(obj, ["company","address","city"])
 function getDeep(obj: any, path: string[]): any {
   return path.reduce((acc, key) => (acc && acc[key] != null ? acc[key] : undefined), obj);
 }
 
-// vráť prvú nenull/neidenú hodnotu z viacerých (vrátane deep ciest "address.city")
 function pickFirst(obj: any, paths: (string | string[])[]): any {
   for (const p of paths) {
     const val =
@@ -54,30 +53,26 @@ function pickFirst(obj: any, paths: (string | string[])[]): any {
   return undefined;
 }
 
-/* ---------- normalizácia karty z backendu ---------- */
+/* ------------- normalizácia jednej karty ------------- */
 function normalizeCard(c: RawCard): UICard {
-  // ID
   const id = pickFirst(c, [
     'id', 'company_id', 'uuid', 'slug', 'external_id',
-    'title', 'name', 'company.name'
+    'title', 'name', ['company', 'id']
   ]);
 
-  // Title
   const title = String(
-    pickFirst(c, [
-      'title', 'name', 'company_name', 'business_name',
-      ['company', 'name']
-    ]) ?? 'Neznáma firma'
+    pickFirst(c, ['title', 'name', 'company_name', 'business_name', ['company', 'name']]) ??
+      'Neznáma firma'
   );
 
-  // Subtitle & Popis
   const subtitle = pickFirst(c, ['subtitle', 'short_description', 'slogan', ['company', 'slogan']]);
+
   const description = pickFirst(c, [
     'description', 'about', 'bio', 'long_description',
     ['company', 'description']
   ]);
 
-  // Lokalita – pokryjeme čo najviac variantov
+  // Pokrytie čo najviac polí pre lokalitu
   const city = pickFirst(c, [
     'city', 'city_name', 'locality', 'town', 'mesto', 'obec', 'municipality',
     'address.city', ['address', 'city'],
@@ -104,23 +99,19 @@ function normalizeCard(c: RawCard): UICard {
     formattedAddress ||
     undefined;
 
-  // Overenie
   const verified = Boolean(
     pickFirst(c, ['verified', 'is_verified']) ??
     (String(pickFirst(c, ['status', 'company.status']) ?? '').toLowerCase() === 'verified')
   );
 
-  // Rating
   const rating =
     toNumberOrNull(pickFirst(c, ['rating', 'average_rating', 'avg_rating', ['company', 'average_rating']])) ?? null;
 
-  // Tagy/služby
   const tagsRaw = pickFirst(c, ['tags', 'services', ['company', 'services']]);
   const tags = Array.isArray(tagsRaw) ? tagsRaw : undefined;
 
-  // Kontakty
   const actions = {
-    call: pickFirst(c, ['call', 'phone', 'tel', 'contact_phone', ['company', 'phone']]) ?? null,
+    call:  pickFirst(c, ['call', 'phone', 'tel', 'contact_phone', ['company', 'phone']]) ?? null,
     email: pickFirst(c, ['email', 'contact_email', ['company', 'email']]) ?? null,
     website: pickFirst(c, ['website', 'url', 'link', ['company', 'website']]) ?? null,
     ctaLabel: pickFirst(c, ['ctaLabel', 'cta_label']) ?? undefined,
@@ -129,7 +120,7 @@ function normalizeCard(c: RawCard): UICard {
   return { id, title, subtitle, description, location, verified, rating, tags, actions };
 }
 
-/* ---------- hlavná funkcia ---------- */
+/* ---------------- hlavná funkcia ---------------- */
 export async function askAI(
   message: string,
   history: ChatTurn[] = [],
@@ -145,8 +136,22 @@ export async function askAI(
     throw new Error('Nepodarilo sa zavolať Edge Function');
   }
 
+  const intentLocation: string | undefined =
+    (data?.intent && (data.intent.location || data.intent.city || data.intent.mesto)) ||
+    undefined;
+
   const rawCards: RawCard[] = Array.isArray(data?.cards) ? data.cards : [];
-  const cards: UICard[] = rawCards.map(normalizeCard);
+  const normalized = rawCards.map(normalizeCard);
+
+  // 🔁 Doplň fallback na lokalitu, ak karta žiadnu nemá
+  const cards: UICard[] = normalized.map((k) => {
+    if (k.location && String(k.location).trim() !== '') return k;
+    const fallback =
+      intentLocation ||
+      meta.userLocation ||
+      (meta.coords ? 'Moje okolie' : undefined);
+    return { ...k, location: fallback };
+  });
 
   return {
     reply: (data?.reply as string) ?? '',
