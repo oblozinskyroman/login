@@ -39,7 +39,7 @@ type UICard = {
   title: string;
   subtitle?: string;
   description?: string;
-  location?: string; // 👈 lokalita firmy (ak je k dispozícii)
+  location?: string; // <— pridané
   verified?: boolean;
   rating?: number | null;
   tags?: string[];
@@ -472,8 +472,8 @@ function App() {
                   <>
                     <div className="flex flex-col space-y-6 mt-6">
                       {cards.map((c) => (
-                        <div 
-                          key={String(c.id ?? c.title)} 
+                        <div
+                          key={String(c.id ?? c.title)}
                           className="flex flex-col h-full rounded-2xl shadow p-5 bg-white cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                           onClick={() => c.id && navigateToCompanyDetail(String(c.id))}
                         >
@@ -504,21 +504,19 @@ function App() {
                             )}
                           </div>
 
-                          {/* Location */}
-                          {(c.location) && (
-                            <div className="mt-2 flex items-center gap-1 text-xs text-gray-500">
-                              <MapPin size={12} />
-                              <span>{c.location}</span>
-                            </div>
-                          )}
-
-                          {/* Lokalita */}
-                          {c.location && (
-                            <div className="mt-2 flex items-center gap-1 text-xs text-gray-500">
-                              <MapPin size={12} />
-                              <span className="truncate">{c.location}</span>
-                            </div>
-                          )}
+                          {/* Location (s fallbackom na userLocation / coords) */}
+                          {(() => {
+                            const displayLoc =
+                              (typeof c.location === 'string' && c.location.trim())
+                                ? c.location.trim()
+                                : (userLocation?.trim() || (coords ? 'Moje okolie' : ''));
+                            return displayLoc ? (
+                              <div className="mt-2 flex items-center gap-1 text-xs text-gray-500">
+                                <MapPin size={12} />
+                                <span>{displayLoc}</span>
+                              </div>
+                            ) : null;
+                          })()}
 
                           {/* Popis */}
                           {c.description && (
@@ -633,14 +631,14 @@ function App() {
         )}
 
         {currentPage === 'companyList' && (
-          <CompanyListPage 
-            selectedService={selectedService} 
+          <CompanyListPage
+            selectedService={selectedService}
             onNavigateBack={navigateToHome}
             onNavigateToCompanyDetail={navigateToCompanyDetail}
           />
         )}
         {currentPage === 'companyDetail' && selectedCompanyId && (
-          <CompanyDetailPage 
+          <CompanyDetailPage
             companyId={selectedCompanyId}
             onNavigateBack={() => setCurrentPage('companyList')}
           />
