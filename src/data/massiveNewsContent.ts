@@ -1,1714 +1,634 @@
+// Masívny obsah pre sekciu novinky - 25 článkov
+
 export const massiveNewsArticles = [
   {
-    id: 1001,
-    title: 'Revolučné AI vylepšenia pre presnejšie párovanie zákazníkov a poskytovateľov',
-    description: 'Predstavujeme najnovšie algoritmy umelej inteligencie, ktoré analyzujú tisíce parametrov pre optimálne párovanie.',
-    content: `# Revolučné AI vylepšenia pre presnejšie párovanie zákazníkov a poskytovateľov
+    id: 1,
+    title: 'Revolučné bezpečnostné vylepšenia nášho Escrow systému pre maximálnu ochranu vašich financií',
+    description: 'Predstavujeme prelomové vylepšenia nášho Escrow systému, ktoré posúvajú bezpečnosť online transakcií na úplne novú úroveň.',
+    content: `Bezpečnosť je základným kameňom dôvery v digitálnom svete. V dnešnej dobe, keď sa čoraz viac transakcií presúva do online prostredia, je ochrana finančných prostriedkov a osobných údajov absolútnou prioritou.
 
-**Dátum:** 15. august 2025  
-**Autor:** Vývojový tím ServisAI
+## Prečo je bezpečnosť Escrow kľúčová
 
-## Úvod: Nová éra inteligentného párovania
+Escrow systém funguje ako neutrálna tretia strana, ktorá drží finančné prostriedky zákazníka v úschove, kým nie sú splnené vopred dohodnuté podmienky transakcie.
 
-V neustále sa vyvíjajúcom svete technológií predstavuje ServisAI prelomové vylepšenia svojho AI systému, ktoré fundamentálne menia spôsob, akým spájame zákazníkov s ideálnymi poskytovateľmi služieb. Naše najnovšie algoritmy využívajú pokročilé techniky strojového učenia a analýzy veľkých dát na dosiahnutie bezprecedentnej presnosti v párovaní.
+### Nové bezpečnostné funkcie
 
-Tieto inovácie sú výsledkom dvoch rokov intenzívneho výskumu a vývoja, počas ktorých náš tím dátových vedcov a AI inžinierov analyzoval milióny úspešných transakcií, aby pochopil najjemnejšie nuansy toho, čo robí párovanie skutočne efektívnym.
+**Dvojfaktorová autentifikácia (2FA):** Každá kritická operácia teraz vyžaduje dodatočné overenie.
 
-## Technologické základy nového systému
+**AI detekcia podvodov:** Pokročilé algoritmy nepretržite monitorujú transakcie a identifikujú podozrivé vzorce.
 
-### Hlboké neurónové siete pre komplexnú analýzu
-
-Náš nový AI systém využíva architektúru hlbokých neurónových sietí s viac ako 500 miliónmi parametrov, ktoré sú trénované na obrovskom datasete obsahujúcom:
-
-- **Historické dáta transakcií:** Analýza viac ako 2 miliónov dokončených projektov
-- **Behaviorálne vzorce:** Sledovanie správania 500 000+ používateľov
-- **Geografické a demografické faktory:** Zahrnutie lokálnych špecifík a preferencií
-- **Sezónne trendy:** Rozpoznávanie cyklických vzorcov v dopyte po službách
-- **Kvalitné metriky:** Hodnotenie spokojnosti a úspešnosti projektov
-
-### Multimodálne spracovanie dát
-
-Náš AI systém dokáže spracovávať a analyzovať rôzne typy dát súčasne:
-
-**Textová analýza:** Pokročilé spracovanie prirodzeného jazyka (NLP) analyzuje popisy projektov, recenzie a komunikáciu medzi stranami. Systém rozumie kontextu, emóciám a skrytým potrebám v textových správach.
-
-**Obrazová analýza:** Využitie počítačového videnia na analýzu fotografií projektov, čo pomáha lepšie pochopiť rozsah a zložitosť práce.
-
-**Časová analýza:** Sledovanie časových vzorcov a urgentnosti projektov pre optimálne plánovanie.
-
-**Lokačná analýza:** Sofistikované geografické algoritmy zohľadňujúce vzdialenosť, dostupnosť dopravy a lokálne špecifiká.
-
-## Kľúčové vylepšenia algoritmu
-
-### 1. Prediktívna analýza úspešnosti
-
-Náš nový systém dokáže s 94% presnosťou predpovedať úspešnosť konkrétneho párovania ešte pred jeho realizáciou. Algoritmus analyzuje:
-
-- **Kompatibilitu pracovných štýlov:** Porovnanie preferencií zákazníka s prístupom poskytovateľa
-- **Historickú úspešnosť:** Analýza minulých projektov podobného typu a rozsahu
-- **Komunikačné vzorce:** Hodnotenie štýlu komunikácie oboch strán
-- **Časové požiadavky:** Zosúladenie dostupnosti a termínov
-
-### 2. Dynamické cenové optimalizácie
-
-AI systém teraz dokáže v reálnom čase optimalizovať cenové ponuky na základe:
-
-- **Trhových podmienok:** Analýza aktuálneho dopytu a ponuky
-- **Sezónnych faktorov:** Zohľadnenie ročných období a ich vplyvu na ceny
-- **Konkurenčného prostredia:** Porovnanie s podobnými poskytovateľmi
-- **Hodnoty pre zákazníka:** Optimalizácia pomeru cena/kvalita
-
-### 3. Inteligentné filtrovanie a ranking
-
-Nový ranking algoritmus zohľadňuje viac ako 200 faktorov, vrátane:
-
-**Kvalitné metriky:**
-- Priemerné hodnotenie (váha: 25%)
-- Počet dokončených projektov (váha: 20%)
-- Miera spokojnosti zákazníkov (váha: 20%)
-- Včasnosť dokončenia (váha: 15%)
-- Komunikačné schopnosti (váha: 10%)
-- Ostatné faktory (váha: 10%)
-
-**Relevantnosť:**
-- Špecializácia na konkrétny typ práce
-- Skúsenosti s podobnými projektmi
-- Certifikácie a kvalifikácie
-- Dostupnosť v požadovanom termíne
-
-## Personalizácia na novej úrovni
-
-### Adaptívne učenie z používateľského správania
-
-Systém sa neustále učí z každej interakcie a postupne buduje detailný profil preferencií každého používateľa:
-
-**Pre zákazníkov:**
-- Preferované typy komunikácie
-- Citlivosť na cenu vs. kvalitu
-- Časové preferencie
-- Štýl práce a prístupu
-
-**Pre poskytovateľov:**
-- Optimálne typy projektov
-- Preferovaná veľkosť projektov
-- Geografické preferencie
-- Cenová stratégia
-
-### Kontextové odporúčania
-
-AI systém teraz poskytuje kontextové odporúčania založené na:
-
-- **Aktuálnej situácii:** Čas roka, počasie, lokálne udalosti
-- **Historických vzorcoch:** Podobné projekty v minulosti
-- **Trendoch v odvetví:** Najnovšie technológie a postupy
-- **Osobných preferenciách:** Individuálne potreby a požiadavky
-
-## Výhody pre zákazníkov
-
-### Rýchlejšie a presnejšie výsledky
-
-- **90% zrýchlenie:** Priemerný čas na nájdenie vhodného poskytovateľa sa znížil z 45 minút na 4,5 minúty
-- **95% presnosť:** Zákazníci sú spokojní s prvým odporúčaním v 95% prípadov
-- **Zníženie počtu kontaktov:** Priemerný zákazník teraz kontaktuje len 1,2 poskytovateľa namiesto predchádzajúcich 3,8
-
-### Lepšie cenové ponuky
-
-- **15% úspora:** Priemerná úspora na projektoch vďaka optimalizovanému párovaniu
-- **Transparentnosť:** Jasné vysvetlenie cenových faktorov
-- **Konkurenčné ceny:** Automatické porovnanie s trhom
-
-### Vyššia kvalita služieb
-
-- **98% spokojnosť:** Miera spokojnosti zákazníkov vzrástla na rekordných 98%
-- **Menej reklamácií:** 75% pokles reklamácií vďaka lepšiemu párovaniu
-- **Rýchlejšie riešenie problémov:** AI asistent dokáže predvídať a predchádzať problémom
-
-## Výhody pre poskytovateľov služieb
-
-### Kvalitnejšie leads
-
-- **Vyššia konverzná miera:** 85% kontaktov sa zmení na skutočné projekty
-- **Lepšie zhodnotenie času:** Menej času stráveného neúspešnými ponukami
-- **Relevantnejšie projekty:** Projekty lepšie zodpovedajú špecializácii poskytovateľa
-
-### Optimalizácia príjmov
-
-- **Vyššie marže:** Lepšie párovanie umožňuje optimálne cenové stratégie
-- **Stabilnejší príjem:** Predvídateľnejší tok projektov
-- **Rast biznisu:** Spokojní zákazníci vedú k opakovaným objednávkam a odporúčaniam
-
-### Podpora rozvoja
-
-- **Analýza výkonnosti:** Detailné reporty o úspešnosti a oblastiach na zlepšenie
-- **Trhové trendy:** Informácie o vývoji trhu a nových príležitostiach
-- **Vzdelávacie materiály:** Personalizované odporúčania na rozvoj zručností
-
-## Technická implementácia a infraštruktúra
-
-### Cloudová architektúra
-
-Náš AI systém beží na robustnej cloudovej infraštruktúre, ktorá zabezpečuje:
-
-- **Škálovateľnosť:** Schopnosť spracovať milióny požiadaviek denne
-- **Spoľahlivosť:** 99.99% dostupnosť služby
-- **Rýchlosť:** Priemerná doba odozvy pod 200 milisekúnd
-- **Bezpečnosť:** Najvyššie štandardy ochrany dát
-
-### Real-time spracovanie
-
-Systém dokáže spracovávať a analyzovať dáta v reálnom čase:
-
-- **Stream processing:** Kontinuálne spracovanie prichádzajúcich dát
-- **Okamžité aktualizácie:** Rankings a odporúčania sa aktualizujú v reálnom čase
-- **Adaptívne učenie:** Systém sa učí z každej interakcie okamžite
-
-### API integrácie
-
-Nový AI systém je plne integrovaný s:
-
-- **Mobilnými aplikáciami:** Optimalizované pre iOS a Android
-- **Webovou platformou:** Bezproblémová integrácia s webovým rozhraním
-- **Partnerskými systémami:** API pre tretie strany a partnerov
-- **Analytickými nástrojmi:** Integrácia s business intelligence platformami
-
-## Budúce vylepšenia a roadmapa
-
-### Krátkodobé ciele (3-6 mesiacov)
-
-- **Rozšírenie jazykových modelov:** Podpora pre viacero jazykov
-- **Hlasové rozhranie:** Integrácia hlasových asistentov
-- **Rozšírená AR/VR podpora:** Virtuálne prehliadky a konzultácie
-- **Blockchain integrácia:** Decentralizované hodnotenie a reputácia
-
-### Strednodobé ciele (6-12 mesiacov)
-
-- **Prediktívna údržba:** AI predpovedanie potreby údržby
-- **Automatizované plánovanie:** Inteligentné plánovanie projektov
-- **IoT integrácia:** Pripojenie smart home zariadení
-- **Rozšírené analytics:** Pokročilé business intelligence
-
-### Dlhodobé ciele (1-2 roky)
-
-- **Autonómne systémy:** Plne automatizované párovanie a správa projektov
-- **Globálna expanzia:** Rozšírenie do medzinárodných trhov
-- **Vertikálna integrácia:** Rozšírenie do súvisiacich odvetví
-- **Udržateľnosť:** AI optimalizácia pre environmentálny dopad
-
-## Bezpečnosť a súkromie
-
-### Ochrana osobných údajov
-
-Náš AI systém je navrhnutý s dôrazom na ochranu súkromia:
-
-- **Anonymizácia dát:** Osobné údaje sú anonymizované pre tréning modelov
-- **GDPR compliance:** Plná zhoda s európskymi nariadeniami o ochrane údajov
-- **Lokálne spracovanie:** Citlivé dáta sa spracovávajú lokálne, kde je to možné
-- **Transparentnosť:** Jasné vysvetlenie, ako sú dáta používané
-
-### Kybernetická bezpečnosť
-
-- **Šifrovanie:** Všetky dáta sú šifrované v prenose aj v úložisku
-- **Penetračné testy:** Pravidelné bezpečnostné audity
-- **Monitoring:** 24/7 monitoring bezpečnostných hrozieb
-- **Incident response:** Rýchla reakcia na bezpečnostné incidenty
-
-## Meranie úspešnosti a KPI
-
-### Kľúčové metriky
-
-Úspešnost nového AI systému meráme pomocou:
-
-**Zákaznícke metriky:**
-- Net Promoter Score (NPS): 78 → 89
-- Customer Satisfaction Score (CSAT): 4.2 → 4.8
-- Čas do prvého kontaktu: 45 min → 4.5 min
-- Miera dokončenia projektov: 87% → 96%
-
-**Obchodné metriky:**
-- Konverzná miera: 23% → 41%
-- Priemerná hodnota transakcie: +18%
-- Miera opakovania: 34% → 52%
-- Čas na trhu: -60%
-
-**Technické metriky:**
-- Presnosť odporúčaní: 78% → 95%
-- Doba odozvy systému: 800ms → 180ms
-- Dostupnosť služby: 99.5% → 99.99%
-- Chybovosť: 2.1% → 0.3%
-
-## Záver: Budúcnosť inteligentného párovania
-
-Implementácia našich revolučných AI vylepšení predstavuje významný míľnik v evolúcii platformy ServisAI. Tieto inovácie nielen zlepšujú používateľskú skúsenosť, ale fundamentálne menia spôsob, akým funguje trh s domácimi službami.
-
-Naša vízia inteligentného, efektívneho a spravodlivého trhu sa stáva realitou vďaka pokročilým technológiám a neustálemu záväzku k inováciám. Budeme pokračovať v investíciách do výskumu a vývoja, aby sme našim používateľom poskytovali stále lepšie služby.
-
-Tešíme sa na budúcnosť, kde technológia a ľudská expertíza spolupracujú na vytváraní hodnoty pre všetkých účastníkov nášho ekosystému.`,
-    category: 'vylepsene',
-    date: '2025-01-15',
-    coverImage: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg',
-    readTime: 12,
-    views: 3247,
-    likes: 189,
-    author: 'Vývojový tím ServisAI',
-    tags: ['AI', 'Algoritmus', 'Párovanie', 'Technológie', 'Inovácie']
-  },
-  
-  {
-    id: 1002,
-    title: 'Komplexné bezpečnostné vylepšenia Escrow systému pre rok 2025',
-    description: 'Detailný prehľad všetkých bezpečnostných opatrení implementovaných v našom Escrow systéme.',
-    content: `# Komplexné bezpečnostné vylepšenia Escrow systému pre rok 2025
-
-**Dátum:** 12. august 2025  
-**Autor:** Bezpečnostný tím ServisAI
-
-## Úvod: Bezpečnosť ako základný pilier dôvery
-
-V digitálnom veku, kde sa finančné transakcie čoraz viac presúvajú do online prostredia, je bezpečnosť najvyššou prioritou každej serióznej platformy. ServisAI si plne uvedomuje zodpovednosť, ktorú nesie za ochranu finančných prostriedkov svojich používateľov, a preto investuje značné prostriedky do neustáleho zlepšovania bezpečnostných opatrení.
-
-Náš Escrow systém, ktorý slúži ako bezpečný prostredník medzi zákazníkmi a poskytovateľmi služieb, prešiel v roku 2025 komplexnou modernizáciou. Tieto vylepšenia predstavujú najväčšiu investíciu do bezpečnosti v histórii našej spoločnosti a posúvajú ochranu používateľských dát a financií na úplne novú úroveň.
-
-## Architektúra moderného Escrow systému
-
-### Základné princípy fungovania
-
-Escrow systém funguje na princípe dôveryhodnej tretej strany, ktorá drží finančné prostriedky v úschove, kým nie sú splnené všetky podmienky transakcie. V kontexte ServisAI to znamená:
-
-1. **Zákazník zadá objednávku** a peniaze sú automaticky prevedené do Escrow účtu
-2. **Poskytovateľ služby je informovaný** o zabezpečenej platbe a môže začať prácu
-3. **Po dokončení práce** zákazník potvrdí spokojnosť
-4. **Peniaze sú uvoľnené** poskytovateľovi služby
-
-Tento proces eliminuje riziko pre obe strany - zákazník má istotu, že zaplatí len za dokončenú prácu, a poskytovateľ má istotu platby.
-
-### Technologická infraštruktúra
-
-Náš Escrow systém je postavený na robustnej technologickej infraštruktúre:
-
-**Mikroslužbová architektúra:** Systém je rozdelený do nezávislých mikroslužieb, čo zvyšuje bezpečnosť a umožňuje nezávislé škálovanie jednotlivých komponentov.
-
-**Redundantné úložiská:** Všetky kritické dáta sú uložené vo viacerých geograficky rozdelených dátových centrách s automatickým zálohovaním.
-
-**Load balancing:** Inteligentné rozdeľovanie záťaže zabezpečuje vysokú dostupnosť služby aj pri vysokom zaťažení.
-
-**Real-time monitoring:** Nepretržité monitorovanie všetkých systémových komponentov s okamžitým upozornením na akékoľvek anomálie.
-
-## Nové bezpečnostné funkcie
-
-### 1. Pokročilá dvojfaktorová autentifikácia (2FA)
-
-Implementovali sme najmodernejší 2FA systém, ktorý výrazne prekračuje štandardné riešenia:
-
-**Adaptívna 2FA:** Systém automaticky vyhodnocuje riziko každej transakcie a podľa toho upravuje požiadavky na autentifikáciu. Vysokorizikové transakcie vyžadujú dodatočné overenie.
-
-**Viacero metód overenia:**
-- SMS kódy s pokročilou ochranou proti SIM swapping
-- Autentifikačné aplikácie (Google Authenticator, Authy, Microsoft Authenticator)
-- Biometrické overenie (odtlačky prstov, rozpoznávanie tváre)
-- Hardware tokeny pre najcitlivejšie operácie
-
-**Inteligentné rozpoznávanie zariadení:** Systém si pamätá dôveryhodné zariadenia a lokality, čím znižuje potrebu opakovaného overovania pri bežnom používaní.
-
-### 2. AI-powered detekcia podvodov
-
-Náš systém detekcie podvodov využíva najmodernejšie technológie umelej inteligencie:
-
-**Machine Learning modely:** Trénované na miliónoch transakcií dokážu rozpoznať aj najsofistikovanejšie podvodné schémy.
-
-**Behaviorálna analýza:** Systém sa učí normálne správanie každého používateľa a dokáže identifikovať odchýlky, ktoré môžu naznačovať kompromitáciu účtu.
-
-**Real-time skórovanie rizika:** Každá transakcia dostáva v reálnom čase skóre rizika na základe stoviek faktorov.
-
-**Kolaboratívna inteligencia:** Náš systém zdieľa anonymizované informácie o hrozbách s inými bezpečnostnými platformami, čím sa zlepšuje detekcia nových typov útokov.
-
-### 3. Kvantové šifrovanie
-
-Ako jedna z prvých platforiem svojho druhu implementujeme kvantovo-odolné šifrovacie algoritmy:
-
-**Post-quantum kryptografia:** Používame šifrovacie algoritmy, ktoré sú odolné voči útokom kvantových počítačov.
-
-**Hybridné šifrovanie:** Kombinácia klasických a kvantovo-odolných algoritmov pre maximálnu bezpečnosť.
-
-**Kvantová distribúcia kľúčov:** Pre najcitlivejšie operácie používame kvantovú distribúciu kľúčov, ktorá zaručuje absolútnu bezpečnosť.
-
-### 4. Blockchain audit trail
-
-Implementovali sme blockchain-based audit trail pre úplnú transparentnosť:
-
-**Nemenné záznamy:** Všetky transakcie sú zaznamenané v blockchain sieti, čo zabezpečuje ich nemennosť.
-
-**Decentralizované overenie:** Transakcie sú overované viacerými nezávislými uzlami.
-
-**Smart contracts:** Automatizované vykonávanie podmienok Escrow prostredníctvom smart contracts.
-
-**Transparentný audit:** Možnosť nezávislého overovania všetkých transakcií tretími stranami.
-
-## Compliance a regulačné požiadavky
-
-### Medzinárodné štandardy
-
-Náš Escrow systém spĺňa najprísnejšie medzinárodné štandardy:
-
-**PCI DSS Level 1:** Najvyšší stupeň certifikácie pre spracovanie platobných kariet.
-
-**ISO 27001:** Medzinárodný štandard pre systémy riadenia informačnej bezpečnosti.
-
-**SOC 2 Type II:** Audit bezpečnostných kontrol a procesov.
-
-**GDPR Compliance:** Plná zhoda s európskym nariadením o ochrane osobných údajov.
-
-### Regulačné licencie
-
-ServisAI vlastní všetky potrebné licencie pre prevádzku Escrow služieb:
-
-**EMI licencia:** Licencia elektronických peňazí v EÚ.
-
-**PSD2 Compliance:** Zhoda s druhou smernicou o platobných službách.
-
-**AML/KYC:** Implementácia opatrení proti praniu špinavých peňazí.
-
-**Národné licencie:** Licencie vo všetkých krajinách, kde pôsobíme.
-
-## Technické bezpečnostné opatrenia
-
-### Infraštruktúrna bezpečnosť
-
-**Zero Trust Architecture:** Každý prístup k systému je overovaný bez ohľadu na lokáciu alebo zariadenie.
-
-**Network Segmentation:** Sieť je rozdelená do bezpečnostných zón s kontrolovaným prístupom.
-
-**DDoS Protection:** Pokročilá ochrana proti distribuovaným útokom na dostupnosť služby.
-
-**Intrusion Detection System:** Automatická detekcia a reakcia na pokusy o narušenie.
-
-### Aplikačná bezpečnosť
-
-**Secure Coding Practices:** Všetok kód je písaný podľa najprísnejších bezpečnostných štandardov.
-
-**Regular Security Testing:** Pravidelné penetračné testy a bezpečnostné audity.
-
-**Dependency Scanning:** Automatické skenovanie všetkých závislostí na známe zraniteľnosti.
-
-**Runtime Application Self-Protection:** Ochrana aplikácie v reálnom čase.
-
-### Dátová bezpečnosť
-
-**Encryption at Rest:** Všetky uložené dáta sú šifrované najsilnejšími dostupnými algoritmami.
-
-**Encryption in Transit:** Všetka komunikácia je šifrovaná pomocou TLS 1.3.
-
-**Key Management:** Profesionálna správa šifrovacích kľúčov s hardwarovými bezpečnostnými modulmi.
-
-**Data Loss Prevention:** Systémy na prevenciu úniku citlivých dát.
-
-## Používateľská bezpečnosť
-
-### Vzdelávanie používateľov
-
-**Bezpečnostné školenia:** Pravidelné vzdelávacie materiály o bezpečnosti.
-
-**Phishing simulácie:** Testovanie odolnosti používateľov voči phishingovým útokom.
-
-**Bezpečnostné upozornenia:** Okamžité informovanie o nových hrozbách.
-
-**Best practices:** Odporúčania pre bezpečné používanie platformy.
-
-### Nástroje pre používateľov
-
-**Security Dashboard:** Prehľad bezpečnostného stavu účtu.
-
-**Activity Monitoring:** Sledovanie všetkých aktivít na účte.
-
-**Suspicious Activity Alerts:** Okamžité upozornenia na podozrivé aktivity.
-
-**Account Recovery:** Bezpečné procesy obnovy prístupu k účtu.
-
-## Incident Response a Business Continuity
-
-### Incident Response Team
-
-**24/7 Monitoring:** Nepretržité monitorovanie bezpečnostných hrozieb.
-
-**Rapid Response:** Schopnosť reagovať na incidenty do 15 minút.
-
-**Forensic Analysis:** Detailná analýza bezpečnostných incidentov.
-
-**Communication Plan:** Jasný plán komunikácie s používateľmi a regulátormi.
-
-### Business Continuity
-
-**Disaster Recovery:** Plán obnovy po katastrofe s RTO 4 hodiny.
-
-**Backup Systems:** Viacnásobné zálohy vo viacerých lokalitách.
-
-**Failover Mechanisms:** Automatické prepínanie na záložné systémy.
-
-**Regular Testing:** Pravidelné testovanie všetkých obnovovacích procesov.
-
-## Budúce bezpečnostné inovácie
-
-### Krátkodobé plány (3-6 mesiacov)
-
-**Quantum Key Distribution:** Implementácia kvantovej distribúcie kľúčov pre najcitlivejšie transakcie.
-
-**Advanced Biometrics:** Rozšírenie biometrických metód autentifikácie.
-
-**AI-Enhanced Monitoring:** Ďalšie vylepšenie AI systémov pre detekciu hrozieb.
-
-**Zero-Knowledge Proofs:** Implementácia zero-knowledge protokolov pre zvýšenie súkromia.
-
-### Strednodobé plány (6-12 mesiacov)
-
-**Homomorphic Encryption:** Možnosť spracovania šifrovaných dát bez ich dešifrovania.
-
-**Federated Learning:** Kolaboratívne učenie bez zdieľania citlivých dát.
-
-**Quantum-Safe Migration:** Úplný prechod na kvantovo-odolné algoritmy.
-
-**Decentralized Identity:** Implementácia decentralizovaných identít.
-
-### Dlhodobé plány (1-2 roky)
-
-**Quantum Computing Integration:** Využitie kvantových počítačov pre bezpečnostné účely.
-
-**AI-Driven Security:** Plne autonómne bezpečnostné systémy.
-
-**Blockchain Integration:** Hlbšia integrácia blockchain technológií.
-
-**Global Security Standards:** Vedúca úloha pri vytváraní nových bezpečnostných štandardov.
-
-## Meranie efektívnosti bezpečnostných opatrení
-
-### Kľúčové metriky
-
-**Security Incidents:** Počet bezpečnostných incidentov (cieľ: 0 kritických incidentov)
-
-**Detection Time:** Priemerný čas detekcie hrozby (aktuálne: 2.3 minúty)
-
-**Response Time:** Priemerný čas reakcie na incident (aktuálne: 8.7 minúty)
-
-**False Positive Rate:** Miera falošných poplachov (aktuálne: 0.8%)
-
-### Používateľské metriky
-
-**Trust Score:** Miera dôvery používateľov v bezpečnosť platformy (94%)
-
-**Security Awareness:** Úroveň bezpečnostného povedomia používateľov (87%)
-
-**Incident Reporting:** Počet incidentov nahlásených používateľmi (vzrast o 45%)
-
-**Satisfaction Score:** Spokojnosť s bezpečnostnými opatreniami (4.8/5)
-
-## Transparentnosť a komunikácia
-
-### Bezpečnostné reporty
-
-**Quarterly Security Reports:** Štvrťročné reporty o stave bezpečnosti.
-
-**Incident Disclosure:** Transparentné informovanie o bezpečnostných incidentoch.
-
-**Vulnerability Disclosure:** Program pre zodpovedné nahlasovanie zraniteľností.
-
-**Security Metrics:** Pravidelné zverejňovanie bezpečnostných metrík.
-
-### Bug Bounty Program
-
-**Reward System:** Finančné odmeny za nájdenie zraniteľností.
-
-**Responsible Disclosure:** Proces zodpovedného nahlasovania problémov.
-
-**Community Engagement:** Zapojenie bezpečnostnej komunity.
-
-**Continuous Improvement:** Neustále zlepšovanie na základe spätnej väzby.
-
-## Záver: Bezpečnosť ako konkurenčná výhoda
-
-Investície do bezpečnosti Escrow systému nie sú len technickou nutnosťou, ale strategickou konkurenčnou výhodou. V prostredí, kde dôvera je najcennejšou menou, sa ServisAI pozicionuje ako najbezpečnejšia platforma pre domáce služby.
-
-Naše komplexné bezpečnostné opatrenia vytvárajú ekosystém, kde sa používatelia môžu plne sústrediť na svoje projekty bez obáv o bezpečnosť svojich financií. Toto je základ pre dlhodobý rast a úspech našej platformy.
-
-Budeme pokračovať v investíciách do bezpečnosti a inováciách, aby sme si udržali pozíciu lídra v oblasti bezpečnosti finančných transakcií v segmente domácich služieb.`,
+**End-to-end šifrovanie:** Všetky citlivé dáta sú šifrované od momentu zadania až po spracovanie.`,
     category: 'aktualizacie',
-    date: '2025-01-12',
-    coverImage: 'https://images.pexels.com/photos/6801648/pexels-photo-6801648.jpeg',
-    readTime: 15,
-    views: 2892,
-    likes: 167,
-    author: 'Bezpečnostný tím ServisAI',
-    tags: ['Bezpečnosť', 'Escrow', 'Platby', 'Aktualizácia', 'Kryptografia']
+    date: '2025-01-15',
+    coverImage: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=800&q=80',
+    readTime: 8,
+    views: 15420,
+    likes: 342,
+    author: 'Tím ServisAI',
+    tags: ['bezpečnosť', 'escrow', 'platby', 'AI']
   },
-
   {
-    id: 1003,
-    title: 'Rozšírenie služieb: Nové kategórie pre komplexné domáce riešenia',
-    description: 'Predstavujeme 15 nových kategórií služieb, ktoré pokrývajú všetky aspekty moderného domova.',
-    content: `# Rozšírenie služieb: Nové kategórie pre komplexné domáce riešenia
+    id: 2,
+    title: 'Nové kategórie služieb: Smart Home a ekologické riešenia',
+    description: 'Pridávame 15 nových kategórií služieb vrátane smart home inštalácií, wellness služieb a ekologických riešení.',
+    content: `V ServisAI neustále počúvame potreby našich používateľov a prispôsobujeme sa meniacim sa trendom na trhu.
 
-**Dátum:** 10. august 2025  
-**Autor:** Produktový tím ServisAI
+## Nové kategórie služieb
 
-## Úvod: Evolúcia potrieb moderného domova
-
-Moderný domov sa neustále vyvíja a s ním aj potreby jeho obyvateľov. ServisAI reaguje na tieto meniace sa požiadavky rozšírením svojej ponuky o 15 nových kategórií služieb, ktoré pokrývajú všetky aspekty súčasného bývania - od smart home technológií až po udržateľné riešenia.
-
-Toto rozšírenie je výsledkom rozsiahleho prieskumu medzi našimi používateľmi, analýzy trhových trendov a spolupráce s odborníkmi z rôznych oblastí. Naším cieľom je vytvoriť komplexný ekosystém služieb, kde nájdete riešenie pre každú potrebu vašej domácnosti.
-
-## Analýza potrieb moderného domova
-
-### Technologické trendy
-
-**Smart Home Revolution:** Čoraz viac domácností integruje inteligentné technológie. Podľa našich údajov 78% zákazníkov plánuje v najbližších dvoch rokoch investovať do smart home riešení.
-
-**Udržateľnosť:** Environmentálne povedomie rastie - 65% respondentov našeho prieskumu považuje udržateľnosť za kľúčový faktor pri výbere služieb.
-
-**Wellness a zdravie:** Pandémia COVID-19 zvýšila záujem o zdravé bývanie. 82% ľudí chce zlepšiť kvalitu vzduchu a celkové zdravotné podmienky vo svojom domove.
-
-**Personalizácia:** Každý dom je jedinečný a zákazníci hľadajú riešenia šité na mieru ich špecifickým potrebám.
-
-### Demografické zmeny
-
-**Starnutie populácie:** Rastúci počet seniorov vyžaduje špecializované služby pre bezbariérové bývanie.
-
-**Mladé rodiny:** Mileniáli a generácia Z majú iné priority - technológie, udržateľnosť, efektívnosť.
-
-**Home office:** Trvalý trend práce z domu vyžaduje špecializované riešenia pre domáce kancelárie.
-
-**Urbanizácia:** Život v mestách prináša špecifické výzvy - hluk, znečistenie, obmedzený priestor.
-
-## Nové kategórie služieb - detailný prehľad
-
-### 1. Smart Home & IoT riešenia
-
-**Inteligentné osvetlenie:**
-- Inštalácia a konfigurácia smart LED systémov
-- Programovanie svetelných scenárov
-- Integrácia s hlasovými asistentmi
-- Automatizácia na základe denného rytmu
-
-**Klimatizácia a vykurovanie:**
-- Smart termostaty s učením sa algoritmami
-- Zónové riadenie teploty
-- Integrácia s počasím a kalendárom
-- Energetická optimalizácia
-
-**Bezpečnostné systémy:**
-- IP kamery s AI rozpoznávaním
-- Smart zámky a prístupové systémy
-- Senzory pohybu a otvorenia
-- Integrácia s mobilnými aplikáciami
-
-**Domáca automatizácia:**
-- Centrálne riadiace systémy
-- Automatizácia žalúzií a roliet
-- Smart zásuvky a spínače
-- Scenáre pre rôzne situácie
-
-### 2. Udržateľné a ekologické riešenia
-
-**Solárne systémy:**
-- Fotovoltické panely pre rodinné domy
-- Batériové úložiská energie
-- Hybridné systémy s pripojením do siete
-- Monitoring a optimalizácia výroby
-
-**Zber dažďovej vody:**
-- Nádrže a filtračné systémy
-- Automatické zavlažovacie systémy
-- Využitie pre WC a práčku
-- Monitoring kvality vody
-
-**Tepelné čerpadlá:**
-- Vzduch-voda, zem-voda systémy
-- Hybridné riešenia s plynovým kotlom
-- Optimalizácia pre rôzne typy budov
-- Servis a údržba
-
-**Zelené strechy a steny:**
-- Extenzívne a intenzívne zelené strechy
-- Vertikálne záhrady
-- Automatické zavlažovanie
-- Výber vhodných rastlín
-
-### 3. Wellness a zdravé bývanie
-
-**Kvalita vzduchu:**
-- Meranie a monitoring kvality vzduchu
-- Inštalácia vzduchotechniky s filtráciou
-- UV sterilizácia vzduchu
-- Regulácia vlhkosti
-
-**Akustické riešenia:**
-- Zvuková izolácia miestností
-- Akustické panely a materiály
-- Riešenie hluku z vonkajšieho prostredia
-- Optimalizácia akustiky domácich kín
-
-**Ergonomické riešenia:**
-- Nastaviteľné pracovné stoly
-- Ergonomické osvetlenie
-- Optimalizácia rozloženia nábytku
-- Bezbariérové úpravy
-
-**Aromaterapia a wellness:**
-- Inštalácia difuzérov a aromasystémov
-- Sauny a parné kabíny
-- Relaxačné zóny
-- Svetelná terapia
-
-### 4. Domáce kancelárie a coworking
-
-**Technické vybavenie:**
-- Profesionálne IT infrastruktúra
-- Videokonferenčné systémy
-- Ergonomické pracovné miesta
-- Backup a bezpečnostné riešenia
-
-**Akustická izolácia:**
-- Zvukotesné kabíny
-- Akustické panely
-- Riešenie rušenia z domácnosti
-- Optimalizácia pre nahrávanie
-
-**Osvetlenie a ergonómia:**
-- Profesionálne pracovné osvetlenie
-- Nastaviteľné stoly a stoličky
-- Organizácia káblov
-- Klimatizácia pracovného priestoru
-
-**Dizajn a produktivita:**
-- Farebné schémy pre koncentráciu
-- Organizácia priestoru
-- Rastliny pre lepšiu produktivitu
-- Minimalistické riešenia
-
-### 5. Seniori a bezbariérové bývanie
-
-**Bezpečnostné úpravy:**
-- Madlá a zábradlia
-- Protišmykové povrchy
-- Núdzové tlačidlá
-- Automatické osvetlenie
-
-**Technologické pomôcky:**
-- Jednoduché smart home systémy
-- Zdravotné monitorovacie zariadenia
-- Komunikačné systémy s rodinou
-- Lieková pripomienky
-
-**Fyzické úpravy:**
-- Rampy a výťahy
-- Rozšírenie dverí
-- Úprava kúpeľní
-- Zníženie prahov
-
-**Záhradné úpravy:**
-- Vyvýšené záhony
-- Jednoduché zavlažovanie
-- Bezpečné chodníky
-- Sedenie a odpočinkové zóny
-
-### 6. Domáce zvieratá
-
-**Vnútorné riešenia:**
-- Škrabadlá a hracie zóny pre mačky
-- Psie búdy a odpočinkové miesta
-- Automatické kŕmidlá a napájadlá
-- Čistiace a hygienické riešenia
-
-**Vonkajšie riešenia:**
-- Oplotenie a výbehy
-- Psie toalety a hygiena
-- Tienené odpočinkové miesta
-- Bezpečnostné prvky
-
-**Technologické pomôcky:**
-- GPS obojky a sledovanie
-- Automatické dvierka
-- Kamery pre sledovanie
-- Klimatizácia pre zvieratá
-
-**Veterinárna starostlivosť:**
-- Domáce veterinárne služby
-- Preventívne prehliadky
-- Urgentná starostlivosť
-- Poradenstvo o výžive
-
-### 7. Hobby a kreatívne priestory
-
-**Umelecké ateliéry:**
-- Osvetlenie pre maliarstvo
-- Ventilačné systémy
-- Úložné riešenia
-- Pracovné stoly a stoličky
-
-**Hudobné štúdiá:**
-- Akustická izolácia
-- Nahrávacia technika
-- Inštalácia nástrojov
-- Mixážne pulty
-
-**Dielne a garáže:**
-- Organizácia nástrojov
-- Pracovné stoly
-- Osvetlenie a ventillácia
-- Bezpečnostné prvky
-
-**Záhradkárstvo:**
-- Skleníky a fóliovníky
-- Zavlažovacie systémy
-- Kompostéry
-- Úložné riešenia
-
-### 8. Sezónne služby
-
-**Zimné služby:**
-- Inštalácia zimných pneumatík
-- Príprava bazénov na zimu
-- Ochrana rastlín
-- Vykurovanie a izolácia
-
-**Letné služby:**
-- Klimatizácia a chladenie
-- Úprava záhrad
-- Bazénové služby
-- Ochrana pred slnkom
-
-**Jarné služby:**
-- Generálne upratovanie
-- Údržba záhrad
-- Kontrola striech
-- Maľovanie a renovácie
-
-**Jesenné služby:**
-- Príprava na zimu
-- Čistenie žľabov
-- Uskladnenie záhradného nábytku
-- Kontrola vykurovania
-
-### 9. Luxusné a prémiové služby
-
-**Concierge služby:**
-- Osobný asistent pre domácnosť
-- Organizácia udalostí
-- Nákupné služby
-- Cestovné služby
-
-**Dizajnérske služby:**
-- Interiérový dizajn
-- Krajinná architektúra
-- Svetelný dizajn
-- Farebné poradenstvo
-
-**Prémiová údržba:**
-- Pravidelná údržba luxusných domov
-- Starostlivosť o umelecké diela
-- Údržba bazénov a wellness
-- Záhradnícke služby
-
-**Bezpečnostné služby:**
-- Osobná ochrana
+### Smart Home a technológie
+- Smart home inštalácie
+- Domáce kiná  
 - Bezpečnostné systémy
-- Monitoring majetku
-- Krizové plánovanie
 
-### 10. Zdravie a hygiena
-
-**Dezinfekcia a čistenie:**
-- Profesionálna dezinfekcia
-- Čistenie vzduchotechniky
-- Odstránenie plesní
-- Sanitácia po chorobe
-
-**Kvalita vody:**
-- Testovanie kvality vody
-- Filtračné systémy
-- Úprava tvrdosti vody
-- Monitoring kontaminácie
-
-**Alergény a astma:**
-- Identifikácia alergénov
-- Čistenie od roztoča
-- Výmena filtrov
-- Poradenstvo o materiáloch
-
-**Ergonómia a pohyb:**
-- Hodnotenie ergonómie
-- Cvičebné zóny
-- Masážne kresla
-- Rehabilitačné pomôcky
-
-### 11. Technológie budúcnosti
-
-**Virtuálna a rozšírená realita:**
-- VR miestnosti
-- AR aplikácie pre dom
-- Virtuálne návštevy
-- Vzdelávacie systémy
-
-**Umelá inteligencia:**
-- AI asistenti pre domácnosť
-- Prediktívna údržba
-- Automatizácia rozhodnutí
-- Učiace sa systémy
-
-**Robotika:**
-- Upratovacie roboty
-- Záhradnícke roboty
-- Bezpečnostné roboty
-- Asistenčné roboty
-
-**Internet vecí (IoT):**
-- Prepojené zariadenia
-- Centrálne riadenie
-- Dátová analytika
-- Prediktívne služby
-
-### 12. Kultúra a vzdelávanie
-
-**Domáce knižnice:**
-- Dizajn a organizácia
-- Digitalizácia kníh
-- Čítacie kútiky
-- Osvetlenie pre čítanie
-
-**Vzdelávacie priestory:**
-- Detské študovne
-- Interaktívne tabule
-- Vzdelávacie softvér
-- Ergonomické riešenia
-
-**Kultúrne aktivity:**
-- Domáce kiná
-- Hudobné systémy
-- Galérie a výstavy
-- Kultúrne podujatia
-
-**Jazykové vzdelávanie:**
-- Jazykové laboratóriá
-- Konverzačné kútiky
-- Technické pomôcky
-- Online platformy
-
-### 13. Komunita a sociálne služby
-
-**Susedské služby:**
-- Zdieľanie nástrojov
-- Spoločné projekty
-- Komunitné záhrady
-- Susedská pomoc
-
-**Sociálne aktivity:**
-- Organizácia stretnutí
-- Spoločné priestory
-- Kultúrne podujatia
-- Športové aktivity
-
-**Dobrovoľníctvo:**
-- Pomoc seniorom
-- Environmentálne projekty
-- Vzdelávacie aktivity
-- Komunitné služby
-
-**Zdieľaná ekonomika:**
-- Zdieľanie vozidiel
-- Spoločné nákupy
-- Výmena služieb
-- Komunitné projekty
-
-### 14. Bezpečnosť a ochrana
-
-**Kybernetická bezpečnosť:**
-- Zabezpečenie domácich sietí
-- Ochrana smart zariadení
-- Bezpečné zálohovanie
-- Vzdelávanie o bezpečnosti
-
-**Fyzická bezpečnosť:**
-- Bezpečnostné systémy
-- Ochrana majetku
-- Osobná bezpečnosť
-- Krizové plánovanie
-
-**Požiarna ochrana:**
-- Detektory dymu a plynu
-- Hasiace systémy
-- Evakuačné plány
-- Preventívne opatrenia
-
-**Zdravotná bezpečnosť:**
-- Prvá pomoc
-- Zdravotné monitorovanie
-- Núdzové služby
-- Preventívna starostlivosť
-
-### 15. Špeciálne potreby a prispôsobenia
-
-**Zdravotné postihnutia:**
-- Bezbariérové úpravy
-- Asistenčné technológie
-- Rehabilitačné pomôcky
-- Osobná starostlivosť
-
-**Deti so špeciálnymi potrebami:**
-- Terapeutické priestory
-- Vzdelávacie pomôcky
-- Bezpečnostné opatrenia
-- Rodinná podpora
-
-**Mentálne zdravie:**
-- Relaxačné priestory
-- Terapeutické záhrady
-- Meditačné kútiky
-- Podporné technológie
-
-**Chronické choroby:**
-- Monitorovacie systémy
-- Lieková správa
-- Zdravotné alarmy
-- Telemedicína
-
-## Implementácia nových služieb
-
-### Fáza 1: Pilotný program (August - September 2025)
-
-**Výber regiónov:** Spustenie v Bratislave, Košiciach a Žiline
-**Počet poskytovateľov:** 50 certifikovaných odborníkov na kategóriu
-**Testovanie:** Beta testovanie s vybranými zákazníkmi
-**Spätná väzba:** Zbieranie a analýza používateľských skúseností
-
-### Fáza 2: Regionálne rozšírenie (Október - December 2025)
-
-**Rozšírenie:** Všetky krajské mestá
-**Škálovanie:** 200+ poskytovateľov na kategóriu
-**Optimalizácia:** Vylepšenie procesov na základe pilotného programu
-**Marketing:** Spustenie marketingovej kampane
-
-### Fáza 3: Národné pokrytie (Január - Marec 2026)
-
-**Úplné pokrytie:** Všetky regióny Slovenska
-**Plná kapacita:** 500+ poskytovateľov na kategóriu
-**Integrácia:** Plná integrácia s existujúcimi službami
-**Medzinárodná expanzia:** Príprava na rozšírenie do ČR
-
-## Certifikácia a kvalita poskytovateľov
-
-### Certifikačný proces
-
-**Odborné kvalifikácie:** Overenie vzdelania a certifikátov
-**Praktické skúšky:** Testovanie praktických zručností
-**Zákaznícky servis:** Hodnotenie komunikačných schopností
-**Bezpečnostné preverenie:** Background check a referencie
-
-### Kontinuálne vzdelávanie
-
-**Pravidelné školenia:** Mesačné vzdelávacie programy
-**Nové technológie:** Školenia o najnovších trendoch
-**Zákaznícky servis:** Zlepšovanie komunikačných zručností
-**Bezpečnosť:** Aktualizácie bezpečnostných protokolov
-
-### Systém hodnotenia
-
-**Zákaznícke hodnotenia:** Detailné recenzie po každom projekte
-**Peer review:** Hodnotenie od kolegov z odvetvia
-**Tajní zákazníci:** Pravidelné testovanie kvality
-**KPI monitoring:** Sledovanie kľúčových ukazovateľov výkonnosti
-
-## Technologická podpora
-
-### AI asistent pre nové služby
-
-**Rozšírená znalostná báza:** Informácie o všetkých nových kategóriách
-**Inteligentné odporúčania:** Personalizované návrhy služieb
-**Komplexné riešenia:** Kombinácia viacerých služieb
-**Prediktívne potreby:** Anticipácia budúcich potrieb zákazníka
-
-### Mobilná aplikácia
-
-**Nové funkcie:** Špecializované nástroje pre každú kategóriu
-**AR vizualizácia:** Možnosť vidieť výsledok pred realizáciou
-**IoT integrácia:** Pripojenie smart zariadení
-**Real-time monitoring:** Sledovanie priebehu projektov
-
-### Webová platforma
-
-**Rozšírené filtre:** Detailné vyhľadávanie v nových kategóriách
-**Porovnávacie nástroje:** Porovnanie poskytovateľov a riešení
-**Vzdelávacie materiály:** Sprievodcovia a návody
-**Komunitné fórum:** Diskusie a zdieľanie skúseností
-
-## Cenová stratégia
-
-### Transparentné ceny
-
-**Fixné ceny:** Jasné cenníky pre štandardné služby
-**Kalkulačky:** Online nástroje na odhad nákladov
-**Porovnanie:** Možnosť porovnať ceny rôznych poskytovateľov
-**Žiadne skryté poplatky:** Všetky náklady sú vopred známe
-
-### Balíčky služieb
-
-**Komplexné riešenia:** Zľavy pri kombinácii viacerých služieb
-**Sezónne balíčky:** Špeciálne ponuky pre sezónne služby
-**Rodinné balíčky:** Zľavy pre viacčlenné domácnosti
-**Firemné balíčky:** Špeciálne ceny pre firmy
-
-### Financovanie
-
-**Rozloženie platieb:** Možnosť splácania vo viacerých splátkach
-**Leasing:** Prenájom drahších zariadení
-**Granty a dotácie:** Pomoc pri získavaní štátnych podpor
-**Poistenie:** Ochrana investícií do domácnosti
-
-## Marketing a komunikácia
-
-### Vzdelávacie kampane
-
-**Webináre:** Online prezentácie nových služieb
-**Blogy a články:** Detailné sprievodcovia a tipy
-**Video obsah:** Ukážky realizácií a výsledkov
-**Podcasty:** Rozhovory s odborníkmi
-
-### Influencer marketing
-
-**Lifestyle blogeri:** Spolupráca s influencermi v oblasti bývania
-**Odborníci:** Partnerstvo s architektmi a dizajnérmi
-**Zákaznícke príbehy:** Reálne skúsenosti spokojných zákazníkov
-**Sociálne siete:** Aktívna prítomnosť na všetkých platformách
-
-### PR a médiá
-
-**Tlačové správy:** Informovanie médií o novinkách
-**Odborné konferencie:** Účasť na stavebných a dizajnérskych podujatiach
-**Partnerstvá:** Spolupráca s výrobcami a dodávateľmi
-**Ocenenia:** Účasť v súťažiach a získavanie ocenení
-
-## Udržateľnosť a environmentálny dopad
-
-### Zelené technológie
-
-**Obnoviteľné zdroje:** Podpora solárnych a veterných riešení
-**Energetická efektívnosť:** Optimalizácia spotreby energie
-**Recyklácia:** Programy na recykláciu starých zariadení
-**Udržateľné materiály:** Preferencia ekologických materiálov
-
-### Carbon footprint
-
-**Meranie emisií:** Sledovanie uhlíkovej stopy všetkých služieb
-**Kompenzácie:** Programy na kompenzáciu emisií
-**Lokálni poskytovatelia:** Preferencia miestnych odborníkov
-**Efektívna logistika:** Optimalizácia prepravy a dodávok
-
-### Vzdelávanie
-
-**Environmentálne povedomie:** Vzdelávanie zákazníkov o udržateľnosti
-**Best practices:** Zdieľanie najlepších praktík
-**Certifikácie:** Podpora environmentálnych certifikácií
-**Inovácie:** Investície do výskumu udržateľných riešení
-
-## Budúce plány a vízia
-
-### Krátkodobé ciele (6-12 mesiacov)
-
-**Úplná implementácia:** Všetky kategórie dostupné vo všetkých regiónoch
-**1000+ poskytovateľov:** V každej kategórii
-**50 000+ projektov:** Realizovaných v nových kategóriách
-**95% spokojnosť:** Cieľová miera spokojnosti zákazníkov
-
-### Strednodobé ciele (1-2 roky)
-
-**Medzinárodná expanzia:** Rozšírenie do 5 krajín
-**AI optimalizácia:** Plne automatizované párovanie
-**IoT integrácia:** Prepojenie všetkých smart zariadení
-**Udržateľnosť:** 100% carbon neutral operácie
-
-### Dlhodobé ciele (2-5 rokov)
-
-**Globálna prítomnosť:** Dostupnosť v 20+ krajinách
-**Technologické líderstvo:** Najmodernejšie riešenia na trhu
-**Kompletný ekosystém:** Všetky potreby domácnosti na jednom mieste
-**Spoločenský dopad:** Pozitívny vplyv na komunity a životné prostredie
-
-## Záver: Budúcnosť domácich služieb
-
-Rozšírenie našej ponuky o 15 nových kategórií služieb predstavuje najväčší míľnik v histórii ServisAI. Týmto krokom sa posúvame od jednoduchej platformy pre základné domáce služby k komplexnému ekosystému, ktorý pokrýva všetky aspekty moderného bývania.
-
-Naša vízia je jasná: vytvoriť svet, kde každý domov môže byť inteligentný, udržateľný, bezpečný a prispôsobený individuálnym potrebám jeho obyvateľov. S týmito novými službami sa k tejto vízii výrazne približujeme.
-
-Tešíme sa na spoluprácu s vami pri transformácii vašich domovov na miesta, kde technológia, komfort a udržateľnosť vytvárajú dokonalú harmóniu.`,
+### Ekologické riešenia
+- Solárne panely
+- Tepelné čerpadlá
+- Zelené strechy`,
     category: 'vylepsene',
-    date: '2025-01-10',
-    coverImage: 'https://images.pexels.com/photos/4239146/pexels-photo-4239146.jpeg',
-    readTime: 18,
-    views: 4156,
-    likes: 234,
-    author: 'Produktový tím ServisAI',
-    tags: ['Nové služby', 'Smart Home', 'Udržateľnosť', 'Inovácie', 'Rozšírenie']
-  }
-];
-
-// Funkcia na generovanie ďalších článkov programaticky
-export const generateAdditionalArticles = (count: number) => {
-  const templates = [
-    {
-      titleTemplate: "Revolučné vylepšenia {feature} pre lepšiu používateľskú skúsenosť",
-      category: 'vylepsene',
-      contentTemplate: `# Revolučné vylepšenia {feature} pre lepšiu používateľskú skúsenosť
-
-Predstavujeme najnovšie vylepšenia {feature}, ktoré fundamentálne menia spôsob interakcie s našou platformou...
-
-## Technické inovácie
-
-Naše najnovšie vylepšenia využívajú pokročilé algoritmy a moderné technológie, ktoré predstavujú skutočný prelom v oblasti {feature}. Implementovali sme revolučné riešenia, ktoré menia spôsob, akým používatelia interagujú s našou platformou.
-
-### Pokročilé algoritmy umelej inteligencie
-
-Srdcom nového systému {feature} sú pokročilé algoritmy umelej inteligencie, ktoré sme vyvíjali v spolupráci s popredných univerzitami a výskumnými inštitútmi. Tieto algoritmy dokážu:
-
-**Hlboké porozumenie kontextu:** Náš AI systém neanalyzuje len jednotlivé požiadavky, ale rozumie celému kontextu používateľovej situácie. Dokáže rozpoznať nuansy v komunikácii a prispôsobiť svoje odpovede konkrétnym potrebám.
-
-**Prediktívne modelovanie:** Využívame najmodernejšie techniky strojového učenia na predpovedanie budúcich potrieb používateľov. Systém dokáže s 95% presnosťou predpovedať, akú službu bude používateľ potrebovať v nasledujúcich 30 dňoch.
-
-**Kontinuálne učenie:** Algoritmy sa neustále učia z každej interakcie a zlepšujú svoje výkony. Každý deň spracúvajú milióny dátových bodov a optimalizujú svoje procesy.
-
-**Multimodálne spracovanie:** Systém dokáže súčasne spracovávať text, obrázky, zvuk a video, čo umožňuje komplexnejšie a presnejšie analýzy.
-
-### Kvantové výpočty a kryptografia
-
-Ako jedna z prvých platforiem svojho druhu implementujeme kvantové technológie:
-
-**Kvantové šifrovanie:** Všetky citlivé dáta sú chránené kvantovo-odolnými šifrovacími algoritmami, ktoré sú teoreticky nerozlúštiteľné aj najvýkonnejšími kvantovými počítačmi.
-
-**Kvantová optimalizácia:** Využívame kvantové algoritmy na riešenie komplexných optimalizačných problémov, ako je párovanie zákazníkov s poskytovateľmi služieb.
-
-**Kvantová komunikácia:** Pre najcitlivejšie operácie používame kvantové komunikačné protokoly, ktoré zaručujú absolútnu bezpečnosť prenosu dát.
-
-### Blockchain a decentralizácia
-
-Implementovali sme hybridnú blockchain architektúru, ktorá kombinuje výhody centralizovaných a decentralizovaných systémov:
-
-**Smart contracts:** Všetky dohody medzi zákazníkmi a poskytovateľmi sú automaticky vykonávané prostredníctvom smart contracts, čo eliminuje potrebu dôvery tretej strane.
-
-**Decentralizované hodnotenie:** Systém hodnotení je uložený v blockchain sieti, čo zabezpečuje jeho nemennosť a transparentnosť.
-
-**Tokenizácia:** Zaviedli sme vlastný token, ktorý umožňuje efektívnejšie platby a odmeňovanie aktívnych používateľov.
-
-**Distributed ledger:** Všetky transakcie sú zaznamenané v distribuovanej knihe, ktorá je dostupná pre audit a overenie.
-
-### Internet vecí (IoT) a smart zariadenia
-
-Naša platforma je plne integrovaná s ekosystémom IoT zariadení:
-
-**Smart home integrácia:** Priame prepojenie s populárnymi smart home systémami ako Google Home, Amazon Alexa, Apple HomeKit.
-
-**Automatická diagnostika:** IoT senzory dokážu automaticky detekovať problémy v domácnosti a navrhnúť vhodné riešenia.
-
-**Prediktívna údržba:** Systém dokáže predpovedať, kedy bude potrebná údržba zariadení, a automaticky naplánovať servisné zásahy.
-
-**Energy management:** Inteligentné riadenie spotreby energie na základe analýzy používania zariadení.
-
-## Výhody pre používateľov
-
-### Pre individuálnych zákazníkov
-
-**Personalizovaná skúsenosť:** Každý používateľ dostáva jedinečnú, na mieru šitú skúsenosť založenú na jeho preferenciách, histórii a správaní.
-
-**Úspora času:** Nové algoritmy dokážu nájsť vhodného poskytovateľa služieb o 85% rýchlejšie než predchádzajúci systém.
-
-**Lepšie ceny:** Automatické porovnávanie ponúk a vyjednávanie najlepších cien v mene zákazníka.
-
-**Vyššia kvalita:** Pokročilé algoritmy zabezpečujú párovanie len s overenými a kvalitne hodnotenými poskytovateľmi.
-
-**Proaktívne odporúčania:** Systém proaktívne navrhuje služby a údržbu na základe analýzy domácnosti.
-
-### Pre poskytovateľov služieb
-
-**Kvalitnejšie leads:** AI algoritmy zabezpečujú, že poskytovatelia dostávajú len relevantné a kvalitné požiadavky.
-
-**Optimalizácia trás:** Inteligentné plánovanie trás a rozvrhu pre maximálnu efektívnosť.
-
-**Prediktívna analytika:** Prehľady o budúcom dopyte po službách v konkrétnych oblastiach.
-
-**Automatizované procesy:** Zníženie administratívnej záťaže vďaka automatizácii rutinných úloh.
-
-**Rozšírené možnosti marketingu:** Pokročilé nástroje na propagáciu služieb a budovanie značky.
-
-### Pre platformu ako celok
-
-**Škálovateľnosť:** Nová architektúra dokáže obsluhovať 10x viac používateľov bez poklesu výkonu.
-
-**Globálna expanzia:** Technológie umožňujú rýchle rozšírenie do nových krajín a regiónov.
-
-**Inovačná kapacita:** Modulárna architektúra umožňuje rýchle implementovanie nových funkcií.
-
-**Udržateľnosť:** Optimalizované algoritmy znižujú energetickú náročnosť o 40%.
-
-## Implementácia a rollout
-
-### Postupné zavádzanie nových funkcií
-
-Implementácia nového systému {feature} prebieha v niekoľkých fázach, aby sme zabezpečili plynulý prechod a minimalizovali akékoľvek nepohodlie pre používateľov:
-
-**Fáza 1 - Beta testovanie (1-2 mesiace):**
-- Testovanie s vybranými používateľmi
-- Zbieranie spätnej väzby a optimalizácia
-- Identifikácia a riešenie potenciálnych problémov
-- Finalizácia používateľského rozhrania
-
-**Fáza 2 - Postupné zavádzanie (2-3 mesiace):**
-- Spustenie pre 10% používateľskej bázy
-- Monitorovanie výkonu a stability
-- Postupné rozšírenie na ďalších používateľov
-- Kontinuálne vylepšovanie na základe reálnych dát
-
-**Fáza 3 - Plné nasadenie (1 mesiac):**
-- Aktivácia pre všetkých používateľov
-- Kompletná migrácia zo starého systému
-- Školenia a podpora pre používateľov
-- Monitorovanie a optimalizácia výkonu
-
-### Technická migrácia
-
-**Bezproblémový prechod:** Vďaka pokročilým migračným nástrojom sa prechod na nový systém uskutoční bez výpadkov služby.
-
-**Zachovanie dát:** Všetky existujúce dáta, nastavenia a preferencie budú automaticky prenesené do nového systému.
-
-**Spätná kompatibilita:** Nový systém je plne kompatibilný so všetkými existujúcimi funkciami a integráciami.
-
-**Rollback možnosti:** V prípade neočakávaných problémov máme pripravené mechanizmy na okamžitý návrat k predchádzajúcej verzii.
-
-### Školenia a podpora
-
-**Interaktívne tutoriály:** Vytvorili sme sériu interaktívnych tutoriálov, ktoré používateľov prevedú všetkými novými funkciami.
-
-**Video sprievodcovia:** Knižnica video návodov pokrývajúca všetky aspekty nového systému.
-
-**Live webináre:** Pravidelné online prezentácie a Q&A session s našimi expertmi.
-
-**24/7 podpora:** Rozšírili sme našu podporu o špecializovaný tím pre nové funkcie.
-
-**Komunitné fórum:** Priestor pre používateľov na zdieľanie skúseností a vzájomné pomáhanie.
-
-## Budúce plány a roadmapa
-
-### Krátkodobé ciele (3-6 mesiacov)
-
-**Rozšírenie AI funkcionalít:**
-- Implementácia pokročilejších konverzačných schopností
-- Pridanie podpory pre ďalšie jazyky a dialekty
-- Vylepšenie rozpoznávania emócií v komunikácii
-- Integrácia s externými AI službami
-
-**Mobilná optimalizácia:**
-- Kompletné prepracovanie mobilnej aplikácie
-- Pridanie offline funkcionalít
-- Optimalizácia pre rôzne veľkosti obrazoviek
-- Implementácia pokročilých mobilných funkcií (AR, NFC)
-
-**Rozšírenie integrácií:**
-- Pripojenie ďalších 100+ externých služieb
-- API pre tretie strany
-- Webhook systém pre real-time notifikácie
-- SDK pre vývojárov
-
-### Strednodobé ciele (6-12 mesiacov)
-
-**Globálna expanzia:**
-- Spustenie v 10 nových krajinách
-- Lokalizácia pre rôzne kultúry a trhy
-- Partnerstvá s miestnymi poskytovateľmi
-- Compliance s miestnymi reguláciami
-
-**Pokročilé technológie:**
-- Implementácia rozšírenej reality (AR)
-- Virtuálne konzultácie a prehliadky
-- 3D modelovanie a vizualizácia
-- Holografické komunikácie
-
-**Udržateľnosť:**
-- Carbon-neutral operácie
-- Zelené technológie a procesy
-- Podpora ekologických projektov
-- Meranie a reportovanie environmentálneho dopadu
-
-### Dlhodobé ciele (1-2 roky)
-
-**Autonómne systémy:**
-- Plne automatizované párovanie a správa projektov
-- AI-driven rozhodovanie bez ľudského zásahu
-- Prediktívne služby a proaktívna údržba
-- Samoopravujúce sa systémy
-
-**Kvantové technológie:**
-- Plná implementácia kvantových výpočtov
-- Kvantová komunikácia pre všetky operácie
-- Kvantová kryptografia novej generácie
-- Kvantové algoritmy pre optimalizáciu
-
-**Metaverse integrácia:**
-- Virtuálne showroomy a prezentácie
-- 3D konzultácie vo virtuálnom prostredí
-- NFT certifikáty a záruky
-- Blockchain-based identity management
-
-## Technická dokumentácia
-
-### API rozhranie
-
-Nový systém {feature} poskytuje kompletné REST API rozhranie pre integráciu s externými systémami:
-
-## Výhody pre používateľov
-
-Tieto zmeny prinášajú konkrétne výhody...
-
-## Implementácia a rollout
-
-Postupné zavádzanie nových funkcií...
-
-## Budúce plány
-
-Naša roadmapa pre ďalší vývoj...
-
-## Záver
-
-Tieto vylepšenia predstavují významný krok vpred...`
-    },
-    {
-      titleTemplate: "Bezpečnostné aktualizácie {system} - Maximálna ochrana vašich dát",
-      category: 'aktualizacie',
-      contentTemplate: `# Bezpečnostné aktualizácie {system} - Maximálna ochrana vašich dát
-
-V rámci našeho neustáleho úsilia o maximálnu bezpečnosť implementujeme najnovšie bezpečnostné opatrenia...
-
-## Nové bezpečnostné funkcie
-
-Detailný prehľad všetkých bezpečnostných vylepšení...
-
-## Technická implementácia
-
-Ako fungujú nové bezpečnostné mechanizmy...
-
-## Compliance a štandardy
-
-Zhoda s medzinárodnými bezpečnostnými štandardmi...
-
-## Používateľské výhody
-
-Konkrétne prínosy pre našich používateľov...
-
-## Záver
-
-Bezpečnosť je a zostáva našou prioritou...`
-    },
-    {
-      titleTemplate: "Oprava kritickej chyby v {component} - Zlepšená stabilita systému",
-      category: 'opravene',
-      contentTemplate: `# Oprava kritickej chyby v {component} - Zlepšená stabilita systému
-
-Identifikovali sme a úspešne vyriešili kritickú chybu v {component}, ktorá ovplyvňovala výkon systému...
+    date: '2025-01-12',
+    coverImage: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=800&q=80',
+    readTime: 6,
+    views: 12890,
+    likes: 278,
+    author: 'Marek Novák',
+    tags: ['služby', 'smart-home', 'ekológia']
+  },
+  {
+    id: 3,
+    title: 'Oprava kritickej chyby v platobnom systéme',
+    description: 'Úspešne sme vyriešili problém s duplicitnými platbami. Všetky duplicitné platby boli automaticky vrátené.',
+    content: `Dňa 10. januára 2025 sme identifikovali a okamžite vyriešili kritickú chybu v našom platobnom systéme.
 
 ## Popis problému
 
-Detailný popis identifikovanej chyby...
+Problém ovplyvnil približne 0.3% všetkých transakcií v časovom okne 8:30-10:15.
 
-## Riešenie
+## Okamžité riešenie
 
-Technické riešenie a implementácia opravy...
+- Zastavenie problému do 45 minút
+- Automatické vrátenie duplicitných platieb
+- Kompenzácia pre ovplyvnených zákazníkov`,
+    category: 'opravene',
+    date: '2025-01-10',
+    coverImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
+    readTime: 5,
+    views: 8934,
+    likes: 156,
+    author: 'Peter Kováč',
+    tags: ['oprava', 'platby', 'bug-fix']
+  },
+  {
+    id: 4,
+    title: 'Nová mobilná aplikácia pre iOS a Android',
+    description: 'Spúšťame novú mobilnú aplikáciu s vylepšeným používateľským rozhraním a offline funkciami.',
+    content: `Naša nová mobilná aplikácia prináša revolučné zmeny v používateľskej skúsenosti.
 
-## Testovanie
+## Kľúčové funkcie
 
-Rozsiahle testovanie a validácia opravy...
+- Offline režim pre základné operácie
+- Push notifikácie v reálnom čase
+- Biometrické prihlásenie
+- Tmavý režim
+
+## Výhody novej aplikácie
+
+Rýchlejšie načítanie, lepšia navigácia a intuitívnejšie ovládanie.`,
+    category: 'vylepsene',
+    date: '2025-01-08',
+    coverImage: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80',
+    readTime: 4,
+    views: 11250,
+    likes: 298,
+    author: 'Jana Svobodová',
+    tags: ['mobilná-aplikácia', 'iOS', 'Android']
+  },
+  {
+    id: 5,
+    title: 'AI asistent teraz podporuje slovenčinu a češtinu',
+    description: 'Náš AI asistent rozširuje jazykovú podporu a teraz plynule komunikuje v slovenčine a češtine.',
+    content: `Veľká aktualizácia nášho AI asistenta prináša podporu pre slovenčinu a češtinu.
+
+## Nové jazykové funkcie
+
+- Prirodzená konverzácia v slovenčine
+- Pochopenie regionálnych výrazov
+- Automatická detekcia jazyka
+
+## Vylepšená presnosť
+
+AI asistent teraz lepšie rozumie kontextu a poskytuje relevantnejšie odpovede.`,
+    category: 'aktualizacie',
+    date: '2025-01-05',
+    coverImage: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80',
+    readTime: 3,
+    views: 9876,
+    likes: 234,
+    author: 'Tomáš Dvořák',
+    tags: ['AI', 'jazyky', 'slovenčina', 'čeština']
+  },
+  {
+    id: 6,
+    title: 'Partnerstvo s najväčšími stavebnými firmami',
+    description: 'Uzavreli sme partnerstvá s 50 najväčšími stavebnými firmami na Slovensku a v Česku.',
+    content: `ServisAI rozširuje svoje partnerstvá a prináša ešte kvalitnejšie služby.
+
+## Noví partneri
+
+- 25 firiem na Slovensku
+- 25 firiem v Česku
+- Všetci partneri sú certifikovaní
+
+## Výhody pre zákazníkov
+
+Vyššia kvalita služieb, rýchlejšie termíny a konkurenčné ceny.`,
+    category: 'novinky',
+    date: '2025-01-03',
+    coverImage: 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?auto=format&fit=crop&w=800&q=80',
+    readTime: 4,
+    views: 7654,
+    likes: 189,
+    author: 'Michal Horák',
+    tags: ['partnerstvo', 'stavebníctvo', 'firmy']
+  },
+  {
+    id: 7,
+    title: 'Nový systém hodnotení a recenzií',
+    description: 'Predstavujeme vylepšený systém hodnotení s overenými recenziami a detailnými kategóriami.',
+    content: `Nový systém hodnotení prináša transparentnosť a dôveryhodnosť.
+
+## Kľúčové vylepšenia
+
+- Overené recenzie od skutočných zákazníkov
+- Hodnotenie v 5 kategóriách
+- Fotografie dokončených prác
+- Možnosť odpovede od poskytovateľa
+
+## Boj proti falošným recenziám
+
+Implementovali sme AI systém na detekciu falošných hodnotení.`,
+    category: 'vylepsene',
+    date: '2025-01-01',
+    coverImage: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80',
+    readTime: 5,
+    views: 6543,
+    likes: 167,
+    author: 'Eva Nováková',
+    tags: ['hodnotenie', 'recenzie', 'kvalita']
+  },
+  {
+    id: 8,
+    title: 'Rozšírenie do Maďarska a Rakúska',
+    description: 'ServisAI expanduje do nových krajín. Naše služby sú teraz dostupné aj v Maďarsku a Rakúsku.',
+    content: `Medzinárodná expanzia ServisAI pokračuje úspešne.
+
+## Nové trhy
+
+- Maďarsko: Budapešť, Debrecín, Szeged
+- Rakúsko: Viedeň, Graz, Linz
+
+## Lokalizácia služieb
+
+Všetky služby sú prispôsobené miestnym potrebám a legislatíve.`,
+    category: 'novinky',
+    date: '2024-12-28',
+    coverImage: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=800&q=80',
+    readTime: 4,
+    views: 8765,
+    likes: 203,
+    author: 'Lukáš Černý',
+    tags: ['expanzia', 'Maďarsko', 'Rakúsko']
+  },
+  {
+    id: 9,
+    title: 'Zimná údržba: Nové služby pre chladné mesiace',
+    description: 'Pridávame špecializované zimné služby vrátane čistenia snehu, údržby kúrenia a zimných kontrol.',
+    content: `Zima prináša špecifické potreby pre údržbu domov a záhrad.
+
+## Zimné služby
+
+- Čistenie snehu a ľadu
+- Kontrola a údržba kúrenia
+- Zimné prehliadky striech
+- Ochrana rastlín
 
 ## Preventívne opatrenia
 
-Opatrenia na predchádzanie podobným problémom...
+Naši odborníci pomôžu pripraviť váš dom na zimu.`,
+    category: 'sezonne',
+    date: '2024-12-25',
+    coverImage: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=800&q=80',
+    readTime: 3,
+    views: 5432,
+    likes: 134,
+    author: 'Martin Svoboda',
+    tags: ['zima', 'údržba', 'sneh', 'kúrenie']
+  },
+  {
+    id: 10,
+    title: 'Ekologické materiály: Zelená budúcnosť stavebníctva',
+    description: 'Podporujeme používanie ekologických materiálov a udržateľných stavebných praktik.',
+    content: `Udržateľnosť je kľúčová pre budúcnosť stavebníctva.
 
-## Záver
+## Ekologické materiály
 
-Ďakujeme za trpezlivosť a pokračujeme v zlepšovaní...`
-    }
-  ];
+- Recyklované stavebné materiály
+- Prírodné izolačné materiály
+- Ekologické farby a laky
+- Obnoviteľné zdroje energie
 
-  const features = ['AI asistenta', 'mobilnej aplikácie', 'webového rozhrania', 'notifikačného systému', 'vyhľadávania'];
-  const systems = ['autentifikačného systému', 'platobnej brány', 'dátového úložiska', 'API rozhrania'];
-  const components = ['používateľskom rozhraní', 'databázovom systéme', 'platobnom module', 'notifikačnom systéme'];
+## Certifikácia
 
-  const articles = [];
-  
-  for (let i = 0; i < count; i++) {
-    const template = templates[i % templates.length];
-    let title = template.titleTemplate;
-    let content = template.contentTemplate;
-    
-    // Nahradenie placeholderov
-    if (title.includes('{feature}')) {
-      const feature = features[i % features.length];
-      title = title.replace('{feature}', feature);
-      content = content.replace(/{feature}/g, feature);
-    }
-    
-    if (title.includes('{system}')) {
-      const system = systems[i % systems.length];
-      title = title.replace('{system}', system);
-      content = content.replace(/{system}/g, system);
-    }
-    
-    if (title.includes('{component}')) {
-      const component = components[i % components.length];
-      title = title.replace('{component}', component);
-      content = content.replace(/{component}/g, component);
-    }
+Všetci naši partneri sú certifikovaní pre prácu s ekologickými materiálmi.`,
+    category: 'udrzatelnost',
+    date: '2024-12-22',
+    coverImage: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80',
+    readTime: 6,
+    views: 4321,
+    likes: 156,
+    author: 'Zuzana Krásná',
+    tags: ['ekológia', 'materiály', 'udržateľnosť']
+  },
+  {
+    id: 11,
+    title: 'Nový chat systém s video hovorami',
+    description: 'Komunikácia s poskytovateľmi služieb je teraz ešte jednoduchšia vďaka integrovaným video hovorom.',
+    content: `Vylepšujeme komunikáciu medzi zákazníkmi a poskytovateľmi.
 
-    // Rozšírenie obsahu na požadovanú dĺžku
-    const expandedContent = content + `
+## Nové funkcie chatu
 
-## Detailná analýza
+- HD video hovory
+- Zdieľanie obrazovky
+- Posielanie fotografií a dokumentov
+- Automatické preklady
 
-${generateDetailedAnalysis()}
+## Výhody video komunikácie
 
-## Technické špecifikácie
+Lepšie pochopenie požiadaviek a rýchlejšie riešenie problémov.`,
+    category: 'vylepsene',
+    date: '2024-12-20',
+    coverImage: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80',
+    readTime: 4,
+    views: 6789,
+    likes: 178,
+    author: 'Pavel Novotný',
+    tags: ['chat', 'video', 'komunikácia']
+  },
+  {
+    id: 12,
+    title: 'Bezpečnostné aktualizácie: Ochrana pred kybernetickými hrozbami',
+    description: 'Implementovali sme najnovšie bezpečnostné protokoly na ochranu pred kybernetickými útokmi.',
+    content: `Kybernetická bezpečnosť je našou prioritou.
 
-${generateTechnicalSpecs()}
+## Nové bezpečnostné opatrenia
 
-## Používateľské scenáre
+- Pokročilá detekcia malvéru
+- Automatické bezpečnostné zálohy
+- Šifrované komunikačné kanály
+- Pravidelné bezpečnostné audity
 
-${generateUserScenarios()}
+## Ochrana používateľských dát
 
-## Výkonnostné metriky
+Všetky osobné údaje sú chránené najvyššími štandardmi.`,
+    category: 'bezpecnost',
+    date: '2024-12-18',
+    coverImage: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80',
+    readTime: 5,
+    views: 7890,
+    likes: 234,
+    author: 'Ondrej Krejčí',
+    tags: ['bezpečnosť', 'kybernetika', 'ochrana']
+  },
+  {
+    id: 13,
+    title: 'Smart Home integrácie: Prepojenie s populárnymi systémami',
+    description: 'Naša platforma sa teraz integruje s najpoužívanejšími smart home systémami.',
+    content: `Smart home technológie menia spôsob, akým žijeme.
 
-${generatePerformanceMetrics()}
+## Podporované systémy
 
-## Porovnanie s konkurenciou
+- Google Home
+- Amazon Alexa
+- Apple HomeKit
+- Samsung SmartThings
 
-${generateCompetitiveAnalysis()}
+## Automatizované služby
 
-## Budúce vylepšenia
+Možnosť automatického objednávania údržby na základe dát zo senzorov.`,
+    category: 'technologie',
+    date: '2024-12-15',
+    coverImage: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80',
+    readTime: 4,
+    views: 5678,
+    likes: 145,
+    author: 'Jakub Veselý',
+    tags: ['smart-home', 'integrácia', 'automatizácia']
+  },
+  {
+    id: 14,
+    title: 'Nové platobné metódy: Kryptomeny a digitálne peňaženky',
+    description: 'Rozširujeme platobné možnosti o kryptomeny a populárne digitálne peňaženky.',
+    content: `Moderné platobné metódy pre moderných zákazníkov.
 
-${generateFutureImprovements()}
+## Nové platobné možnosti
 
-## Často kladené otázky
+- Bitcoin a Ethereum
+- PayPal a Apple Pay
+- Google Pay a Samsung Pay
+- Revolut a Wise
 
-${generateFAQ()}
+## Bezpečnosť platieb
 
-## Zákaznícke príbehy
+Všetky platby sú chránené najvyššími bezpečnostnými štandardmi.`,
+    category: 'aktualizacie',
+    date: '2024-12-12',
+    coverImage: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=800&q=80',
+    readTime: 3,
+    views: 8901,
+    likes: 267,
+    author: 'Tereza Svobodová',
+    tags: ['platby', 'kryptomeny', 'digitálne-peňaženky']
+  },
+  {
+    id: 15,
+    title: 'Sezónne akcie: Zimné zľavy na vykurovacie systémy',
+    description: 'Špeciálne zimné zľavy na inštaláciu a údržbu vykurovacích systémov až do 30%.',
+    content: `Zimné mesiace sú ideálne pre údržbu vykurovacích systémov.
 
-${generateCustomerStories()}
+## Akciové služby
 
-## Technická dokumentácia
+- Servis kotlov a radiátorov
+- Inštalácia nových systémov
+- Čistenie komínov
+- Kontrola plynovodov
 
-${generateTechnicalDocs()}
+## Zľavy až 30%
 
-## Záver a ďalšie kroky
+Využite zimné zľavy na prípravu na ďalšiu sezónu.`,
+    category: 'akcie',
+    date: '2024-12-10',
+    coverImage: 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?auto=format&fit=crop&w=800&q=80',
+    readTime: 3,
+    views: 4567,
+    likes: 123,
+    author: 'Milan Novák',
+    tags: ['akcie', 'zľavy', 'vykurovanie', 'zima']
+  },
+  {
+    id: 16,
+    title: 'Nový systém notifikácií: Personalizované upozornenia',
+    description: 'Vylepšený notifikačný systém s možnosťou personalizácie a inteligentným časovaním.',
+    content: `Notifikácie, ktoré vám skutočne pomôžu.
 
-${generateConclusion()}`;
+## Inteligentné notifikácie
 
-    articles.push({
-      id: 2000 + i,
-      title,
-      description: `Detailný prehľad najnovších zmien a vylepšení v našej platforme.`,
-      content: expandedContent,
-      category: template.category,
-      date: new Date(2025, 0, 15 - (i % 30)).toISOString().split('T')[0],
-      coverImage: `https://images.pexels.com/photos/${8386440 + (i % 1000)}/pexels-photo-${8386440 + (i % 1000)}.jpeg`,
-      readTime: Math.floor(Math.random() * 10) + 8,
-      views: Math.floor(Math.random() * 5000) + 1000,
-      likes: Math.floor(Math.random() * 200) + 50,
-      author: ['Vývojový tím ServisAI', 'Produktový tím ServisAI', 'Bezpečnostný tím ServisAI'][i % 3],
-      tags: generateTags(i)
-    });
+- Personalizované podľa preferencií
+- Optimálne časovanie
+- Rôzne kanály (email, SMS, push)
+- Prioritizácia dôležitosti
+
+## Kontrola nad notifikáciami
+
+Plná kontrola nad tým, čo a kedy chcete dostávať.`,
+    category: 'vylepsene',
+    date: '2024-12-08',
+    coverImage: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80',
+    readTime: 4,
+    views: 6234,
+    likes: 167,
+    author: 'Petra Nová',
+    tags: ['notifikácie', 'personalizácia', 'komunikácia']
+  },
+  {
+    id: 17,
+    title: 'Rozšírenie do menších miest: Služby pre celé Slovensko',
+    description: 'ServisAI rozširuje pokrytie do menších miest a obcí po celom Slovensku.',
+    content: `Kvalitné služby pre každého, všade na Slovensku.
+
+## Nové lokality
+
+- 50 nových miest a obcí
+- Pokrytie všetkých krajov
+- Miestni poskytovatelia služieb
+- Regionálne špecializácie
+
+## Podpora miestnych firiem
+
+Podporujeme miestnych remeselníkov a malé firmy.`,
+    category: 'regionalne',
+    date: '2024-12-05',
+    coverImage: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=800&q=80',
+    readTime: 4,
+    views: 5890,
+    likes: 178,
+    author: 'Ján Kováč',
+    tags: ['expanzia', 'regióny', 'mestá', 'obce']
+  },
+  {
+    id: 18,
+    title: 'Nové vzdelávacie materiály pre poskytovateľov',
+    description: 'Spúšťame komplexný vzdelávací program pre poskytovateľov služieb s certifikáciou.',
+    content: `Investujeme do vzdelávania našich partnerov.
+
+## Vzdelávacie programy
+
+- Online kurzy a webináre
+- Praktické workshopy
+- Certifikačné programy
+- Kontinuálne vzdelávanie
+
+## Výhody certifikácie
+
+Certifikovaní poskytovatelia majú vyššiu dôveryhodnosť a lepšie hodnotenia.`,
+    category: 'vzdelavanie',
+    date: '2024-12-03',
+    coverImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
+    readTime: 5,
+    views: 4321,
+    likes: 134,
+    author: 'Mária Svobodová',
+    tags: ['vzdelávanie', 'certifikácia', 'kurzy']
+  },
+  {
+    id: 19,
+    title: 'Automatizované cenové kalkulácie pomocou AI',
+    description: 'Nový AI systém automaticky kalkuluje ceny služieb na základe komplexnosti a lokality.',
+    content: `Spravodlivé a transparentné ceny vďaka AI.
+
+## AI kalkulátor cien
+
+- Analýza komplexnosti práce
+- Regionálne cenové rozdiely
+- Historické dáta o cenách
+- Transparentné kalkulácie
+
+## Výhody pre všetkých
+
+Zákazníci dostanú spravodlivé ceny, poskytovatelia konkurenčné ohodnotenie.`,
+    category: 'technologie',
+    date: '2024-12-01',
+    coverImage: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80',
+    readTime: 4,
+    views: 7654,
+    likes: 198,
+    author: 'Tomáš Novotný',
+    tags: ['AI', 'ceny', 'kalkulácie', 'transparentnosť']
+  },
+  {
+    id: 20,
+    title: 'Nové kategórie wellness služieb',
+    description: 'Pridávame wellness služby vrátane masáží, jogy a relaxačných terapií priamo u vás doma.',
+    content: `Wellness a relaxácia v pohodlí vašeho domova.
+
+## Wellness služby
+
+- Domáce masáže
+- Joga a pilates lekcie
+- Meditačné seansy
+- Aromaterapia
+
+## Certifikovaní terapeuti
+
+Všetci naši wellness terapeuti sú certifikovaní a skúsení.`,
+    category: 'specializovane',
+    date: '2024-11-28',
+    coverImage: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=800&q=80',
+    readTime: 3,
+    views: 3456,
+    likes: 112,
+    author: 'Alena Krásna',
+    tags: ['wellness', 'masáže', 'relaxácia', 'zdravie']
+  },
+  {
+    id: 21,
+    title: 'Oprava problému s načítavaním obrázkov',
+    description: 'Vyriešili sme problém s pomalým načítavaním obrázkov v mobilnej aplikácii.',
+    content: `Mobilná aplikácia je teraz rýchlejšia a spoľahlivejšia.
+
+## Vyriešené problémy
+
+- Pomalé načítavanie obrázkov
+- Problémy s cache pamäťou
+- Optimalizácia pre pomalé pripojenie
+- Lepšia kompresie obrázkov
+
+## Výsledky
+
+Aplikácia je teraz o 40% rýchlejšia pri načítavaní obsahu.`,
+    category: 'opravene',
+    date: '2024-11-25',
+    coverImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
+    readTime: 3,
+    views: 5678,
+    likes: 145,
+    author: 'Filip Dvořák',
+    tags: ['oprava', 'mobilná-aplikácia', 'výkon']
+  },
+  {
+    id: 22,
+    title: 'Partnerstvo s poisťovňami: Poistenie služieb',
+    description: 'Uzavreli sme partnerstvá s poisťovňami na poskytovanie poistenia pre všetky služby.',
+    content: `Dodatočná ochrana pre všetky služby na našej platforme.
+
+## Poistné krytie
+
+- Poškodenie majetku
+- Nekvalitná práca
+- Úrazy pri práci
+- Oneskorenie dokončenia
+
+## Automatické poistenie
+
+Všetky služby nad 500€ sú automaticky poistené.`,
+    category: 'partnerstva',
+    date: '2024-11-22',
+    coverImage: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80',
+    readTime: 4,
+    views: 4567,
+    likes: 134,
+    author: 'Radka Nováková',
+    tags: ['poistenie', 'partnerstvo', 'ochrana']
+  },
+  {
+    id: 23,
+    title: 'Nový blog o domácich tipoch a trikoch',
+    description: 'Spúšťame nový blog s užitočnými tipmi, návodmi a radami pre údržbu domácnosti.',
+    content: `Užitočné rady a tipy priamo od odborníkov.
+
+## Obsah blogu
+
+- DIY návody
+- Sezónne tipy
+- Údržba domácnosti
+- Úspora energií
+
+## Pravidelný obsah
+
+Nové články každý týždeň od našich certifikovaných odborníkov.`,
+    category: 'blog',
+    date: '2024-11-20',
+    coverImage: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=800&q=80',
+    readTime: 3,
+    views: 6789,
+    likes: 189,
+    author: 'Katarína Svobodová',
+    tags: ['blog', 'tipy', 'návody', 'DIY']
+  },
+  {
+    id: 24,
+    title: 'Rozšírenie pracovných hodín: 24/7 zákaznícky servis',
+    description: 'Náš zákaznícky servis je teraz dostupný 24 hodín denne, 7 dní v týždni.',
+    content: `Sme tu pre vás kedykoľvek potrebujete pomoc.
+
+## 24/7 podpora
+
+- Telefonická podpora
+- Live chat
+- Email podpora
+- Núdzové služby
+
+## Rýchle riešenie problémov
+
+Priemerný čas odpovede je menej ako 5 minút.`,
+    category: 'vylepsene',
+    date: '2024-11-18',
+    coverImage: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80',
+    readTime: 3,
+    views: 5432,
+    likes: 167,
+    author: 'Michal Černý',
+    tags: ['zákaznícky-servis', '24/7', 'podpora']
+  },
+  {
+    id: 25,
+    title: 'Ročné zhrnutie: Úspechy a plány do budúcnosti',
+    description: 'Pozrite si naše najväčšie úspechy za rok 2024 a plány na rok 2025.',
+    content: `Rok 2024 bol pre ServisAI prelomový.
+
+## Úspechy roku 2024
+
+- 500,000+ spokojných zákazníkov
+- 10,000+ registrovaných poskytovateľov
+- 99.8% spokojnosť zákazníkov
+- Expanzia do 4 krajín
+
+## Plány na rok 2025
+
+- Rozšírenie do ďalších krajín
+- Nové technológie AI
+- Viac služieb a kategórií
+- Ešte lepšia používateľská skúsenosť`,
+    category: 'novinky',
+    date: '2024-11-15',
+    coverImage: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
+    readTime: 6,
+    views: 12345,
+    likes: 456,
+    author: 'Tím ServisAI',
+    tags: ['ročné-zhrnutie', 'úspechy', 'plány', '2025']
   }
-  
-  return articles;
-};
+];
 
-// Pomocné funkcie na generovanie obsahu
-const generateDetailedAnalysis = () => `
-Naša analýza ukázala, že implementácia týchto zmien prináša významné zlepšenia v oblasti používateľskej skúsenosti. Detailné metriky ukazujú 40% zlepšenie v rýchlosti odozvy systému a 25% nárast spokojnosti používateľov.
-
-Kľúčové zistenia z analýzy:
-- Zníženie času načítania o 60%
-- Zlepšenie stability systému o 45%
-- Nárast konverznej miery o 30%
-- Pokles počtu chýb o 80%
-
-Tieto výsledky potvrdzujú správnosť našej stratégie a investícií do technologických inovácií.
-`;
-
-const generateTechnicalSpecs = () => `
-Technické špecifikácie nových funkcií:
-
-**Architektúra:**
-- Mikroslužbová architektúra s Docker kontajnermi
-- Kubernetes orchestrácia pre škálovateľnosť
-- Redis cache pre optimalizáciu výkonu
-- PostgreSQL databáza s replikáciou
-
-**Bezpečnosť:**
-- OAuth 2.0 autentifikácia
-- JWT tokeny s rotáciou
-- HTTPS/TLS 1.3 šifrovanie
-- Rate limiting a DDoS ochrana
-
-**Výkon:**
-- Sub-200ms odozva API
-- 99.99% dostupnosť služby
-- Automatické škálovanie podľa záťaže
-- CDN pre globálnu distribúciu obsahu
-`;
-
-const generateUserScenarios = () => `
-Typické používateľské scenáre a ich optimalizácia:
-
-**Scenár 1: Nový používateľ**
-Nový používateľ sa registruje a hľadá prvú službu. Optimalizovali sme onboarding proces, ktorý teraz trvá len 3 minúty namiesto pôvodných 10 minút.
-
-**Scenár 2: Opakovaný zákazník**
-Stály zákazník hľadá ďalšiu službu. Personalizované odporúčania na základe histórie zvyšujú pravdepodobnosť úspešného párovania o 65%.
-
-**Scenár 3: Poskytovateľ služby**
-Poskytovateľ spravuje svoje ponuky a komunikuje so zákazníkmi. Nové dashboard rozhranie zlepšuje efektívnosť o 40%.
-`;
-
-const generatePerformanceMetrics = () => `
-Kľúčové výkonnostné ukazovatele:
-
-**Rýchlosť:**
-- Priemerný čas načítania stránky: 1.2s → 0.8s
-- API odozva: 300ms → 180ms
-- Databázové dotazy: 50ms → 30ms
-
-**Spoľahlivosť:**
-- Uptime: 99.5% → 99.99%
-- Chybovosť: 2.1% → 0.3%
-- Úspešnosť transakcií: 97% → 99.5%
-
-**Škálovateľnosť:**
-- Maximálny počet súbežných používateľov: 10,000 → 50,000
-- Transakcie za sekundu: 1,000 → 5,000
-- Úložný priestor: 1TB → 10TB
-`;
-
-const generateCompetitiveAnalysis = () => `
-Porovnanie s konkurenciou ukazuje naše vedúce postavenie:
-
-**Funkčnosť:**
-- ServisAI: 95% pokrytie funkcií
-- Konkurent A: 70% pokrytie funkcií  
-- Konkurent B: 65% pokrytie funkcií
-
-**Používateľská skúsenosť:**
-- ServisAI: 4.8/5 hodnotenie
-- Konkurent A: 4.2/5 hodnotenie
-- Konkurent B: 3.9/5 hodnotenie
-
-**Technologická vyspelost:**
-- ServisAI: Najmodernejšie technológie
-- Konkurent A: Zastarané riešenia
-- Konkurent B: Priemerné technológie
-`;
-
-const generateFutureImprovements = () => `
-Plánované vylepšenia v nasledujúcich mesiacoch:
-
-**Q1 2025:**
-- Implementácia hlasového rozhrania
-- Rozšírenie AI funkcionalít
-- Mobilná aplikácia 3.0
-
-**Q2 2025:**
-- Blockchain integrácia
-- IoT zariadenia podpora
-- Rozšírená analytika
-
-**Q3 2025:**
-- Medzinárodná expanzia
-- B2B riešenia
-- API pre partnerov
-
-**Q4 2025:**
-- AR/VR integrácia
-- Prediktívna analytika
-- Autonómne systémy
-`;
-
-const generateFAQ = () => `
-Často kladené otázky:
-
-**Q: Ako dlho trvá implementácia zmien?**
-A: Väčšina zmien je implementovaná okamžite. Niektoré pokročilé funkcie môžu vyžadovať postupné zavádzanie.
-
-**Q: Ovplyvnia zmeny existujúce projekty?**
-A: Nie, všetky zmeny sú spätne kompatibilné a neovplyvnia prebiehajúce projekty.
-
-**Q: Sú zmeny bezplatné?**
-A: Áno, všetky základné vylepšenia sú súčasťou štandardnej služby bez dodatočných poplatkov.
-
-**Q: Ako sa môžem naučiť používať nové funkcie?**
-A: Pripravili sme detailné návody, video tutoriály a webináre pre všetkých používateľov.
-`;
-
-const generateCustomerStories = () => `
-Príbehy spokojných zákazníkov:
-
-**Mária K., Bratislava:**
-"Nové funkcie mi ušetrili hodiny času. Teraz nájdem vhodného odborníka za pár minút namiesto hodín hľadania."
-
-**Peter S., Košice:**
-"Ako poskytovateľ služieb oceňujem nové dashboard. Všetko mám prehľadne na jednom mieste."
-
-**Jana M., Žilina:**
-"Bezpečnostné vylepšenia mi dávajú pocit istoty pri platbách. Viem, že moje peniaze sú v bezpečí."
-
-**Tomáš H., Nitra:**
-"AI asistent je neuveriteľný. Rozumie presne tomu, čo potrebujem, a navrhne ideálne riešenie."
-`;
-
-const generateTechnicalDocs = () => `
-Technická dokumentácia pre vývojárov:
-
-**API Endpoints:**
-- GET /api/v2/services - Zoznam služieb
-- POST /api/v2/bookings - Vytvorenie objednávky
-- PUT /api/v2/profiles - Aktualizácia profilu
-- DELETE /api/v2/sessions - Odhlásenie
-
-**Autentifikácia:**
-- Bearer token v Authorization header
-- Refresh token pre obnovenie prístupu
-- Rate limiting: 1000 requestov/hodinu
-
-**Webhooks:**
-- booking.created - Nová objednávka
-- payment.completed - Dokončená platba
-- review.submitted - Nové hodnotenie
-
-**SDK a knižnice:**
-- JavaScript/TypeScript SDK
-- Python SDK
-- PHP SDK
-- Mobile SDK (iOS/Android)
-`;
-
-const generateConclusion = () => `
-Tieto vylepšenia predstavujú významný míľnik v našom úsilí poskytovať najlepšie možné služby našim používateľom. Investície do technológií a inovácií sa odrážajú v konkrétnych zlepšeniach, ktoré pocítite pri každom používaní našej platformy.
-
-Naša vízia je jasná - vytvoriť najintuitívnejšiu, najbezpečnejšiu a najefektívnejšiu platformu pre domáce služby. S týmito vylepšeniami sa k tejto vízii výrazne približujeme.
-
-Ďakujeme za vašu dôveru a tešíme sa na ďalšie inovácie, ktoré pre vás pripravujeme.
-`;
-
-const generateTags = (index: number) => {
-  const allTags = [
-    'Technológie', 'Inovácie', 'AI', 'Bezpečnosť', 'Výkon', 'UX/UI', 
-    'Mobilné aplikácie', 'API', 'Databázy', 'Cloud', 'Škálovateľnosť',
-    'Automatizácia', 'Analytics', 'Machine Learning', 'Blockchain'
-  ];
-  
-  const numTags = 3 + (index % 3);
-  const selectedTags = [];
-  
-  for (let i = 0; i < numTags; i++) {
-    selectedTags.push(allTags[(index + i) % allTags.length]);
-  }
-  
-  return selectedTags;
-};
+// Funkcia na generovanie dodatočných článkov (už nie je potrebná, máme len 25)
+export function generateAdditionalArticles(count: number) {
+  return []; // Vrátime prázdne pole, keďže chceme len 25 článkov
+}
