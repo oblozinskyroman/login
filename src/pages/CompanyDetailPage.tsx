@@ -111,6 +111,13 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
         size={20}
         className={index < Math.round(rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}
       />
+    ));
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('sk-SK');
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 flex items-center justify-center">
@@ -199,7 +206,9 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
                   <div className="flex items-center gap-4 mb-4">
                     {company?.average_rating && company?.review_count && company?.review_count > 0 ? (
                       <div className="flex items-center gap-2">
-                        <StarRating value={company?.average_rating} />
+                        <div className="flex">
+                          {renderStars(company?.average_rating)}
+                        </div>
                         <span className="text-lg font-semibold text-gray-700">
                           {company?.average_rating?.toFixed(1)}
                         </span>
@@ -411,7 +420,9 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
                       </div>
                       
                       <div className="flex items-center mb-3">
-                        <StarRating value={review?.rating} />
+                        <div className="flex mr-2">
+                          {renderStars(review?.rating)}
+                        </div>
                         <span className="font-semibold text-gray-700">{review?.rating}/5</span>
                       </div>
                       
