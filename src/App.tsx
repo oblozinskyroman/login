@@ -413,7 +413,7 @@ function App() {
                     <button
                       type="button"
                       onClick={useMyLocation}
-                      className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-600 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                      className="px-6 py-3 bg-gray-200 text-gray-800 hover:bg-gray-300 font-semibold rounded-xl transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                     >
                       <MapPin size={18} />
                       Firmy v mojom okolí
