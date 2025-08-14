@@ -8,13 +8,12 @@ export type AskMeta = {
   limit?: number;
   userLocation?: string;
   coords?: { lat: number; lng: number } | null;
-  /** rýchle filtre z UI (napr. 'verified', 'rating-4plus', ...) */
-  filters?: string[];
+  filters?: string[]; // rýchle filtre z UI
 };
 
 type RawCard = Record<string, any>;
 
-type UICard = {
+export type UICard = {
   id?: string | number;
   title: string;
   subtitle?: string;
@@ -31,97 +30,106 @@ type UICard = {
   };
 };
 
+/* ---------- utils ---------- */
 function toNumberOrNull(v: unknown): number | null {
+  if (v == null) return null;
   const n = typeof v === 'string' ? Number(v.replace(',', '.')) : Number(v);
   return Number.isFinite(n) ? n : null;
 }
 
-function normalizeCard(c: RawCard): UICard {
-  // --- titul/ID ---
-  const id =
-    c.id ??
-    c.company_id ??
-    c.uuid ??
-    c.slug ??
-    c.external_id ??
-    c.title ??
-    c.name ??
-    undefined;
+// bezpečné čítanie z hĺbky: get(obj, ["company","address","city"])
+function getDeep(obj: any, path: string[]): any {
+  return path.reduce((acc, key) => (acc && acc[key] != null ? acc[key] : undefined), obj);
+}
 
+// vráť prvú nenull/neidenú hodnotu z viacerých (vrátane deep ciest "address.city")
+function pickFirst(obj: any, paths: (string | string[])[]): any {
+  for (const p of paths) {
+    const val =
+      Array.isArray(p) ? getDeep(obj, p) :
+      p.includes('.')   ? getDeep(obj, p.split('.')) :
+      (obj ? obj[p] : undefined);
+    if (val != null && String(val).trim() !== '') return val;
+  }
+  return undefined;
+}
+
+/* ---------- normalizácia karty z backendu ---------- */
+function normalizeCard(c: RawCard): UICard {
+  // ID
+  const id = pickFirst(c, [
+    'id', 'company_id', 'uuid', 'slug', 'external_id',
+    'title', 'name', 'company.name'
+  ]);
+
+  // Title
   const title = String(
-    c.title ?? c.name ?? c.company_name ?? c.business_name ?? 'Neznáma firma'
+    pickFirst(c, [
+      'title', 'name', 'company_name', 'business_name',
+      ['company', 'name']
+    ]) ?? 'Neznáma firma'
   );
 
-  const subtitle = c.subtitle ?? c.short_description ?? c.slogan ?? undefined;
+  // Subtitle & Popis
+  const subtitle = pickFirst(c, ['subtitle', 'short_description', 'slogan', ['company', 'slogan']]);
+  const description = pickFirst(c, [
+    'description', 'about', 'bio', 'long_description',
+    ['company', 'description']
+  ]);
 
-  // --- popis ---
-  const description =
-    c.description ?? c.about ?? c.bio ?? c.long_description ?? undefined;
+  // Lokalita – pokryjeme čo najviac variantov
+  const city = pickFirst(c, [
+    'city', 'city_name', 'locality', 'town', 'mesto', 'obec', 'municipality',
+    'address.city', ['address', 'city'],
+    'geo.city', ['geo', 'city'],
+    'company.city', ['company', 'city'],
+  ]);
 
-  // --- lokalita (skúsime poskladať z rôznych polí, ak chýba `location`) ---
-  const city =
-    c.city ??
-    c.locality ??
-    c.town ??
-    c.mesto ??
-    c.address?.city ??
-    c.address_city ??
-    c.geo?.city ??
-    undefined;
+  const region = pickFirst(c, [
+    'region', 'region_name', 'district', 'okres', 'kraj', 'county', 'state', 'province',
+    'address.region', ['address', 'region'],
+    'geo.region', ['geo', 'region'],
+    'company.region', ['company', 'region'],
+  ]);
 
-  const region =
-    c.region ??
-    c.district ??
-    c.kraj ??
-    c.okres ??
-    c.address?.region ??
-    c.address_region ??
-    c.geo?.region ??
-    undefined;
-
-  const fallbackLocation =
-    c.address?.formatted ??
-    c.address?.line1 ??
-    c.address ??
-    c.location_text ??
-    undefined;
+  const formattedAddress = pickFirst(c, [
+    'address.formatted', ['address', 'formatted'],
+    'address.line1', ['address', 'line1'],
+    'address', 'location_text',
+  ]);
 
   const location =
-    c.location ||
+    pickFirst(c, ['location', 'location_text']) ||
     [city, region].filter(Boolean).join(', ') ||
-    fallbackLocation ||
+    formattedAddress ||
     undefined;
 
-  // --- verifikácia ---
+  // Overenie
   const verified = Boolean(
-    c.verified ?? c.is_verified ?? (c.status && String(c.status).toLowerCase() === 'verified')
+    pickFirst(c, ['verified', 'is_verified']) ??
+    (String(pickFirst(c, ['status', 'company.status']) ?? '').toLowerCase() === 'verified')
   );
 
-  // --- rating ---
+  // Rating
   const rating =
-    toNumberOrNull(c.rating) ??
-    toNumberOrNull(c.average_rating) ??
-    toNumberOrNull(c.avg_rating) ??
-    null;
+    toNumberOrNull(pickFirst(c, ['rating', 'average_rating', 'avg_rating', ['company', 'average_rating']])) ?? null;
 
-  // --- tagy/služby ---
-  const tags = Array.isArray(c.tags)
-    ? c.tags
-    : Array.isArray(c.services)
-    ? c.services
-    : undefined;
+  // Tagy/služby
+  const tagsRaw = pickFirst(c, ['tags', 'services', ['company', 'services']]);
+  const tags = Array.isArray(tagsRaw) ? tagsRaw : undefined;
 
-  // --- akcie/kontakty ---
+  // Kontakty
   const actions = {
-    call: c.call ?? c.phone ?? c.tel ?? c.contact_phone ?? null,
-    email: c.email ?? c.contact_email ?? null,
-    website: c.website ?? c.url ?? c.link ?? null,
-    ctaLabel: c.ctaLabel ?? c.cta_label ?? undefined,
+    call: pickFirst(c, ['call', 'phone', 'tel', 'contact_phone', ['company', 'phone']]) ?? null,
+    email: pickFirst(c, ['email', 'contact_email', ['company', 'email']]) ?? null,
+    website: pickFirst(c, ['website', 'url', 'link', ['company', 'website']]) ?? null,
+    ctaLabel: pickFirst(c, ['ctaLabel', 'cta_label']) ?? undefined,
   };
 
   return { id, title, subtitle, description, location, verified, rating, tags, actions };
 }
 
+/* ---------- hlavná funkcia ---------- */
 export async function askAI(
   message: string,
   history: ChatTurn[] = [],
