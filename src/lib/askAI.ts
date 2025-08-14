@@ -1,4 +1,3 @@
-// src/lib/askAI.ts
 import { supabase } from './supabase';
 
 export type ChatTurn = { role: 'user' | 'assistant' | 'system'; content: string };
@@ -39,7 +38,7 @@ export async function askAI(
   temperature = 0.7,
   meta: AskMeta = {}
 ): Promise<AskResult> {
-  // ⛏️ POSIELAJ META NAPLOCHO (nie pod kľúčom "meta")
+  // POSIELAJ meta NAPLOCHO (edge function ich číta na top-level)
   const { data, error } = await supabase.functions.invoke('ai-assistant', {
     body: { message, history, temperature, ...meta },
   });
@@ -53,7 +52,7 @@ export async function askAI(
   const metaOut = data?.meta ?? null;
   const cardsRaw = Array.isArray(data?.cards) ? data.cards : [];
 
-  // Fallback logika pre zobrazenie lokality na kartách
+  // Fallback – ak backend neposlal location, ukáž intent/userLocation alebo „Moje okolie“ keď máme coords
   const cards = cardsRaw.map((c: any) => {
     const loc =
       (c?.location && String(c.location).trim()) ||
@@ -64,15 +63,13 @@ export async function askAI(
 
     const rating =
       typeof c?.rating === 'number' ? c.rating : (c?.rating != null ? Number(c.rating) : null);
-    const id =
-      typeof c?.id === 'number' || typeof c?.id === 'string' ? c.id : undefined;
 
     return {
-      id,
+      id: (typeof c?.id === 'number' || typeof c?.id === 'string') ? c.id : undefined,
       title: String(c?.title ?? ''),
       subtitle: c?.subtitle ?? '',
       description: c?.description ?? '',
-      location: loc || undefined, // zobrazí sa iba ak nie je prázdne
+      location: loc || undefined,      // zobrazí sa len keď nie je prázdne
       verified: Boolean(c?.verified),
       rating: Number.isFinite(rating as number) ? (rating as number) : null,
       tags: Array.isArray(c?.tags) ? c.tags : [],
