@@ -11,6 +11,7 @@ import MyAccountPage from './pages/MyAccountPage';
 
 import { supabase } from './lib/supabase';
 import { askAI, type ChatTurn } from './lib/askAI';
+import StarRating from './components/StarRating';
 
 import {
   MessageCircle,
@@ -50,20 +51,6 @@ type UICard = {
     ctaLabel?: string;
   };
 };
-
-/* ---------- ⭐ hviezdičky ---------- */
-function StarRating({ value = 0 }: { value?: number | null }) {
-  const v = Math.max(0, Math.min(Number(value ?? 0), 5));
-  const pct = (v / 5) * 100;
-  return (
-    <div className="relative inline-block leading-none" aria-label={`Hodnotenie ${v} z 5`}>
-      <div className="text-gray-300 select-none">★★★★★</div>
-      <div className="absolute inset-0 overflow-hidden" style={{ width: `${pct}%` }}>
-        <div className="text-yellow-400 select-none">★★★★★</div>
-      </div>
-    </div>
-  );
-}
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

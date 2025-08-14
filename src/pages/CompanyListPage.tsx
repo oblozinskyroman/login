@@ -19,6 +19,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { supabase, type Company } from '../lib/supabase';
+import StarRating from '../components/StarRating';
 
 interface CompanyListPageProps {
   selectedService?: string;
@@ -105,17 +106,6 @@ function CompanyListPage({ selectedService, onNavigateBack, onNavigateToCompanyD
   const clearAllFilters = () => {
     setActiveFilters([]);
     setSearchQuery('');
-  };
-
-  const renderStars = (rating: number | null | undefined) => {
-    if (!rating) return null;
-    return Array.from({ length: 5 }, (_, index) => (
-      <Star
-        key={index}
-        size={16}
-        className={index < Math.round(rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}
-      />
-    ));
   };
 
   return (
@@ -328,122 +318,79 @@ function CompanyListPage({ selectedService, onNavigateBack, onNavigateToCompanyD
         )}
 
         {!loadingCompanies && !errorCompanies && companies.length > 0 && (
-          <div className="flex flex-col space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {companies.map((company) => (
               <div
                 key={company.id}
                 onClick={() => onNavigateToCompanyDetail(company.id)}
-                className="bg-white/70 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col cursor-pointer"
+                className="flex flex-col h-full rounded-2xl shadow p-5 bg-white cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
               >
-                {/* Company Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-4">
-                    {/* Logo */}
-                    <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center overflow-hidden">
-                      {company.logo_url ? (
-                        <img 
-                          src={company.logo_url} 
-                          alt={`${company.name} logo`}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-white font-bold text-xl">
-                          {company.name.charAt(0)}
-                        </span>
-                      )}
-                    </div>
-
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-800 mb-2">
-                        {company.name}
-                      </h3>
-                      
-                      {/* Rating */}
-                      <div className="flex items-center gap-2 mb-2">
-                        {company.average_rating && company.review_count && company.review_count > 0 ? (
-                          <div className="flex items-center gap-1">
-                            <div className="flex">
-                              {renderStars(company.average_rating)}
-                            </div>
-                            <span className="text-sm font-medium text-gray-700">
-                              {company.average_rating.toFixed(1)}
-                            </span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center">
-                            <Star className="text-gray-300" size={16} />
-                            <span className="ml-1 text-gray-500 text-sm">Bez hodnotenia</span>
-                          </div>
-                        )}
-                        {company.status === 'approved' && (
-                          <Verified className="text-blue-600" size={20} />
-                        )}
-                      </div>
-                      
-                      <div className="text-sm text-gray-500 space-y-1">
-                        {company.location && (
-                          <div className="flex items-center gap-1">
-                            <MapPin size={14} />
-                            {company.location}
-                          </div>
-                        )}
-                        <div className="flex items-center gap-1">
-                          <Clock size={14} />
-                          Nová firma
-                        </div>
-                      </div>
-                    </div>
+                {/* Hlavička */}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-semibold break-words">{company.name}</h3>
                   </div>
-                  
-                  {/* Status Badge */}
-                  <div className="text-right">
-                    <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                  {company.status === 'approved' && (
+                    <span className="shrink-0 text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">
                       Overená
                     </span>
-                  </div>
+                  )}
                 </div>
 
-                {/* Services */}
-                <div className="flex flex-wrap gap-2 mb-4">
+                {/* Rating / Nová firma */}
+                <div className="mt-2 flex items-center gap-2">
+                  {company.average_rating && company.review_count && company.review_count > 0 ? (
+                    <>
+                      <StarRating value={company.average_rating} />
+                      <span className="text-xs text-gray-500">{company.average_rating.toFixed(1)}</span>
+                    </>
+                  ) : (
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                      Nová firma
+                    </span>
+                  )}
+                </div>
+
+                {/* Location */}
+                {company.location && (
+                  <div className="mt-2 flex items-center gap-1 text-xs text-gray-500">
+                    <MapPin size={12} />
+                    <span>{company.location}</span>
+                  </div>
+                )}
+
+                {/* Popis */}
+                {company.description && (
+                  <p className="mt-3 text-sm text-gray-700 line-clamp-3">
+                    {company.description}
+                  </p>
+                )}
+
+                {/* Tagy – konzistentná výška */}
+                <div className="mt-3 min-h-8 flex flex-wrap gap-2">
                   {(company.services ?? []).map((service, index) => (
-                    <span
-                      key={`${service}-${index}`}
-                      className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
-                    >
+                    <span key={`${service}-${index}`} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
                       {service}
                     </span>
                   ))}
                 </div>
 
-                {/* Description */}
-                <p className="text-gray-600 mb-4 line-clamp-2">
-                  {company.description || 'Popis firmy nie je k dispozícii.'}
-                </p>
-
-                {/* Contact Info */}
-                {(company.email || company.phone) && (
-                  <div className="text-sm text-gray-600 mb-4">
-                    {company.email && (
-                      <div className="flex items-center gap-1 mb-1">
-                        <Mail size={14} />
-                        {company.email}
-                      </div>
-                    )}
-                    {company.phone && (
-                      <div className="flex items-center gap-1">
-                        <Phone size={14} />
-                        {company.phone}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Action Buttons */}
-                <div className="flex gap-3 mt-auto">
-                  <button className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-2 px-4 rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 font-medium">
+                {/* CTA naspodku */}
+                <div className="mt-auto pt-4 flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
+                  <button className="px-3 py-2 rounded-xl bg-blue-600 text-white">
                     Kontaktovať
                   </button>
-                  {/* odstránené nefunkčné tlačidlá phone/mail */}
+                  
+                  {company.phone && (
+                    <a href={`tel:${company.phone}`} className="px-3 py-2 rounded-xl bg-blue-100 text-blue-700">
+                      Tel.
+                    </a>
+                  )}
+                  {company.email && (
+                    <a href={`mailto:${company.email}`} className="px-3 py-2 rounded-xl bg-blue-100 text-blue-700">
+                      Email
+                    </a>
+                  )}
                 </div>
               </div>
             ))}
