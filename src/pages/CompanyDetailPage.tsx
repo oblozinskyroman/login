@@ -206,9 +206,7 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
                   <div className="flex items-center gap-4 mb-4">
                     {company?.average_rating && company?.review_count && company?.review_count > 0 ? (
                       <div className="flex items-center gap-2">
-                        <div className="flex">
-                          {renderStars(company?.average_rating)}
-                        </div>
+                        <StarRating value={company?.average_rating} />
                         <span className="text-lg font-semibold text-gray-700">
                           {company?.average_rating?.toFixed(1)}
                         </span>
@@ -420,9 +418,7 @@ function CompanyDetailPage({ companyId, onNavigateBack }: CompanyDetailPageProps
                       </div>
                       
                       <div className="flex items-center mb-3">
-                        <div className="flex mr-2">
-                          {renderStars(review?.rating)}
-                        </div>
+                        <StarRating value={review?.rating} />
                         <span className="font-semibold text-gray-700">{review?.rating}/5</span>
                       </div>
                       
