@@ -504,6 +504,14 @@ function App() {
                             )}
                           </div>
 
+                          {/* Location */}
+                          {(c.location) && (
+                            <div className="mt-2 flex items-center gap-1 text-xs text-gray-500">
+                              <MapPin size={12} />
+                              <span>{c.location}</span>
+                            </div>
+                          )}
+
                           {/* Lokalita */}
                           {c.location && (
                             <div className="mt-2 flex items-center gap-1 text-xs text-gray-500">
