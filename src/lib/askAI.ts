@@ -39,6 +39,8 @@ export async function askAI(
   temperature = 0.7,
   meta: AskMeta = {}
 ): Promise<AskResult> {
+  console.log('askAI: Vstupná meta:', meta);
+  
   // dôležité: meta posielame naplocho – edge function ich číta na top-level
   const { data, error } = await supabase.functions.invoke('ai-assistant', {
     body: { message, history, temperature, ...meta },
@@ -48,6 +50,8 @@ export async function askAI(
     console.error('invoke error:', error);
     throw new Error('Nepodarilo sa zavolať Edge Function');
   }
+
+  console.log('askAI: Dáta z Edge Function:', data);
 
   const intent = data?.intent ?? null;
   const metaOut = data?.meta ?? null;
@@ -67,12 +71,22 @@ export async function askAI(
     const rating =
       typeof c?.rating === 'number' ? c.rating : (c?.rating != null ? Number(c.rating) : null);
 
+    const loc = (c?.location && String(c.location).trim()) || undefined;
+    
+    console.log(`askAI: Spracovaná lokalita pre kartu "${c?.title}":`, {
+      cardLocation: c?.location,
+      intentLocation: intent?.location,
+      metaOutUserLocation: metaOut?.userLocation,
+      metaUserLocation: meta?.userLocation,
+      hasCoords: !!(metaOut?.coords || meta?.coords),
+      finalLocation: loc
+    });
     return {
       id: (typeof c?.id === 'number' || typeof c?.id === 'string') ? c.id : undefined,
       title: String(c?.title ?? ''),
       subtitle: c?.subtitle ?? '',
       description: c?.description ?? '',
-      location: (c?.location && String(c.location).trim()) || undefined,
+      location: loc,
       verified: Boolean(c?.verified),
       rating: Number.isFinite(rating as number) ? (rating as number) : null,
       tags: Array.isArray(c?.tags) ? c.tags : [],
