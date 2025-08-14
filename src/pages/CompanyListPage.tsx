@@ -381,10 +381,12 @@ function CompanyListPage({ selectedService, onNavigateBack, onNavigateToCompanyD
                       </div>
                       
                       <div className="text-sm text-gray-500 space-y-1">
-                        <div className="flex items-center gap-1">
-                          <MapPin size={14} />
-                          {company.location || 'Neurčené'}
-                        </div>
+                        {company.location && (
+                          <div className="flex items-center gap-1">
+                            <MapPin size={14} />
+                            {company.location}
+                          </div>
+                        )}
                         <div className="flex items-center gap-1">
                           <Clock size={14} />
                           Nová firma
