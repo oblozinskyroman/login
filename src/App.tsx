@@ -11,7 +11,6 @@ import MyAccountPage from './pages/MyAccountPage';
 
 import { supabase } from './lib/supabase';
 import { askAI, type ChatTurn } from './lib/askAI';
-import StarRating from './components/StarRating';
 
 import {
   MessageCircle,
@@ -40,7 +39,7 @@ type UICard = {
   title: string;
   subtitle?: string;
   description?: string;
-  location?: string; // <— pridané
+  location?: string;
   verified?: boolean;
   rating?: number | null;
   tags?: string[];
@@ -51,6 +50,20 @@ type UICard = {
     ctaLabel?: string;
   };
 };
+
+/* ---------- ⭐ hviezdičky ---------- */
+function StarRating({ value = 0 }: { value?: number | null }) {
+  const v = Math.max(0, Math.min(Number(value ?? 0), 5));
+  const pct = (v / 5) * 100;
+  return (
+    <div className="relative inline-block leading-none" aria-label={`Hodnotenie ${v} z 5`}>
+      <div className="text-gray-300 select-none">★★★★★</div>
+      <div className="absolute inset-0 overflow-hidden" style={{ width: `${pct}%` }}>
+        <div className="text-yellow-400 select-none">★★★★★</div>
+      </div>
+    </div>
+  );
+}
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -120,24 +133,46 @@ function App() {
 
   const relyOrEmpty = (s?: string) => (typeof s === 'string' ? s : '');
 
-  /* ---------- Geolokácia: Firmy v mojom okolí ---------- */
+  /* ---------- Geolokácia: Firmy v mojom okolí (robustné povolenie/timeout/fallback) ---------- */
   const useMyLocation = () => {
     if (!('geolocation' in navigator)) {
       alert('Prehliadač nepodporuje geolokáciu.');
       return;
     }
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude } = pos.coords;
-        setCoords({ lat: latitude, lng: longitude });
-        if (!userLocation) setUserLocation('Moje okolie');
-      },
-      (err) => {
-        console.error(err);
-        alert('Nepodarilo sa získať polohu.');
-      },
-      { enableHighAccuracy: true, timeout: 8000, maximumAge: 300000 }
-    );
+
+    const get = () => {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          setCoords({ lat: latitude, lng: longitude });
+          setUserLocation((prev) => prev || 'Moje okolie');
+        },
+        (err) => {
+          console.error('geo error', err);
+          const msg =
+            err.code === err.PERMISSION_DENIED
+              ? 'Prístup k polohe je zablokovaný v prehliadači.'
+              : err.code === err.POSITION_UNAVAILABLE
+              ? 'Poloha teraz nie je dostupná.'
+              : 'Vypršal čas na zistenie polohy.';
+          alert(`${msg} Povolenie zapni v nastaveniach prehliadača pre zrovnaj.sk alebo zadaj mesto ručne.`);
+        },
+        { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 }
+      );
+    };
+
+    try {
+      // @ts-ignore – Permissions API nemusí mať typy v každom targete
+      navigator.permissions?.query({ name: 'geolocation' as PermissionName }).then((res: any) => {
+        if (res.state === 'denied') {
+          alert('Poloha je pre túto stránku blokovaná. Klikni na ikonu zámku v adresnom riadku a povoľ polohu.');
+          return;
+        }
+        get();
+      }).catch(get);
+    } catch {
+      get();
+    }
   };
 
   const makeAck = (intent?: any, fallbackLocation?: string) => {
@@ -491,19 +526,13 @@ function App() {
                             )}
                           </div>
 
-                          {/* Location (s fallbackom na userLocation / coords) */}
-                          {(() => {
-                            const displayLoc =
-                              (typeof c.location === 'string' && c.location.trim())
-                                ? c.location.trim()
-                                : (userLocation?.trim() || (coords ? 'Moje okolie' : ''));
-                            return displayLoc ? (
-                              <div className="mt-2 flex items-center gap-1 text-xs text-gray-500">
-                                <MapPin size={12} />
-                                <span>{displayLoc}</span>
-                              </div>
-                            ) : null;
-                          })()}
+                          {/* Lokalita */}
+                          {c.location && (
+                            <div className="mt-2 flex items-center gap-1 text-xs text-gray-500">
+                              <MapPin size={12} />
+                              <span>{c.location}</span>
+                            </div>
+                          )}
 
                           {/* Popis */}
                           {c.description && (
