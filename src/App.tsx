@@ -39,7 +39,7 @@ type UICard = {
   title: string;
   subtitle?: string;
   description?: string;
-  location?: string;
+  location?: string; // 👈 lokalita firmy (ak je k dispozícii)
   verified?: boolean;
   rating?: number | null;
   tags?: string[];
@@ -504,11 +504,11 @@ function App() {
                             )}
                           </div>
 
-                          {/* Location */}
+                          {/* Lokalita */}
                           {c.location && (
                             <div className="mt-2 flex items-center gap-1 text-xs text-gray-500">
                               <MapPin size={12} />
-                              <span>{c.location}</span>
+                              <span className="truncate">{c.location}</span>
                             </div>
                           )}
 
