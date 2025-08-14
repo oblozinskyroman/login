@@ -68,6 +68,8 @@ Problém ovplyvnil približne 0.3% všetkých transakcií v časovom okne 8:30-1
 - Zastavenie problému do 45 minút
 - Automatické vrátenie duplicitných platieb
 - Kompenzácia pre ovplyvnených zákazníkov`,
+  }
+]
 // Masívny obsah pre dosiahnutie 12+ miliónov tokenov
 
 // Rozšírené témy pre generovanie článkov
@@ -809,6 +811,7 @@ const suitableImages = [
   'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80', // nástroje
   'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?auto=format&fit=crop&w=800&q=80', // stavba
   'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80', // elektrika
+]
 // Funkcia na generovanie dodatočných článkov (už nie je potrebná, máme len 25)
 export function generateAdditionalArticles(count: number) {
   return []; // Vrátime prázdne pole, keďže chceme len 25 článkov
