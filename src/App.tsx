@@ -8,6 +8,9 @@ import NewsPage from './pages/NewsPage';
 import HelpCenterPage from './pages/HelpCenterPage';
 import ContactPage from './pages/ContactPage';
 import MyAccountPage from './pages/MyAccountPage';
+import MyOrdersPage from './pages/MyOrdersPage';
+import PaymentSuccessPage from './pages/PaymentSuccessPage';
+import PaymentCancelPage from './pages/PaymentCancelPage';
 
 import { supabase } from './lib/supabase';
 import { askAI, type ChatTurn } from './lib/askAI';
@@ -93,7 +96,7 @@ type SortBy = 'relevance' | 'rating' | 'distance';
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<
-    'home' | 'companyList' | 'addCompany' | 'companyDetail' | 'howItWorks' | 'references' | 'news' | 'helpCenter' | 'contact' | 'myAccount'
+    'home' | 'companyList' | 'addCompany' | 'companyDetail' | 'howItWorks' | 'references' | 'news' | 'helpCenter' | 'contact' | 'myAccount' | 'myOrders' | 'paymentSuccess' | 'paymentCancel'
   >('home');
   const [selectedService, setSelectedService] = useState<string>('');
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
@@ -169,6 +172,7 @@ function App() {
     { label: 'Novinky', action: 'news' },
     { label: 'Centrum pomoci', action: 'helpCenter' },
     { label: 'Kontakt', action: 'contact' },
+    { label: 'Moje objednávky', action: 'myOrders' },
   ];
   const mainMenuItems = [...menuItems];
 
@@ -334,6 +338,9 @@ function App() {
   const navigateToHelpCenter = () => setCurrentPage('helpCenter');
   const navigateToContact = () => setCurrentPage('contact');
   const navigateToMyAccount = () => setCurrentPage('myAccount');
+  const navigateToMyOrders = () => setCurrentPage('myOrders');
+  const navigateToPaymentSuccess = () => setCurrentPage('paymentSuccess');
+  const navigateToPaymentCancel = () => setCurrentPage('paymentCancel');
   const navigateToCompanyDetail = (companyId: string) => {
     setSelectedCompanyId(companyId);
     setCurrentPage('companyDetail');
@@ -346,6 +353,7 @@ function App() {
     else if (action === 'helpCenter') navigateToHelpCenter();
     else if (action === 'contact') navigateToContact();
     else if (action === 'myAccount') navigateToMyAccount();
+    else if (action === 'myOrders') navigateToMyOrders();
   };
 
   // GPS badge text
@@ -397,6 +405,15 @@ function App() {
                   {isLoggedIn ? 'Prihlásený' : 'Odhlásený'}
                 </button>
 
+                {isLoggedIn && (
+                  <button
+                    onClick={navigateToMyOrders}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all transform hover:scale-105 shadow-md hover:shadow-lg bg-blue-100 text-blue-800 border border-blue-200 hover:bg-blue-200"
+                  >
+                    <DollarSign size={16} />
+                    Moje objednávky
+                  </button>
+                )}
                 <a
                   href="#"
                   onClick={(e) => { e.preventDefault(); navigateToAddCompany(); }}
@@ -444,6 +461,15 @@ function App() {
                 {isLoggedIn ? 'Prihlásený' : 'Odhlásený'}
               </button>
 
+              {isLoggedIn && (
+                <button
+                  onClick={() => { navigateToMyOrders(); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-base font-medium rounded-lg transition-all bg-blue-100 text-blue-800 border border-blue-200 hover:bg-blue-200"
+                >
+                  <DollarSign size={20} />
+                  Moje objednávky
+                </button>
+              )}
               <a
                 href="#"
                 onClick={(e) => { e.preventDefault(); navigateToAddCompany(); }}
@@ -784,6 +810,15 @@ function App() {
         {currentPage === 'contact' && <ContactPage onNavigateBack={navigateToHome} />}
         {currentPage === 'myAccount' && (
           <MyAccountPage onNavigateBack={navigateToHome} onNavigateToAddCompany={navigateToAddCompany} />
+        )}
+        {currentPage === 'myOrders' && (
+          <MyOrdersPage onNavigateBack={navigateToHome} />
+        )}
+        {currentPage === 'paymentSuccess' && (
+          <PaymentSuccessPage onNavigateBack={navigateToHome} onNavigateToMyOrders={navigateToMyOrders} />
+        )}
+        {currentPage === 'paymentCancel' && (
+          <PaymentCancelPage onNavigateBack={navigateToHome} onNavigateToMyOrders={navigateToMyOrders} />
         )}
       </div>
 
