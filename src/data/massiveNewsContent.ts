@@ -266,7 +266,7 @@ Tešíme sa na budúcnosť, kde technológia a ľudská expertíza spolupracujú
 
 V digitálnom veku, kde sa finančné transakcie čoraz viac presúvajú do online prostredia, je bezpečnosť najvyššou prioritou každej serióznej platformy. ServisAI si plne uvedomuje zodpovednosť, ktorú nesie za ochranu finančných prostriedkov svojich používateľov, a preto investuje značné prostriedky do neustáleho zlepšovania bezpečnostných opatrení.
 
-Náš Escrow systém, ktorý slúži ako bezpečný prostredník medzi zákazníkmi a poskytovateľmi služieb, prešel v roku 2025 komplexnou modernizáciou. Tieto vylepšenia predstavujú najväčšiu investíciu do bezpečnosti v histórii našej spoločnosti a posúvajú ochranu používateľských dát a financií na úplne novú úroveň.
+Náš Escrow systém, ktorý slúži ako bezpečný prostredník medzi zákazníkmi a poskytovateľmi služieb, prešiel v roku 2025 komplexnou modernizáciou. Tieto vylepšenia predstavujú najväčšiu investíciu do bezpečnosti v histórii našej spoločnosti a posúvajú ochranu používateľských dát a financií na úplne novú úroveň.
 
 ## Architektúra moderného Escrow systému
 
@@ -547,13 +547,13 @@ Budeme pokračovať v investíciách do bezpečnosti a inováciách, aby sme si 
 **Dátum:** 10. august 2025  
 **Autor:** Produktový tím ServisAI
 
-## Úvod: Evolúcia potreb moderného domova
+## Úvod: Evolúcia potrieb moderného domova
 
 Moderný domov sa neustále vyvíja a s ním aj potreby jeho obyvateľov. ServisAI reaguje na tieto meniace sa požiadavky rozšírením svojej ponuky o 15 nových kategórií služieb, ktoré pokrývajú všetky aspekty súčasného bývania - od smart home technológií až po udržateľné riešenia.
 
 Toto rozšírenie je výsledkom rozsiahleho prieskumu medzi našimi používateľmi, analýzy trhových trendov a spolupráce s odborníkmi z rôznych oblastí. Naším cieľom je vytvoriť komplexný ekosystém služieb, kde nájdete riešenie pre každú potrebu vašej domácnosti.
 
-## Analýza potreb moderného domova
+## Analýza potrieb moderného domova
 
 ### Technologické trendy
 
@@ -1147,7 +1147,7 @@ Tešíme sa na spoluprácu s vami pri transformácii vašich domovov na miesta, 
 ];
 
 // Funkcia na generovanie ďalších článkov programaticky
-export const generateAdditionalArticles = (count: number) => {
+export const generateAdditionalArticles = (count: number = 15000) => {
   const templates = [
     {
       titleTemplate: "Revolučné vylepšenia {feature} pre lepšiu používateľskú skúsenosť",
