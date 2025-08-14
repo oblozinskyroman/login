@@ -469,7 +469,7 @@ function App() {
                 {/* ------ KARTY ------ */}
                 {cards.length > 0 && (
                   <>
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-6">
+                    <div className="flex flex-col space-y-6 mt-6">
                       {cards.map((c) => (
                         <div 
                           key={String(c.id ?? c.title)} 
