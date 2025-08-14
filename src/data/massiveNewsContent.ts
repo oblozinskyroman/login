@@ -547,13 +547,13 @@ Budeme pokračovať v investíciách do bezpečnosti a inováciách, aby sme si 
 **Dátum:** 10. august 2025  
 **Autor:** Produktový tím ServisAI
 
-## Úvod: Evolúcia potrieb moderného domova
+## Úvod: Evolúcia potreb moderného domova
 
 Moderný domov sa neustále vyvíja a s ním aj potreby jeho obyvateľov. ServisAI reaguje na tieto meniace sa požiadavky rozšírením svojej ponuky o 15 nových kategórií služieb, ktoré pokrývajú všetky aspekty súčasného bývania - od smart home technológií až po udržateľné riešenia.
 
 Toto rozšírenie je výsledkom rozsiahleho prieskumu medzi našimi používateľmi, analýzy trhových trendov a spolupráce s odborníkmi z rôznych oblastí. Naším cieľom je vytvoriť komplexný ekosystém služieb, kde nájdete riešenie pre každú potrebu vašej domácnosti.
 
-## Analýza potrieb moderného domova
+## Analýza potreb moderného domova
 
 ### Technologické trendy
 
@@ -1147,7 +1147,7 @@ Tešíme sa na spoluprácu s vami pri transformácii vašich domovov na miesta, 
 ];
 
 // Funkcia na generovanie ďalších článkov programaticky
-export const generateAdditionalArticles = (count: number = 15000) => {
+export const generateAdditionalArticles = (count: number) => {
   const templates = [
     {
       titleTemplate: "Revolučné vylepšenia {feature} pre lepšiu používateľskú skúsenosť",
@@ -1155,6 +1155,53 @@ export const generateAdditionalArticles = (count: number = 15000) => {
       contentTemplate: `# Revolučné vylepšenia {feature} pre lepšiu používateľskú skúsenosť
 
 Predstavujeme najnovšie vylepšenia {feature}, ktoré fundamentálne menia spôsob interakcie s našou platformou...
+
+## Technologický prelom v oblasti {feature}
+
+Naše najnovšie vylepšenia {feature} predstavujú skutočný technologický prelom, ktorý posúva hranice možného v oblasti digitálnych služieb. Po mesiacoch intenzívneho výskumu a vývoja sme vytvorili riešenie, ktoré nielen spĺňa, ale výrazne prekračuje očakávania našich používateľov.
+
+### Revolučná architektúra systému
+
+Nový systém {feature} je postavený na najmodernejšej mikroslužbovej architektúre, ktorá zabezpečuje bezprecedentnú škálovateľnosť a spoľahlivosť. Každý komponent systému je navrhnutý tak, aby fungoval nezávisle, čo znamená, že aj v prípade výpadku jednej časti systému, ostatné komponenty pokračujú v bezproblémovom fungovaní.
+
+**Kľúčové technologické komponenty:**
+- **Distribuované spracovanie dát:** Využívame najmodernejšie algoritmy na paralelné spracovanie obrovských objemov dát
+- **Real-time synchronizácia:** Všetky zmeny sa propagujú naprieč systémom v reálnom čase
+- **Adaptívne učenie:** Systém sa neustále učí z používateľského správania a optimalizuje svoje procesy
+- **Prediktívna analytika:** Dokážeme predpovedať potreby používateľov s 98% presnosťou
+
+### Inovatívne používateľské rozhranie
+
+Nové používateľské rozhranie {feature} je výsledkom rozsiahleho UX/UI výskumu, ktorý zahŕňal testovanie s viac ako 10,000 používateľmi z rôznych demografických skupín. Výsledkom je rozhranie, ktoré je nielen vizuálne atraktívne, ale aj mimoriadne intuitívne a efektívne.
+
+**Hlavné vylepšenia rozhrania:**
+- **Adaptívny dizajn:** Rozhranie sa automaticky prispôsobuje zariadeniu a preferenciám používateľa
+- **Hlasové ovládanie:** Plná podpora pre hlasové príkazy vo viac ako 25 jazykoch
+- **Gestické ovládanie:** Pokročilé gestá pre rýchlejšiu navigáciu
+- **Personalizácia:** Každý používateľ môže prispôsobiť rozhranie svojim potrebám
+- **Prístupnosť:** Plná podpora pre používateľov so zdravotným postihnutím
+
+### Bezpečnosť na najvyššej úrovni
+
+Bezpečnosť je pre nás absolútnou prioritou. Nový systém {feature} implementuje najprísnejšie bezpečnostné opatrenia v odvetví:
+
+**Viacvrstvová ochrana:**
+- **Kvantové šifrovanie:** Využívame najnovšie kvantovo-odolné šifrovacie algoritmy
+- **Biometrické overenie:** Podpora pre odtlačky prstov, rozpoznávanie tváre a hlasu
+- **Behaviorálna analýza:** AI systém monitoruje správanie a detekuje anomálie
+- **Zero-trust architektúra:** Každý prístup je overovaný bez ohľadu na lokáciu
+
+### Výkonnostné metriky
+
+Nový systém {feature} dosahuje pozoruhodné výkonnostné výsledky:
+- **Rýchlosť odozvy:** Zníženie z 2.3 sekundy na 0.4 sekundy (83% zlepšenie)
+- **Spoľahlivosť:** Zvýšenie z 99.5% na 99.99% dostupnosti
+- **Škálovateľnosť:** Schopnosť obsluhovať 10x viac používateľov súčasne
+- **Energetická efektívnosť:** 40% zníženie spotreby energie
+
+## Revolučné funkcie pre používateľov
+
+### Inteligentný asistent s pokročilou AI
 
 ## Technické inovácie
 
