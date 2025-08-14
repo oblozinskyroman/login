@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import CompanyListPage from './pages/CompanyListPage';
 import AddCompanyPage from './pages/AddCompanyPage';
 import CompanyDetailPage from './pages/CompanyDetailPage';
@@ -34,6 +34,9 @@ import {
   Euro,
 } from 'lucide-react';
 
+/** Lokálny storage kľúč pre preferovanú lokalitu */
+const LS_PREF_LOC = 'sa_pref_loc';
+
 type UICard = {
   id?: string | number;
   title: string;
@@ -43,6 +46,10 @@ type UICard = {
   verified?: boolean;
   rating?: number | null;
   tags?: string[];
+  /** ak server/AI pošle súradnice firmy, vieme z nich spočítať vzdialenosť */
+  geo?: { lat: number; lng: number } | null;
+  /** dopočítavané na klientovi */
+  distanceKm?: number | null;
   actions?: {
     call?: string | null;
     email?: string | null;
@@ -64,6 +71,24 @@ function StarRating({ value = 0 }: { value?: number | null }) {
     </div>
   );
 }
+
+/* ---------- vzdialenosť (km) ---------- */
+function haversineKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
+  const toRad = (x: number) => (x * Math.PI) / 180;
+  const R = 6371; // km
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+
+  const s =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLng / 2) * Math.sin(dLng / 2) * Math.cos(lat1) * Math.cos(lat2);
+  const c = 2 * Math.atan2(Math.sqrt(s), Math.sqrt(1 - s));
+  return R * c;
+}
+
+type SortBy = 'relevance' | 'rating' | 'distance';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -87,6 +112,7 @@ function App() {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [ack, setAck] = useState('');
   const [aiActiveFilters, setAiActiveFilters] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<SortBy>('relevance');
 
   // Auth
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -101,6 +127,21 @@ function App() {
     });
     return () => subscription.unsubscribe();
   }, []);
+
+  // Načítaj preferovanú lokalitu z localStorage pri štarte
+  useEffect(() => {
+    const existing = (localStorage.getItem(LS_PREF_LOC) || '').trim();
+    if (existing && !userLocation) setUserLocation(existing);
+  }, []);
+
+  // Ukladaj preferovanú lokalitu (debounce mini)
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const v = (userLocation || '').trim();
+      localStorage.setItem(LS_PREF_LOC, v);
+    }, 250);
+    return () => clearTimeout(t);
+  }, [userLocation]);
 
   const services = [
     { name: 'Murár', icon: Hammer, color: 'from-amber-500 to-orange-600' },
@@ -133,46 +174,33 @@ function App() {
 
   const relyOrEmpty = (s?: string) => (typeof s === 'string' ? s : '');
 
-  /* ---------- Geolokácia: Firmy v mojom okolí (robustné povolenie/timeout/fallback) ---------- */
+  /* ---------- Geolokácia: Firmy v mojom okolí ---------- */
   const useMyLocation = () => {
     if (!('geolocation' in navigator)) {
       alert('Prehliadač nepodporuje geolokáciu.');
       return;
     }
+    // robustnejšie získanie polohy (timeout + fallback)
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      controller.abort(); // zruš, ak to trvá príliš dlho
+      alert('Nepodarilo sa získať polohu v časovom limite.');
+    }, 9000);
 
-    const get = () => {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const { latitude, longitude } = pos.coords;
-          setCoords({ lat: latitude, lng: longitude });
-          setUserLocation((prev) => prev || 'Moje okolie');
-        },
-        (err) => {
-          console.error('geo error', err);
-          const msg =
-            err.code === err.PERMISSION_DENIED
-              ? 'Prístup k polohe je zablokovaný v prehliadači.'
-              : err.code === err.POSITION_UNAVAILABLE
-              ? 'Poloha teraz nie je dostupná.'
-              : 'Vypršal čas na zistenie polohy.';
-          alert(`${msg} Povolenie zapni v nastaveniach prehliadača pre zrovnaj.sk alebo zadaj mesto ručne.`);
-        },
-        { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 }
-      );
-    };
-
-    try {
-      // @ts-ignore – Permissions API nemusí mať typy v každom targete
-      navigator.permissions?.query({ name: 'geolocation' as PermissionName }).then((res: any) => {
-        if (res.state === 'denied') {
-          alert('Poloha je pre túto stránku blokovaná. Klikni na ikonu zámku v adresnom riadku a povoľ polohu.');
-          return;
-        }
-        get();
-      }).catch(get);
-    } catch {
-      get();
-    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        clearTimeout(timer);
+        const { latitude, longitude } = pos.coords;
+        setCoords({ lat: latitude, lng: longitude });
+        if (!userLocation) setUserLocation('Moje okolie');
+      },
+      (err) => {
+        clearTimeout(timer);
+        console.error(err);
+        alert('Nepodarilo sa získať polohu.');
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 300000 }
+    );
   };
 
   const makeAck = (intent?: any, fallbackLocation?: string) => {
@@ -192,6 +220,34 @@ function App() {
     );
   };
 
+  /** dopočítaj vzdialenosti pre karty (ak máme coords a karta má geo) */
+  const withDistances = (arr: UICard[]): UICard[] => {
+    if (!coords) return arr.map(c => ({ ...c, distanceKm: null }));
+    return arr.map((c) => {
+      if (c.geo && Number.isFinite(c.geo.lat) && Number.isFinite(c.geo.lng)) {
+        const d = haversineKm(coords, c.geo);
+        return { ...c, distanceKm: Math.round(d * 10) / 10 }; // 1 desatinné
+      }
+      return { ...c, distanceKm: null };
+    });
+  };
+
+  /** usporiadaj podľa sortBy */
+  const sortCards = (arr: UICard[], by: SortBy): UICard[] => {
+    if (by === 'rating') {
+      return [...arr].sort((a, b) => (b.rating ?? -1) - (a.rating ?? -1));
+    }
+    if (by === 'distance') {
+      return [...arr].sort((a, b) => {
+        const da = a.distanceKm ?? Number.POSITIVE_INFINITY;
+        const db = b.distanceKm ?? Number.POSITIVE_INFINITY;
+        return da - db;
+      });
+    }
+    // 'relevance' = poradie z backendu
+    return arr;
+  };
+
   /* ---------- AI volanie ---------- */
   const handleAsk = async () => {
     const msg = message.trim();
@@ -207,10 +263,13 @@ function App() {
         { page: 0, limit, userLocation, coords, filters: aiActiveFilters }
       );
 
+      const enriched = withDistances(incoming || []);
+      const sorted = sortCards(enriched, sortBy);
+
       setLastQuery(msg);
       setPage(0);
       setAiResponse(relyOrEmpty(reply));
-      setCards(incoming || []);
+      setCards(sorted);
       setHasMore(!!meta?.hasMore);
       setHistory([...nextHistory, { role: 'assistant', content: reply }]);
       if (!userLocation && intent?.location) setUserLocation(intent.location);
@@ -237,7 +296,9 @@ function App() {
         0.7,
         { page: nextPage, limit, userLocation, coords, filters: aiActiveFilters }
       );
-      setCards((prev) => [...prev, ...(incoming || [])]);
+      const enriched = withDistances(incoming || []);
+      const merged = [...cards, ...enriched];
+      setCards(sortCards(merged, sortBy));
       setPage(nextPage);
       setHasMore(!!meta?.hasMore);
     } catch (e) {
@@ -246,6 +307,19 @@ function App() {
       setIsLoading(false);
     }
   };
+
+  // prepočítaj vzdialenosti aj pri zmene polohy užívateľa
+  useEffect(() => {
+    if (!cards.length) return;
+    const enriched = withDistances(cards);
+    setCards(sortCards(enriched, sortBy));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [coords]);
+
+  // reaguj na zmenu sortovania
+  useEffect(() => {
+    setCards((prev) => sortCards(prev, sortBy));
+  }, [sortBy]);
 
   /* ---------- Navigácia ---------- */
   const navigateToCompanyList = (serviceName: string) => {
@@ -273,6 +347,15 @@ function App() {
     else if (action === 'contact') navigateToContact();
     else if (action === 'myAccount') navigateToMyAccount();
   };
+
+  // GPS badge text
+  const gpsBadge = useMemo(
+    () =>
+      coords
+        ? <span className="inline-flex items-center text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 border border-green-200">GPS aktívne</span>
+        : null,
+    [coords]
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100">
@@ -425,26 +508,29 @@ function App() {
                     </div>
                   )}
 
-                  <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex flex-col sm:flex-row gap-4 items-center">
                     <input
                       type="text"
                       value={userLocation}
                       onChange={(e) => setUserLocation(e.target.value)}
                       placeholder="Uprednostniť lokalitu"
-                      className="px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/80"
+                      className="px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/80 w-full sm:w-auto flex-1"
                     />
-                    <button
-                      type="button"
-                      onClick={useMyLocation}
-                      className="px-6 py-3 bg-gray-200 text-gray-800 hover:bg-gray-300 font-semibold rounded-xl transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-                    >
-                      <MapPin size={18} />
-                      Firmy v mojom okolí
-                    </button>
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={useMyLocation}
+                        className="px-6 py-3 bg-gray-200 text-gray-800 hover:bg-gray-300 font-semibold rounded-xl transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                      >
+                        <MapPin size={18} />
+                        Firmy v mojom okolí
+                      </button>
+                      {gpsBadge}
+                    </div>
                   </div>
 
-                  {/* Quick Filters for AI */}
-                  <div className="flex flex-wrap gap-2 mt-4">
+                  {/* Quick Filters for AI + Sort */}
+                  <div className="flex flex-wrap gap-2 mt-4 items-center">
                     {aiQuickFilters.map((filter) => {
                       const IconComponent = filter.icon;
                       const isActive = aiActiveFilters.includes(filter.id);
@@ -463,6 +549,19 @@ function App() {
                         </button>
                       );
                     })}
+
+                    <div className="ml-auto flex items-center gap-2">
+                      <span className="text-sm text-gray-600">Zoradiť podľa:</span>
+                      <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value as SortBy)}
+                        className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white"
+                      >
+                        <option value="relevance">Relevancia</option>
+                        <option value="rating">Hodnotenie</option>
+                        <option value="distance">Vzdialenosť</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
 
@@ -505,15 +604,22 @@ function App() {
                               <h3 className="text-lg font-semibold break-words">{c.title}</h3>
                               {c.subtitle && <p className="text-sm text-gray-500 truncate">{c.subtitle}</p>}
                             </div>
-                            {c.verified && (
-                              <span className="shrink-0 text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">
-                                Overená
-                              </span>
-                            )}
+                            <div className="flex items-center gap-2">
+                              {coords && (
+                                <span className="text-xs px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                  Moje okolie
+                                </span>
+                              )}
+                              {c.verified && (
+                                <span className="shrink-0 text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">
+                                  Overená
+                                </span>
+                              )}
+                            </div>
                           </div>
 
                           {/* Rating / Nová firma */}
-                          <div className="mt-2 flex items-center gap-2">
+                          <div className="mt-2 flex items-center gap-2 flex-wrap">
                             {typeof c.rating === 'number' ? (
                               <>
                                 <StarRating value={c.rating} />
@@ -524,15 +630,24 @@ function App() {
                                 Nová firma
                               </span>
                             )}
-                          </div>
 
-                          {/* Lokalita */}
-                          {c.location && (
-                            <div className="mt-2 flex items-center gap-1 text-xs text-gray-500">
-                              <MapPin size={12} />
-                              <span>{c.location}</span>
-                            </div>
-                          )}
+                            {/* Location + vzdialenosť */}
+                            {c.location && (
+                              <span className="inline-flex items-center gap-1 text-xs text-gray-500 ml-2">
+                                <MapPin size={12} />
+                                {c.location}
+                                {typeof c.distanceKm === 'number' && (
+                                  <span className="text-gray-400">&nbsp;•&nbsp;{c.distanceKm} km</span>
+                                )}
+                              </span>
+                            )}
+                            {!c.location && typeof c.distanceKm === 'number' && (
+                              <span className="inline-flex items-center gap-1 text-xs text-gray-500 ml-2">
+                                <MapPin size={12} />
+                                {c.distanceKm} km
+                              </span>
+                            )}
+                          </div>
 
                           {/* Popis */}
                           {c.description && (
