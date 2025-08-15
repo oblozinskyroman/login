@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+
 import CompanyListPage from './pages/CompanyListPage';
 import AddCompanyPage from './pages/AddCompanyPage';
 import CompanyDetailPage from './pages/CompanyDetailPage';
@@ -53,7 +54,7 @@ type UICard = {
   tags?: string[];
   geo?: { lat: number; lng: number } | null;
   distanceKm?: number | null;
-  amountCents?: number; // pre objednávku
+  amountCents?: number; // pre objednávku (default 5000)
   actions?: {
     call?: string | null;
     email?: string | null;
@@ -147,13 +148,13 @@ function App() {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [ack, setAck] = useState('');
   const [aiActiveFilters, setAiActiveFilters] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState<SortBy>('relevance');
+  const [sortBy, setSortBy] = useState<SortBy>('relevance'); // ✅ jediný stav pre triedenie
 
   // Auth
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
 
-  // ✅ OPRAVENÝ AUTH EFEKT (žiadna nepárna zátvorka)
+  // ✅ AUTH efekt – správne uzavretý
   useEffect(() => {
     const checkAuth = async () => {
       const {
@@ -164,7 +165,9 @@ function App() {
     };
     checkAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsLoggedIn(!!session?.user);
       setCurrentUser(session?.user ?? null);
     });
@@ -249,12 +252,10 @@ function App() {
         return da - db;
       });
     }
-    return arr;
+    return arr; // relevance = pôvodné poradie
   };
 
   /* ---------- AI ---------- */
-  const [sortByState, setSortBy] = useState<SortBy>('relevance');
-
   const handleAsk = async () => {
     const msg = message.trim();
     if (!msg) return;
@@ -262,7 +263,8 @@ function App() {
     setIsLoading(true);
     try {
       const nextHistory: ChatTurn[] = [...history, { role: 'user', content: msg }];
-      // ak máš inú signatúru askAI, nechaj "as any" – nech sa to nesekne na tipe
+
+      // tolerujeme rôzne signatúry askAI – preto cast na any
       const { reply, cards: incoming, intent, meta } = (await (askAI as any)(msg, nextHistory, 0.7, {
         page: 0,
         limit,
@@ -272,7 +274,7 @@ function App() {
       })) as any;
 
       const enriched = withDistances(incoming || []);
-      const sorted = sortCards(enriched, sortByState);
+      const sorted = sortCards(enriched, sortBy);
 
       setLastQuery(msg);
       setPage(0);
@@ -308,7 +310,7 @@ function App() {
 
       const enriched = withDistances(incoming || []);
       const merged = [...cards, ...enriched];
-      setCards(sortCards(merged, sortByState));
+      setCards(sortCards(merged, sortBy));
       setPage(nextPage);
       setHasMore(Boolean(meta?.hasMore));
     } catch (e) {
@@ -318,16 +320,18 @@ function App() {
     }
   };
 
+  // prepočítaj vzdialenosť po zmene GPS
   useEffect(() => {
     if (!cards.length) return;
     const enriched = withDistances(cards);
-    setCards(sortCards(enriched, sortByState));
+    setCards(sortCards(enriched, sortBy));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coords]);
 
+  // zmena triedenia
   useEffect(() => {
-    setCards((prev) => sortCards(prev, sortByState));
-  }, [sortByState]);
+    setCards((prev) => sortCards(prev, sortBy));
+  }, [sortBy]);
 
   /* ---------- Navigácia ---------- */
   const navigateToCompanyList = (serviceName: string) => {
@@ -517,8 +521,7 @@ function App() {
                   </span>
                 </h2>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-12">
-                  Opýtajte sa nášho AI asistenta na čokoľvek o domácich službách. Pomôže vám nájsť správneho odborníka
-                  pre váš projekt.
+                  Opýtajte sa nášho AI asistenta na čokoľvek o domácich službách. Pomôže vám nájsť správneho odborníka pre váš projekt.
                 </p>
 
                 {/* AI input */}
