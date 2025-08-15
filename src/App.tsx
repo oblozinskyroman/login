@@ -12,6 +12,7 @@ import MyOrdersPage from './pages/MyOrdersPage';
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import PaymentCancelPage from './pages/PaymentCancelPage';
 import CookieConsentBanner from './components/CookieConsentBanner';
+import { createOrderAndRedirect } from './lib/createOrderAndRedirect';
 
 import { supabase } from './lib/supabase';
 import { askAI, type ChatTurn } from './lib/askAI';
@@ -148,18 +149,20 @@ function App() {
 
   // Auth
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect(() => {
+  const [currentUser, setCurrentUser] = useState<any>(null);
     const checkAuth = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
       setIsLoggedIn(!!user);
+      setCurrentUser(user);
     };
     checkAuth();
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsLoggedIn(!!session?.user);
+      setCurrentUser(session?.user || null);
     });
     return () => subscription.unsubscribe();
   }, []);
@@ -226,32 +229,6 @@ function App() {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         clearTimeout(timer);
-        const { latitude, longitude } = pos.coords;
-        setCoords({ lat: latitude, lng: longitude });
-        if (!userLocation) setUserLocation('Moje okolie');
-      },
-      (err) => {
-        clearTimeout(timer);
-        console.error(err);
-        alert('Nepodarilo sa získať polohu.');
-      },
-      { enableHighAccuracy: true, timeout: 8000, maximumAge: 300000 }
-    );
-  };
-
-  const makeAck = (intent?: any, fallbackLocation?: string) => {
-    const s = (intent?.service ?? '').toString().trim();
-    const loc = (intent?.location ?? fallbackLocation ?? '').toString().trim();
-    const parts: string[] = [];
-    if (s) parts.push(`službu ${s.toLowerCase()}`);
-    if (loc) parts.push(`lokalita ${loc}`);
-    return parts.length ? `Rozumiem — ${parts.join(', ')}.` : '';
-  };
-
-  const toggleAiFilter = (filterId: string) => {
-    setAiActiveFilters((prev) => (prev.includes(filterId) ? prev.filter((f) => f !== filterId) : [...prev, filterId]));
-  };
-
   const withDistances = (arr: UICard[]): UICard[] => {
     if (!coords) return arr.map((c) => ({ ...c, distanceKm: null }));
     return arr.map((c) => {
