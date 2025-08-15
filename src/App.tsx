@@ -11,6 +11,7 @@ import MyAccountPage from './pages/MyAccountPage';
 import MyOrdersPage from './pages/MyOrdersPage';
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import PaymentCancelPage from './pages/PaymentCancelPage';
+import CookieConsentBanner from './components/CookieConsentBanner';
 
 import { supabase } from './lib/supabase';
 import { askAI, type ChatTurn } from './lib/askAI';
@@ -821,6 +822,9 @@ function App() {
           <PaymentCancelPage onNavigateBack={navigateToHome} onNavigateToMyOrders={navigateToMyOrders} />
         )}
       </div>
+
+      {/* Cookie Consent Banner */}
+      <CookieConsentBanner />
 
       {/* Footer */}
       <footer className="bg-white/50 backdrop-blur-md mt-20">
