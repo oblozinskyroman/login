@@ -150,6 +150,8 @@ function App() {
   // Auth
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
     const checkAuth = async () => {
       const {
         data: { user },
