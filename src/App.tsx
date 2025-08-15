@@ -36,7 +36,6 @@ import {
   Calendar,
   Shield,
   Euro,
-  DollarSign,
 } from 'lucide-react';
 
 /** Lokálny storage kľúč pre preferovanú lokalitu */
@@ -412,14 +411,14 @@ function App() {
                     onClick={navigateToMyOrders}
                     className="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 border-2 border-green-400 animate-pulse"
                   >
-                    <DollarSign size={18} />
+                    <Euro size={18} />
                     Moje objednávky
                   </button>
                 )}
                 <a
                   href="#"
                   onClick={(e) => { e.preventDefault(); navigateToAddCompany(); }}
-                  className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-2 text-sm font-semibold rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl ml-4"
+                  className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-4 text-base font-extrabold rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl ml-4"
                 >
                   Pridať firmu
                 </a>
@@ -468,14 +467,14 @@ function App() {
                   onClick={() => { navigateToMyOrders(); setMobileMenuOpen(false); }}
                   className="w-full flex items-center gap-2 px-3 py-3 text-base font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 border-2 border-green-400"
                 >
-                  <DollarSign size={22} />
+                  <Euro size={22} />
                   Moje objednávky
                 </button>
               )}
               <a
                 href="#"
                 onClick={(e) => { e.preventDefault(); navigateToAddCompany(); }}
-                className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white block px-3 py-2 text-base font-semibold rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all mt-4"
+                className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white block px-6 py-3 text-lg font-extrabold rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all mt-4"
               >
                 Pridať firmu
               </a>
