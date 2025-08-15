@@ -76,7 +76,6 @@ function normalizeCard(x: any): any {
     x?.verified ?? x?.is_verified ?? x?.trusted ?? x?.isTrusted ?? false
   );
 
-  // location / geo
   const location =
     x?.location ??
     [x?.city, x?.district, x?.region, x?.country].filter(Boolean).join(', ') ||
@@ -128,7 +127,6 @@ async function searchCompaniesFallback(query: string, limit = 9): Promise<any[]>
 
   async function tryTable(name: string) {
     try {
-      // konzervatívny výber, nech to nepadne na chýbajúcej kolónke
       const { data, error } = await supabase
         .from(name)
         .select('*')
@@ -178,9 +176,9 @@ export async function askAI(
     throw new Error(String(msg));
   }
 
-  // text odpovede
-  const reply =
-    (data && (data.reply ?? data.answer ?? data.text ?? '')) || '';
+  // text odpovede (bez miešania ?? a ||)
+  const rawText = (data?.reply ?? data?.answer ?? data?.text ?? '') as string;
+  const reply = rawText;
 
   // firmy z edge
   let cards = extractArray(data).map(normalizeCard);
@@ -194,16 +192,13 @@ export async function askAI(
     }
   }
 
-  const intent = (data && (data.intent ?? data.meta?.intent ?? null)) || null;
+  // intent (bez miešania operátorov)
+  const intent = (data?.intent ?? data?.meta?.intent ?? null) as any;
 
-  const hasMore =
-    Boolean(
-      data?.hasMore ??
-      data?.has_more ??
-      data?.meta?.hasMore ??
-      data?.meta?.has_more ??
-      false
-    );
+  // hasMore (len s ??)
+  const hasMore = Boolean(
+    (data?.hasMore ?? data?.has_more ?? data?.meta?.hasMore ?? data?.meta?.has_more ?? false) as boolean
+  );
 
   const meta = data?.meta ? { ...data.meta, hasMore } : { hasMore };
 
