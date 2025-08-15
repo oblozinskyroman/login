@@ -15,6 +15,7 @@ import CookieConsentBanner from './components/CookieConsentBanner';
 
 import { supabase } from './lib/supabase';
 import { askAI, type ChatTurn } from './lib/askAI';
+import { createOrderAndRedirect } from './lib/createOrderAndRedirect';
 
 import {
   MessageCircle,
@@ -341,8 +342,7 @@ function App() {
     if (!cards.length) return;
     const enriched = withDistances(cards);
     setCards(sortCards(enriched, sortBy));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coords]);
+  }, [coords]); // eslint-disable-line
 
   useEffect(() => {
     setCards((prev) => sortCards(prev, sortBy));
@@ -391,6 +391,8 @@ function App() {
       ) : null,
     [coords]
   );
+
+  const ORDER_AMOUNT_CENTS = 5000; // 50 €
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100">
@@ -720,9 +722,37 @@ function App() {
                               ))}
                           </div>
 
+                          {/* CTA + ESCROW */}
                           <div className="mt-auto pt-4 flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
+                            {/* Escrow platba */}
+                            {c.id && (
+                              <button
+                                onClick={async () => {
+                                  if (!isLoggedIn) {
+                                    alert('Pre platbu sa prosím najprv prihláste.');
+                                    return;
+                                  }
+                                  try {
+                                    await createOrderAndRedirect(String(c.id), ORDER_AMOUNT_CENTS);
+                                  } catch (err) {
+                                    console.error(err);
+                                    alert('Nepodarilo sa vytvoriť escrow objednávku.');
+                                  }
+                                }}
+                                className="px-3 py-2 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 transition"
+                              >
+                                Escrow 50 €
+                              </button>
+                            )}
+
+                            {/* Pôvodné CTA */}
                             {c.actions?.website ? (
-                              <a href={c.actions.website} target="_blank" rel="noreferrer" className="px-3 py-2 rounded-xl bg-blue-600 text-white">
+                              <a
+                                href={c.actions.website}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="px-3 py-2 rounded-xl bg-blue-600 text-white"
+                              >
                                 Kontaktovať
                               </a>
                             ) : c.actions?.call ? (
@@ -746,7 +776,12 @@ function App() {
                               </a>
                             )}
                             {c.actions?.website && (
-                              <a href={c.actions.website} target="_blank" rel="noreferrer" className="px-3 py-2 rounded-xl bg-gray-100">
+                              <a
+                                href={c.actions.website}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="px-3 py-2 rounded-xl bg-gray-100"
+                              >
                                 Web
                               </a>
                             )}
@@ -757,7 +792,11 @@ function App() {
 
                     {hasMore && (
                       <div className="mt-6 flex justify-center">
-                        <button onClick={loadMore} disabled={isLoading} className="px-6 py-3 rounded-xl bg-gray-900 text-white hover:bg-black transition disabled:opacity-60">
+                        <button
+                          onClick={loadMore}
+                          disabled={isLoading}
+                          className="px-6 py-3 rounded-xl bg-gray-900 text-white hover:bg-black transition disabled:opacity-60"
+                        >
                           {isLoading ? 'Načítavam…' : 'Zobraziť viac'}
                         </button>
                       </div>
@@ -781,7 +820,9 @@ function App() {
                       onClick={() => navigateToCompanyList(service.name)}
                       className="bg-white/70 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2 cursor-pointer group"
                     >
-                      <div className={`w-16 h-16 bg-gradient-to-r ${service.color} rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform`}>
+                      <div
+                        className={`w-16 h-16 bg-gradient-to-r ${service.color} rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform`}
+                      >
                         <IconComponent className="text-white" size={28} />
                       </div>
                       <h4 className="text-xl font-semibold text-gray-800 text-center group-hover:text-blue-600 transition-colors">
@@ -796,19 +837,31 @@ function App() {
         )}
 
         {currentPage === 'companyList' && (
-          <CompanyListPage selectedService={selectedService} onNavigateBack={navigateToHome} onNavigateToCompanyDetail={navigateToCompanyDetail} />
+          <CompanyListPage
+            selectedService={selectedService}
+            onNavigateBack={navigateToHome}
+            onNavigateToCompanyDetail={navigateToCompanyDetail}
+          />
         )}
-        {currentPage === 'companyDetail' && selectedCompanyId && <CompanyDetailPage companyId={selectedCompanyId} onNavigateBack={() => setCurrentPage('companyList')} />}
+        {currentPage === 'companyDetail' && selectedCompanyId && (
+          <CompanyDetailPage companyId={selectedCompanyId} onNavigateBack={() => setCurrentPage('companyList')} />
+        )}
         {currentPage === 'addCompany' && <AddCompanyPage onNavigateBack={navigateToHome} />}
-        {currentPage === 'howItWorks' && <HowItWorksPage onNavigateBack={navigateToHome} onNavigateToAddCompany={navigateToAddCompany} />}
+        {currentPage === 'howItWorks' && (
+          <HowItWorksPage onNavigateBack={navigateToHome} onNavigateToAddCompany={navigateToAddCompany} />
+        )}
         {currentPage === 'references' && <ReferencesPage onNavigateBack={navigateToHome} />}
         {currentPage === 'news' && <NewsPage onNavigateBack={navigateToHome} />}
         {currentPage === 'helpCenter' && <HelpCenterPage onNavigateBack={navigateToHome} />}
         {currentPage === 'contact' && <ContactPage onNavigateBack={navigateToHome} />}
         {currentPage === 'myAccount' && <MyAccountPage onNavigateBack={navigateToHome} onNavigateToAddCompany={navigateToAddCompany} />}
         {currentPage === 'myOrders' && <MyOrdersPage onNavigateBack={navigateToHome} />}
-        {currentPage === 'paymentSuccess' && <PaymentSuccessPage onNavigateBack={navigateToHome} onNavigateToMyOrders={navigateToMyOrders} />}
-        {currentPage === 'paymentCancel' && <PaymentCancelPage onNavigateBack={navigateToHome} onNavigateToMyOrders={navigateToMyOrders} />}
+        {currentPage === 'paymentSuccess' && (
+          <PaymentSuccessPage onNavigateBack={navigateToHome} onNavigateToMyOrders={navigateToMyOrders} />
+        )}
+        {currentPage === 'paymentCancel' && (
+          <PaymentCancelPage onNavigateBack={navigateToHome} onNavigateToMyOrders={navigateToMyOrders} />
+        )}
       </div>
 
       <CookieConsentBanner />
@@ -816,7 +869,9 @@ function App() {
       <footer className="bg-white/50 backdrop-blur-md mt-20">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">ServisAI</h2>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+              ServisAI
+            </h2>
             <p className="text-gray-600 mb-6">Váš AI asistent pre domáce služby</p>
             <div className="flex justify-center space-x-6">
               {menuItems.map((item, i) => (
