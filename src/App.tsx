@@ -409,9 +409,9 @@ function App() {
                 {isLoggedIn && (
                   <button
                     onClick={navigateToMyOrders}
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all transform hover:scale-105 shadow-md hover:shadow-lg bg-blue-100 text-blue-800 border border-blue-200 hover:bg-blue-200"
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 border-2 border-green-400 animate-pulse"
                   >
-                    <DollarSign size={16} />
+                    <DollarSign size={18} />
                     Moje objednávky
                   </button>
                 )}
@@ -465,9 +465,9 @@ function App() {
               {isLoggedIn && (
                 <button
                   onClick={() => { navigateToMyOrders(); setMobileMenuOpen(false); }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-base font-medium rounded-lg transition-all bg-blue-100 text-blue-800 border border-blue-200 hover:bg-blue-200"
+                  className="w-full flex items-center gap-2 px-3 py-3 text-base font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 border-2 border-green-400"
                 >
-                  <DollarSign size={20} />
+                  <DollarSign size={22} />
                   Moje objednávky
                 </button>
               )}
