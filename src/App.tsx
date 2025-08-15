@@ -50,9 +50,7 @@ type UICard = {
   verified?: boolean;
   rating?: number | null;
   tags?: string[];
-  /** ak server/AI pošle súradnice firmy, vieme z nich spočítať vzdialenosť */
   geo?: { lat: number; lng: number } | null;
-  /** dopočítavané na klientovi */
   distanceKm?: number | null;
   actions?: {
     call?: string | null;
@@ -62,7 +60,7 @@ type UICard = {
   };
 };
 
-/* ---------- ⭐ hviezdičky ---------- */
+/* ---------- malé pomocné komponenty ---------- */
 function StarRating({ value = 0 }: { value?: number | null }) {
   const v = Math.max(0, Math.min(Number(value ?? 0), 5));
   const pct = (v / 5) * 100;
@@ -76,15 +74,33 @@ function StarRating({ value = 0 }: { value?: number | null }) {
   );
 }
 
+function NavCta({
+  onClick,
+  children,
+  className = '',
+}: {
+  onClick: () => void;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl border-2 ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
+
 /* ---------- vzdialenosť (km) ---------- */
 function haversineKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
   const toRad = (x: number) => (x * Math.PI) / 180;
-  const R = 6371; // km
+  const R = 6371;
   const dLat = toRad(b.lat - a.lat);
   const dLng = toRad(b.lng - a.lng);
   const lat1 = toRad(a.lat);
   const lat2 = toRad(b.lat);
-
   const s =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.sin(dLng / 2) * Math.sin(dLng / 2) * Math.cos(lat1) * Math.cos(lat2);
@@ -97,7 +113,19 @@ type SortBy = 'relevance' | 'rating' | 'distance';
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<
-    'home' | 'companyList' | 'addCompany' | 'companyDetail' | 'howItWorks' | 'references' | 'news' | 'helpCenter' | 'contact' | 'myAccount' | 'myOrders' | 'paymentSuccess' | 'paymentCancel'
+    | 'home'
+    | 'companyList'
+    | 'addCompany'
+    | 'companyDetail'
+    | 'howItWorks'
+    | 'references'
+    | 'news'
+    | 'helpCenter'
+    | 'contact'
+    | 'myAccount'
+    | 'myOrders'
+    | 'paymentSuccess'
+    | 'paymentCancel'
   >('home');
   const [selectedService, setSelectedService] = useState<string>('');
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
@@ -122,11 +150,15 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       setIsLoggedIn(!!user);
     };
     checkAuth();
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsLoggedIn(!!session?.user);
     });
     return () => subscription.unsubscribe();
@@ -138,7 +170,7 @@ function App() {
     if (existing && !userLocation) setUserLocation(existing);
   }, []);
 
-  // Ukladaj preferovanú lokalitu (debounce mini)
+  // Ukladaj preferovanú lokalitu
   useEffect(() => {
     const t = setTimeout(() => {
       const v = (userLocation || '').trim();
@@ -164,7 +196,7 @@ function App() {
     { id: 'rating-4plus', label: '★ 4+', icon: Star },
     { id: 'today', label: 'Dnes', icon: Calendar },
     { id: 'escrow', label: 'Escrow', icon: Shield },
-    { id: 'budget-50', label: 'Do 50 €', icon: Euro }
+    { id: 'budget-50', label: 'Do 50 €', icon: Euro },
   ];
 
   const menuItems = [
@@ -179,16 +211,15 @@ function App() {
 
   const relyOrEmpty = (s?: string) => (typeof s === 'string' ? s : '');
 
-  /* ---------- Geolokácia: Firmy v mojom okolí ---------- */
+  /* ---------- Geolokácia ---------- */
   const useMyLocation = () => {
     if (!('geolocation' in navigator)) {
       alert('Prehliadač nepodporuje geolokáciu.');
       return;
     }
-    // robustnejšie získanie polohy (timeout + fallback)
     const controller = new AbortController();
     const timer = setTimeout(() => {
-      controller.abort(); // zruš, ak to trvá príliš dlho
+      controller.abort();
       alert('Nepodarilo sa získať polohu v časovom limite.');
     }, 9000);
 
@@ -218,30 +249,22 @@ function App() {
   };
 
   const toggleAiFilter = (filterId: string) => {
-    setAiActiveFilters(prev =>
-      prev.includes(filterId)
-        ? prev.filter(f => f !== filterId)
-        : [...prev, filterId]
-    );
+    setAiActiveFilters((prev) => (prev.includes(filterId) ? prev.filter((f) => f !== filterId) : [...prev, filterId]));
   };
 
-  /** dopočítaj vzdialenosti pre karty (ak máme coords a karta má geo) */
   const withDistances = (arr: UICard[]): UICard[] => {
-    if (!coords) return arr.map(c => ({ ...c, distanceKm: null }));
+    if (!coords) return arr.map((c) => ({ ...c, distanceKm: null }));
     return arr.map((c) => {
       if (c.geo && Number.isFinite(c.geo.lat) && Number.isFinite(c.geo.lng)) {
         const d = haversineKm(coords, c.geo);
-        return { ...c, distanceKm: Math.round(d * 10) / 10 }; // 1 desatinné
+        return { ...c, distanceKm: Math.round(d * 10) / 10 };
       }
       return { ...c, distanceKm: null };
     });
   };
 
-  /** usporiadaj podľa sortBy */
   const sortCards = (arr: UICard[], by: SortBy): UICard[] => {
-    if (by === 'rating') {
-      return [...arr].sort((a, b) => (b.rating ?? -1) - (a.rating ?? -1));
-    }
+    if (by === 'rating') return [...arr].sort((a, b) => (b.rating ?? -1) - (a.rating ?? -1));
     if (by === 'distance') {
       return [...arr].sort((a, b) => {
         const da = a.distanceKm ?? Number.POSITIVE_INFINITY;
@@ -249,11 +272,10 @@ function App() {
         return da - db;
       });
     }
-    // 'relevance' = poradie z backendu
     return arr;
   };
 
-  /* ---------- AI volanie ---------- */
+  /* ---------- AI ---------- */
   const handleAsk = async () => {
     const msg = message.trim();
     if (!msg) return;
@@ -261,12 +283,13 @@ function App() {
     setIsLoading(true);
     try {
       const nextHistory: ChatTurn[] = [...history, { role: 'user', content: msg }];
-      const { reply, cards: incoming, intent, meta } = await askAI(
-        msg,
-        nextHistory,
-        0.7,
-        { page: 0, limit, userLocation, coords, filters: aiActiveFilters }
-      );
+      const { reply, cards: incoming, intent, meta } = await askAI(msg, nextHistory, 0.7, {
+        page: 0,
+        limit,
+        userLocation,
+        coords,
+        filters: aiActiveFilters,
+      });
 
       const enriched = withDistances(incoming || []);
       const sorted = sortCards(enriched, sortBy);
@@ -295,12 +318,13 @@ function App() {
     setIsLoading(true);
     try {
       const nextPage = page + 1;
-      const { cards: incoming, meta } = await askAI(
-        lastQuery,
-        history,
-        0.7,
-        { page: nextPage, limit, userLocation, coords, filters: aiActiveFilters }
-      );
+      const { cards: incoming, meta } = await askAI(lastQuery, history, 0.7, {
+        page: nextPage,
+        limit,
+        userLocation,
+        coords,
+        filters: aiActiveFilters,
+      });
       const enriched = withDistances(incoming || []);
       const merged = [...cards, ...enriched];
       setCards(sortCards(merged, sortBy));
@@ -313,7 +337,6 @@ function App() {
     }
   };
 
-  // prepočítaj vzdialenosti aj pri zmene polohy užívateľa
   useEffect(() => {
     if (!cards.length) return;
     const enriched = withDistances(cards);
@@ -321,7 +344,6 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coords]);
 
-  // reaguj na zmenu sortovania
   useEffect(() => {
     setCards((prev) => sortCards(prev, sortBy));
   }, [sortBy]);
@@ -331,7 +353,10 @@ function App() {
     setSelectedService(serviceName);
     setCurrentPage('companyList');
   };
-  const navigateToHome = () => { setCurrentPage('home'); setSelectedService(''); };
+  const navigateToHome = () => {
+    setCurrentPage('home');
+    setSelectedService('');
+  };
   const navigateToAddCompany = () => setCurrentPage('addCompany');
   const navigateToHowItWorks = () => setCurrentPage('howItWorks');
   const navigateToReferences = () => setCurrentPage('references');
@@ -357,12 +382,13 @@ function App() {
     else if (action === 'myOrders') navigateToMyOrders();
   };
 
-  // GPS badge text
   const gpsBadge = useMemo(
     () =>
-      coords
-        ? <span className="inline-flex items-center text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 border border-green-200">GPS aktívne</span>
-        : null,
+      coords ? (
+        <span className="inline-flex items-center text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 border border-green-200">
+          GPS aktívne
+        </span>
+      ) : null,
     [coords]
   );
 
@@ -381,17 +407,17 @@ function App() {
               </button>
             </div>
 
+            {/* Desktop menu */}
             <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-8">
+              <div className="ml-10 flex items-center space-x-8">
                 {mainMenuItems.map((item, i) => (
-                  <a
+                  <button
                     key={i}
-                    href="#"
-                    onClick={(e) => { e.preventDefault(); handleMenuClick(item.action); }}
+                    onClick={() => handleMenuClick(item.action)}
                     className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors hover:bg-blue-50 rounded-lg"
                   >
                     {item.label}
-                  </a>
+                  </button>
                 ))}
 
                 <button
@@ -407,24 +433,25 @@ function App() {
                 </button>
 
                 {isLoggedIn && (
-                  <button
+                  <NavCta
                     onClick={navigateToMyOrders}
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 border-2 border-green-400 animate-pulse"
+                    className="bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 border-green-400"
                   >
                     <Euro size={18} />
                     Moje objednávky
-                  </button>
+                  </NavCta>
                 )}
-                <a
-                  href="#"
-                  onClick={(e) => { e.preventDefault(); navigateToAddCompany(); }}
-                  className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 text-sm font-bold rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl ml-4"
+
+                <NavCta
+                  onClick={navigateToAddCompany}
+                  className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 border-blue-400"
                 >
                   Pridať firmu
-                </a>
+                </NavCta>
               </div>
             </div>
 
+            {/* Mobile burger */}
             <div className="md:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -436,23 +463,29 @@ function App() {
           </div>
         </div>
 
+        {/* Mobile menu */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-white/95 backdrop-blur-md border-t">
-            <div className="px-2 pt-2 pb-3 space-y-1">
+            <div className="px-2 pt-2 pb-3 space-y-2">
               {mainMenuItems.map((item, i) => (
-                <a
+                <button
                   key={i}
-                  href="#"
-                  onClick={(e) => { e.preventDefault(); handleMenuClick(item.action); setMobileMenuOpen(false); }}
-                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium hover:bg-blue-50 rounded-lg transition-colors"
+                  onClick={() => {
+                    handleMenuClick(item.action);
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full text-left text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium hover:bg-blue-50 rounded-lg transition-colors"
                 >
                   {item.label}
-                </a>
+                </button>
               ))}
 
               <button
-                onClick={() => { navigateToMyAccount(); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-base font-medium rounded-lg transition-all ${
+                onClick={() => {
+                  navigateToMyAccount();
+                  setMobileMenuOpen(false);
+                }}
+                className={`w-full flex items-center gap-2 px-3 py-3 text-base font-medium rounded-lg transition-all ${
                   isLoggedIn
                     ? 'bg-green-100 text-green-800 border border-green-200 hover:bg-green-200'
                     : 'bg-red-100 text-red-800 border border-red-200 hover:bg-red-200'
@@ -464,20 +497,26 @@ function App() {
 
               {isLoggedIn && (
                 <button
-                  onClick={() => { navigateToMyOrders(); setMobileMenuOpen(false); }}
-                  className="w-full flex items-center gap-2 px-3 py-3 text-base font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 border-2 border-green-400"
+                  onClick={() => {
+                    navigateToMyOrders();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full inline-flex items-center justify-center gap-2 px-3 py-3 text-base font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 border-2 border-green-400"
                 >
                   <Euro size={22} />
                   Moje objednávky
                 </button>
               )}
-              <a
-                href="#"
-                onClick={(e) => { e.preventDefault(); navigateToAddCompany(); }}
-                className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white block px-3 py-3 text-base font-bold rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl mt-4"
+
+              <button
+                onClick={() => {
+                  navigateToAddCompany();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full inline-flex items-center justify-center gap-2 px-3 py-3 text-base font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 border-2 border-blue-400"
               >
                 Pridať firmu
-              </a>
+              </button>
             </div>
           </div>
         )}
@@ -496,7 +535,8 @@ function App() {
                   </span>
                 </h2>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-12">
-                  Opýtajte sa nášho AI asistenta na čokoľvek o domácich službách. Pomôže vám nájsť správneho odborníka pre váš projekt.
+                  Opýtajte sa nášho AI asistenta na čokoľvek o domácich službách. Pomôže vám nájsť správneho odborníka
+                  pre váš projekt.
                 </p>
               </div>
 
@@ -556,7 +596,7 @@ function App() {
                     </div>
                   </div>
 
-                  {/* Quick Filters for AI + Sort */}
+                  {/* Quick Filters + Sort */}
                   <div className="flex flex-wrap gap-2 mt-4 items-center">
                     {aiQuickFilters.map((filter) => {
                       const IconComponent = filter.icon;
@@ -566,9 +606,7 @@ function App() {
                           key={filter.id}
                           onClick={() => toggleAiFilter(filter.id)}
                           className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                            isActive
-                              ? 'bg-blue-600 text-white shadow-md'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            isActive ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           }`}
                         >
                           <IconComponent size={16} />
@@ -625,7 +663,6 @@ function App() {
                           className="flex flex-col h-full rounded-2xl shadow p-5 bg-white cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                           onClick={() => c.id && navigateToCompanyDetail(String(c.id))}
                         >
-                          {/* Hlavička */}
                           <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0">
                               <h3 className="text-lg font-semibold break-words">{c.title}</h3>
@@ -645,7 +682,6 @@ function App() {
                             </div>
                           </div>
 
-                          {/* Rating / Nová firma */}
                           <div className="mt-2 flex items-center gap-2 flex-wrap">
                             {typeof c.rating === 'number' ? (
                               <>
@@ -653,12 +689,9 @@ function App() {
                                 <span className="text-xs text-gray-500">{c.rating.toFixed(1)}</span>
                               </>
                             ) : (
-                              <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
-                                Nová firma
-                              </span>
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">Nová firma</span>
                             )}
 
-                            {/* Location + vzdialenosť */}
                             {c.location && (
                               <span className="inline-flex items-center gap-1 text-xs text-gray-500 ml-2">
                                 <MapPin size={12} />
@@ -676,45 +709,28 @@ function App() {
                             )}
                           </div>
 
-                          {/* Popis */}
-                          {c.description && (
-                            <p className="mt-3 text-sm text-gray-700 line-clamp-3">
-                              {c.description}
-                            </p>
-                          )}
+                          {c.description && <p className="mt-3 text-sm text-gray-700 line-clamp-3">{c.description}</p>}
 
-                          {/* Tagy – konzistentná výška */}
                           <div className="mt-3 min-h-8 flex flex-wrap gap-2">
-                            {Array.isArray(c.tags) && c.tags.map((t: string) => (
-                              <span key={t} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
-                                {t}
-                              </span>
-                            ))}
+                            {Array.isArray(c.tags) &&
+                              c.tags.map((t: string) => (
+                                <span key={t} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                                  {t}
+                                </span>
+                              ))}
                           </div>
 
-                          {/* CTA naspodku */}
                           <div className="mt-auto pt-4 flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
                             {c.actions?.website ? (
-                              <a
-                                href={c.actions.website}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="px-3 py-2 rounded-xl bg-blue-600 text-white"
-                              >
+                              <a href={c.actions.website} target="_blank" rel="noreferrer" className="px-3 py-2 rounded-xl bg-blue-600 text-white">
                                 Kontaktovať
                               </a>
                             ) : c.actions?.call ? (
-                              <a
-                                href={`tel:${c.actions.call}`}
-                                className="px-3 py-2 rounded-xl bg-blue-600 text-white"
-                              >
+                              <a href={`tel:${c.actions.call}`} className="px-3 py-2 rounded-xl bg-blue-600 text-white">
                                 Zavolať
                               </a>
                             ) : c.actions?.email ? (
-                              <a
-                                href={`mailto:${c.actions.email}`}
-                                className="px-3 py-2 rounded-xl bg-blue-600 text-white"
-                              >
+                              <a href={`mailto:${c.actions.email}`} className="px-3 py-2 rounded-xl bg-blue-600 text-white">
                                 Napísať e-mail
                               </a>
                             ) : null}
@@ -730,12 +746,7 @@ function App() {
                               </a>
                             )}
                             {c.actions?.website && (
-                              <a
-                                href={c.actions.website}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="px-3 py-2 rounded-xl bg-gray-100"
-                              >
+                              <a href={c.actions.website} target="_blank" rel="noreferrer" className="px-3 py-2 rounded-xl bg-gray-100">
                                 Web
                               </a>
                             )}
@@ -746,11 +757,7 @@ function App() {
 
                     {hasMore && (
                       <div className="mt-6 flex justify-center">
-                        <button
-                          onClick={loadMore}
-                          disabled={isLoading}
-                          className="px-6 py-3 rounded-xl bg-gray-900 text-white hover:bg-black transition disabled:opacity-60"
-                        >
+                        <button onClick={loadMore} disabled={isLoading} className="px-6 py-3 rounded-xl bg-gray-900 text-white hover:bg-black transition disabled:opacity-60">
                           {isLoading ? 'Načítavam…' : 'Zobraziť viac'}
                         </button>
                       </div>
@@ -789,61 +796,33 @@ function App() {
         )}
 
         {currentPage === 'companyList' && (
-          <CompanyListPage
-            selectedService={selectedService}
-            onNavigateBack={navigateToHome}
-            onNavigateToCompanyDetail={navigateToCompanyDetail}
-          />
+          <CompanyListPage selectedService={selectedService} onNavigateBack={navigateToHome} onNavigateToCompanyDetail={navigateToCompanyDetail} />
         )}
-        {currentPage === 'companyDetail' && selectedCompanyId && (
-          <CompanyDetailPage
-            companyId={selectedCompanyId}
-            onNavigateBack={() => setCurrentPage('companyList')}
-          />
-        )}
+        {currentPage === 'companyDetail' && selectedCompanyId && <CompanyDetailPage companyId={selectedCompanyId} onNavigateBack={() => setCurrentPage('companyList')} />}
         {currentPage === 'addCompany' && <AddCompanyPage onNavigateBack={navigateToHome} />}
-        {currentPage === 'howItWorks' && (
-          <HowItWorksPage onNavigateBack={navigateToHome} onNavigateToAddCompany={navigateToAddCompany} />
-        )}
+        {currentPage === 'howItWorks' && <HowItWorksPage onNavigateBack={navigateToHome} onNavigateToAddCompany={navigateToAddCompany} />}
         {currentPage === 'references' && <ReferencesPage onNavigateBack={navigateToHome} />}
         {currentPage === 'news' && <NewsPage onNavigateBack={navigateToHome} />}
         {currentPage === 'helpCenter' && <HelpCenterPage onNavigateBack={navigateToHome} />}
         {currentPage === 'contact' && <ContactPage onNavigateBack={navigateToHome} />}
-        {currentPage === 'myAccount' && (
-          <MyAccountPage onNavigateBack={navigateToHome} onNavigateToAddCompany={navigateToAddCompany} />
-        )}
-        {currentPage === 'myOrders' && (
-          <MyOrdersPage onNavigateBack={navigateToHome} />
-        )}
-        {currentPage === 'paymentSuccess' && (
-          <PaymentSuccessPage onNavigateBack={navigateToHome} onNavigateToMyOrders={navigateToMyOrders} />
-        )}
-        {currentPage === 'paymentCancel' && (
-          <PaymentCancelPage onNavigateBack={navigateToHome} onNavigateToMyOrders={navigateToMyOrders} />
-        )}
+        {currentPage === 'myAccount' && <MyAccountPage onNavigateBack={navigateToHome} onNavigateToAddCompany={navigateToAddCompany} />}
+        {currentPage === 'myOrders' && <MyOrdersPage onNavigateBack={navigateToHome} />}
+        {currentPage === 'paymentSuccess' && <PaymentSuccessPage onNavigateBack={navigateToHome} onNavigateToMyOrders={navigateToMyOrders} />}
+        {currentPage === 'paymentCancel' && <PaymentCancelPage onNavigateBack={navigateToHome} onNavigateToMyOrders={navigateToMyOrders} />}
       </div>
 
-      {/* Cookie Consent Banner */}
       <CookieConsentBanner />
 
-      {/* Footer */}
       <footer className="bg-white/50 backdrop-blur-md mt-20">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-              ServisAI
-            </h2>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">ServisAI</h2>
             <p className="text-gray-600 mb-6">Váš AI asistent pre domáce služby</p>
             <div className="flex justify-center space-x-6">
               {menuItems.map((item, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  onClick={(e) => { e.preventDefault(); handleMenuClick(item.action); }}
-                  className="text-gray-500 hover:text-blue-600 transition-colors"
-                >
+                <button key={i} onClick={() => handleMenuClick(item.action)} className="text-gray-500 hover:text-blue-600 transition-colors">
                   {item.label}
-                </a>
+                </button>
               ))}
             </div>
             <div className="mt-8 pt-8 border-t border-gray-200">
