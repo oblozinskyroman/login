@@ -18,48 +18,27 @@ type AskAIResult = {
   meta: any;
 };
 
-const BASE = import.meta.env.VITE_SUPABASE_URL;         // napr. https://xxxx.supabase.co
-const ANON = import.meta.env.VITE_SUPABASE_ANON_KEY;     // public anon key
+const BASE = import.meta.env.VITE_SUPABASE_URL;
+const ANON = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const URL = `${BASE}/functions/v1/ai-assistant`;
 
-/** Pomocná funkcia – vyberie pole firiem z rôznych možných kľúčov */
+/* ---------------- helpers ---------------- */
+
 function extractArray(d: any): any[] {
   if (!d || typeof d !== 'object') return [];
-  const directKeys = [
-    'cards',
-    'results',
-    'items',
-    'list',
-    'records',
-    'matches',
-    'companies',
-    'providers',
-    'firms',
-  ];
-  for (const k of directKeys) {
-    if (Array.isArray(d[k])) return d[k];
-  }
+  const keys = ['cards','results','items','list','records','matches','companies','providers','firms'];
+  for (const k of keys) if (Array.isArray(d?.[k])) return d[k];
   if (d.data && typeof d.data === 'object') {
-    for (const k of directKeys) {
-      if (Array.isArray(d.data[k])) return d.data[k];
-    }
+    for (const k of keys) if (Array.isArray(d.data[k])) return d.data[k];
     if (Array.isArray(d.data)) return d.data;
   }
-  for (const [, v] of Object.entries(d)) {
-    if (Array.isArray(v)) return v as any[];
-  }
+  for (const [,v] of Object.entries(d)) if (Array.isArray(v)) return v as any[];
   return [];
 }
 
-/** Normalizácia na tvar karty, ktorý UI očakáva */
 function normalizeCard(x: any): any {
   const title =
-    x?.title ??
-    x?.name ??
-    x?.company_name ??
-    x?.company ??
-    x?.displayName ??
-    'Bez názvu';
+    x?.title ?? x?.name ?? x?.company_name ?? x?.company ?? x?.displayName ?? 'Bez názvu';
 
   const subtitle =
     x?.subtitle ?? x?.category ?? x?.service ?? x?.specialization ?? x?.type ?? undefined;
@@ -72,29 +51,19 @@ function normalizeCard(x: any): any {
     (typeof x?.score === 'number' ? x.score : undefined) ??
     null;
 
-  const verified = Boolean(
-    x?.verified ?? x?.is_verified ?? x?.trusted ?? x?.isTrusted ?? false
-  );
+  const verified = Boolean(x?.verified ?? x?.is_verified ?? x?.trusted ?? x?.isTrusted ?? false);
 
-  // --- location bez miešania ?? a || ---
+  // location – bez miešania ?? a ||
   const composedLoc = [x?.city, x?.district, x?.region, x?.country].filter(Boolean).join(', ');
   const location = (x?.location ?? (composedLoc ? composedLoc : undefined)) as string | undefined;
 
-  // geo
   const lat =
-    x?.lat ??
-    x?.latitude ??
-    x?.geo?.lat ??
-    x?.geo_lat ??
+    x?.lat ?? x?.latitude ?? x?.geo?.lat ?? x?.geo_lat ??
     (Array.isArray(x?.location) ? x.location[0] : undefined);
   const lng =
-    x?.lng ??
-    x?.longitude ??
-    x?.geo?.lng ??
-    x?.geo_lng ??
+    x?.lng ?? x?.longitude ?? x?.geo?.lng ?? x?.geo_lng ??
     (Array.isArray(x?.location) ? x.location[1] : undefined);
-  const geo =
-    typeof lat === 'number' && typeof lng === 'number' ? { lat, lng } : null;
+  const geo = (typeof lat === 'number' && typeof lng === 'number') ? { lat, lng } : null;
 
   const actions = {
     call: x?.phone ?? null,
@@ -105,47 +74,53 @@ function normalizeCard(x: any): any {
 
   return {
     id: x?.id ?? x?._id ?? x?.uuid ?? undefined,
-    title,
-    subtitle,
-    description,
-    location,
-    rating,
-    verified,
+    title, subtitle, description, location,
+    rating, verified,
     tags: Array.isArray(x?.tags) ? x.tags : undefined,
-    geo,
-    distanceKm: null,
+    geo, distanceKm: null,
     actions,
   };
 }
 
-/** Fallback: keď AI nevráti karty, skúsime ich vytiahnuť zo Supabase DB */
+/* --- jednoduché textové porovnanie v kóde (žiadne .ilike) --- */
+function matchesQuery(row: any, q: string): boolean {
+  const s = (v: any) => (v ?? '').toString().toLowerCase();
+  const joinArr = (a: any) => Array.isArray(a) ? a.map(s).join(' ') : '';
+  const hay =
+    s(row.title) + ' ' + s(row.name) + ' ' + s(row.company_name) + ' ' + s(row.company) + ' ' +
+    s(row.description) + ' ' + s(row.about) + ' ' + joinArr(row.tags) + ' ' + joinArr(row.skills);
+  return hay.includes(q.toLowerCase());
+}
+
+/* --- fallback: nenašiel karty z edge, skús DB (bez .ilike a bez pevných stĺpcov) --- */
 async function searchCompaniesFallback(query: string, limit = 9): Promise<any[]> {
   const q = (query || '').trim();
-  if (!q) return [];
+  // ktoré názvy tabuliek skúsime
+  const TABLES = ['companies', 'providers', 'firms', 'public_companies', 'service_providers'];
 
   const out: any[] = [];
 
-  async function tryTable(name: string) {
+  for (const tbl of TABLES) {
     try {
-      const { data, error } = await supabase
-        .from(name)
-        .select('*')
-        .ilike('title', `%${q}%`)
-        .limit(limit);
+      // žiadne filtre – nechytáme 400 pri neexistujúcom stĺpci
+      const { data, error } = await supabase.from(tbl).select('*').limit(50);
+      if (error || !Array.isArray(data) || data.length === 0) continue;
 
-      if (!error && Array.isArray(data)) {
-        for (const row of data) out.push(normalizeCard(row));
+      // filtrovanie spravíme lokálne
+      const filtered = q ? data.filter((r) => matchesQuery(r, q)) : data;
+      for (const row of filtered.slice(0, Math.max(limit - out.length, 0))) {
+        out.push(normalizeCard(row));
       }
+      if (out.length >= limit) break;
     } catch {
-      /* ignore */
+      // tabuľka nemusí existovať – ideme ďalej
     }
   }
 
-  await tryTable('companies');
-  if (out.length === 0) await tryTable('providers');
-
-  return out;
+  return out.slice(0, limit);
 }
+
+/* ---------------- main ---------------- */
 
 export async function askAI(
   message: string,
@@ -165,24 +140,17 @@ export async function askAI(
   });
 
   let data: any = null;
-  try {
-    data = await res.json();
-  } catch {
-    // nech to nespadne na zlom JSONe
-  }
+  try { data = await res.json(); } catch { /* ignore */ }
 
   if (!res.ok) {
     const msg = (data && (data.error || data.message)) || `AI request failed (${res.status})`;
     throw new Error(String(msg));
   }
 
-  // text odpovede
   const reply = (data?.reply ?? data?.answer ?? data?.text ?? '') as string;
 
-  // firmy z edge
   let cards = extractArray(data).map(normalizeCard);
 
-  // Fallback do DB – ak edge nevrátil žiadne karty
   if (cards.length === 0) {
     const fb = await searchCompaniesFallback(message, opts.limit ?? 9);
     if (fb.length) {
@@ -191,14 +159,11 @@ export async function askAI(
     }
   }
 
-  // intent
   const intent = (data?.intent ?? data?.meta?.intent ?? null) as any;
 
-  // hasMore (čisto s ??)
   const hasMore = Boolean(
     (data?.hasMore ?? data?.has_more ?? data?.meta?.hasMore ?? data?.meta?.has_more ?? false) as boolean
   );
-
   const meta = data?.meta ? { ...data.meta, hasMore } : { hasMore };
 
   console.debug('askAI: edge response:', data);
