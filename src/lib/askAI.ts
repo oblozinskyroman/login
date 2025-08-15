@@ -76,11 +76,11 @@ function normalizeCard(x: any): any {
     x?.verified ?? x?.is_verified ?? x?.trusted ?? x?.isTrusted ?? false
   );
 
-  const location =
-    x?.location ??
-    [x?.city, x?.district, x?.region, x?.country].filter(Boolean).join(', ') ||
-    undefined;
+  // --- location bez miešania ?? a || ---
+  const composedLoc = [x?.city, x?.district, x?.region, x?.country].filter(Boolean).join(', ');
+  const location = (x?.location ?? (composedLoc ? composedLoc : undefined)) as string | undefined;
 
+  // geo
   const lat =
     x?.lat ??
     x?.latitude ??
@@ -176,9 +176,8 @@ export async function askAI(
     throw new Error(String(msg));
   }
 
-  // text odpovede (bez miešania ?? a ||)
-  const rawText = (data?.reply ?? data?.answer ?? data?.text ?? '') as string;
-  const reply = rawText;
+  // text odpovede
+  const reply = (data?.reply ?? data?.answer ?? data?.text ?? '') as string;
 
   // firmy z edge
   let cards = extractArray(data).map(normalizeCard);
@@ -192,10 +191,10 @@ export async function askAI(
     }
   }
 
-  // intent (bez miešania operátorov)
+  // intent
   const intent = (data?.intent ?? data?.meta?.intent ?? null) as any;
 
-  // hasMore (len s ??)
+  // hasMore (čisto s ??)
   const hasMore = Boolean(
     (data?.hasMore ?? data?.has_more ?? data?.meta?.hasMore ?? data?.meta?.has_more ?? false) as boolean
   );
