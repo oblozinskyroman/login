@@ -36,6 +36,7 @@ import {
   Calendar,
   Shield,
   Euro,
+  DollarSign,
 } from 'lucide-react';
 
 /** Lokálny storage kľúč pre preferovanú lokalitu */
